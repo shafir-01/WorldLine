@@ -74,7 +74,7 @@ Claim ceiling: the kernel protects against agents misreporting what the pipeline
 
 Three custom Duo agents and three flows were created through the catalog API and enabled on the project. Observed sequence on issue 1:
 
-1. Investigator session (hosted, Claude Sonnet 5.5 via Vertex, image python:3.12): ran `explore` twice, confirmed byte-identical trace digests, minimized a 3-intervention schedule to the delayed correction, posted a report with exact witnesses and digests. Correct in every checkable detail.
+1. Investigator session (GitLab-hosted runner, GitLab's default agent model, image python:3.12): ran `explore` twice, confirmed byte-identical trace digests, minimized a 3-intervention schedule to the delayed correction, posted a report with exact witnesses and digests. Correct in every checkable detail.
 2. Repairer session: opened a merge request with a grace-window rule in a regression scenario, five tests including a non-vacuity test against the original scenario, no protected path touched, and an honest limitations section. All 163 tests pass.
 3. GitLab's built-in Code Review flow requested changes: with the chosen cutoff the rule can never produce `escalate` for that inject set, so the PASS results demonstrate a constant rule, not a correct one. The finding is right. Neither the test suite nor the kernel would have caught it: tests only asserted the default option, and the kernel recomputes claims, it does not judge whether a repair is meaningful.
 4. A follow-up Repairer session was dispatched with the review to add an escalation-reachability variant.

@@ -45,9 +45,9 @@ Baseline comparison: random fault schedules at the same budget; metrics are fail
 
 A GitLab Duo agent is then asked to repair: the repair must make the failing branch PASS without editing invariants or the kernel, and must add a regression scenario. The kernel recomputes, seals, and authorizes the exact commit digest. A second pipeline shows a stale or mismatching evidence bundle being DENIED.
 
-## Success levels we claim at submission
+## What this release claims
 
-- Level 1 (functional invention): claimed if the pipeline runs end to end from a clean clone.
-- Level 2 (demonstrated advantage): claimed only if guided exploration beats random in the recorded benchmark.
-- Level 3 (generalization): partially, if the genome reproduces on scenario B and does not on an immune variant.
-- Level 4 to 6: not claimed. Roadmap in `docs/ROADMAP.md`.
+- The pipeline runs end to end from a clean clone and produces the same digests on every run.
+- Guided exploration finds more failing worlds than random at equal budget, on the recorded benchmark.
+- The genome extracted from scenario A reproduces on scenario B and does not reproduce on B's immune variant.
+- Nothing beyond that. Generalization across many scenarios, transfer to instrumented real services, and formal guarantees are open work; see `docs/ROADMAP.md`.
