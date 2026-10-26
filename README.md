@@ -40,7 +40,7 @@ WORLDLINE asks: **what would this system do if the world were different, and whi
 
 Scenario A, `port_alert`: a synthetic port security incident with three roles at different latencies. The duty officer decides at 1500 s whether to escalate, based on sightings not yet corrected. In the baseline, a correction arrives in time and the decision is "monitor".
 
-Scenario B, `convoy_lostlink`: a synthetic logistics convoy with an uncrewed scout. Different roles, event kinds, decision rules and timings, written without reference to A's defect.
+Scenario B, `convoy_lostlink`: a synthetic logistics convoy with a drone scout. Different roles, event kinds, decision rules and timings, written without reference to A's defect.
 
 What the pipeline did on this machine (`uv run worldline demo --budget 150 --seed 42`):
 
@@ -220,7 +220,7 @@ The `pages` CI job builds the viewer and publishes it with the pipeline's own `e
 | Guided exploration finds more failing worlds than random | EMPIRICALLY_VALIDATED | 5 seeds, one scenario, one machine |
 | Genome transfers between scenarios | EMPIRICALLY_VALIDATED | one positive scenario, one immune control |
 | Tampered or agent-forged evidence cannot authorize | EMPIRICALLY_VALIDATED | tests and demo |
-| Anything about real deployments, real C2 systems, or heterogeneous codebases | UNKNOWN | not attempted |
+| Anything about real deployments or heterogeneous codebases | UNKNOWN | not attempted |
 
 Nothing here is PROVED_WITHIN_MODEL yet. All scenarios are synthetic and labelled as such.
 

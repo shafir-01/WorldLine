@@ -1,6 +1,6 @@
 # WORLDLINE roadmap beyond the hackathon
 
-The hackathon artifact is laboratory one. This is the research program it opens. Each item names the question, the experiment that would settle it, and what would count as failure.
+The current release is laboratory one. This is the research program it opens. Each item names the question, the experiment that would settle it, and what would count as failure.
 
 ## Near term (weeks)
 
@@ -13,7 +13,7 @@ The hackathon artifact is laboratory one. This is the research program it opens.
 
 - **Symbolic time.** Replace concrete delay sweeps with constraint solving over receipt-time intervals: find the delay window that flips a decision in one solver call. Baseline: the current sweep.
 - **Clock uncertainty.** Model each source's clock as rate, offset and jitter; reconstruct partial orders; invariants over the reconstruction envelope rather than a forced total order.
-- **Genome transfer across code, not just scenarios.** Instrument a real service (e.g. a small FastAPI app with a cache) with the Event v1 adapter; ask whether a genome extracted from the simulator reproduces against the instrumented app. This is the real test of the WORLDLINE hypothesis; the hackathon does not answer it.
+- **Genome transfer across code, not just scenarios.** Instrument a real service (e.g. a small FastAPI app with a cache) with the Event v1 adapter; ask whether a genome extracted from the simulator reproduces against the instrumented app. This is the real test of the WORLDLINE hypothesis; the current release does not answer it.
 - **Agent-session evidence.** Capture GitLab Duo session transcripts as evidence records with producer `agent:<name>`, so an authorization can show exactly which agent actions preceded which verifications.
 - **Statistical evidence kind.** Add confidence intervals and n to EMPIRICALLY_VALIDATED records; refuse claims below a sample threshold.
 
@@ -26,4 +26,4 @@ The hackathon artifact is laboratory one. This is the research program it opens.
 
 ## Explicitly not planned
 
-- Live operational military systems, weapon functions, classified data, or any claim of certification or accreditation. Everything stays synthetic or authorised.
+- Connecting to live operational systems, handling restricted data, or any claim of certification or accreditation. Everything stays synthetic or explicitly authorised.

@@ -1,4 +1,4 @@
-# WORLDLINE scenario: synthetic logistics convoy with an uncrewed scout (45 minutes).
+# WORLDLINE scenario: synthetic logistics convoy with a drone scout (45 minutes).
 #
 # A different domain from port_alert: different roles, actors, event kinds, rules and
 # timings. Built WITHOUT any reference to the port_alert minimal schedule. It exists to
