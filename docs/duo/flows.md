@@ -54,7 +54,6 @@ components:
       - get_issue
       - create_issue_note
       - run_command
-    max_cycles: 120
     ui_log_events:
       - on_tool_execution_success
       - on_tool_execution_failed
@@ -141,7 +140,6 @@ components:
       - run_git_command            # UNVERIFIED name; needed for branch/commit/push
       - create_merge_request
       - create_merge_request_note
-    max_cycles: 200
     ui_log_events:
       - on_tool_execution_success
       - on_tool_execution_failed
@@ -233,7 +231,6 @@ components:
       - get_merge_request
       - create_merge_request_note
       - run_command
-    max_cycles: 120
     ui_log_events:
       - on_tool_execution_success
       - on_tool_execution_failed
