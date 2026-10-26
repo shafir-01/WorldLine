@@ -113,8 +113,8 @@ def test_response_alert_ack(invs):
     inv = invs["response.alert_ack"]
     alert = ev(1, 10, kind="alert", source="ops", payload={"level": 2})
     noise = ev(2, 100, kind="weather", source="met", payload={})
-    ack = ev(3, 200, kind="acknowledged", source="ops1", payload={"acks": "e1"})
-    late_ack = ev(4, 400, kind="acknowledged", source="ops1", payload={"acks": "e1"})
+    ack = ev(3, 200, kind="ack", source="ops1", payload={"acknowledges": "e1"})
+    late_ack = ev(4, 400, kind="ack", source="ops1", payload={"acknowledges": "e1"})
     truth = log(alert, noise, ack)
     assert check(FakeTrace(truth=truth, views={"harbour_ops": view_of(truth)}), inv).result is Verdict.PASS
     # late ack: FAIL witness = alert + latest event received before the deadline (10+1+300 = 311s)
@@ -126,7 +126,7 @@ def test_response_alert_ack(invs):
     rec = check(FakeTrace(truth=truth3, views={"harbour_ops": view_of(truth3)}), inv)
     assert rec.result is Verdict.FAIL and rec.witness == ["e1"]
     # ack present but linked to another alert does not count
-    truth4 = log(alert, ev(3, 200, kind="acknowledged", source="ops1", payload={"acks": "e9"}))
+    truth4 = log(alert, ev(3, 200, kind="ack", source="ops1", payload={"acknowledges": "e9"}))
     assert check(FakeTrace(truth=truth4, views={"harbour_ops": view_of(truth4)}), inv).result is Verdict.FAIL
     # UNKNOWN: no alert anywhere -> required signal missing
     rec = check(FakeTrace(truth=log(noise), views={"harbour_ops": view_of(log(noise))}), inv)
