@@ -64,6 +64,8 @@ test:
     - uv run pytest -q --junitxml=report.xml
   artifacts:
     when: always
+    paths:
+      - report.xml        # downstream jobs need the file itself; `reports:` alone is not passed on
     reports:
       junit: report.xml
     expire_in: 2 weeks
