@@ -7,16 +7,15 @@
 # This file is read ONLY from the default branch. setup_script runs before the sandbox with the
 # triggering user's token in the environment, so this path is CODEOWNERS-protected (@shafir-01).
 
-# Python 3.12 base; Node 20 is installed in setup_script because flows may build ui/.
+# Python 3.12 base. setup_script must be a single string (server validation). Node is not installed here; flows do not build ui/.
 image: python:3.12
 
-setup_script:
-  - apt-get update -qq && apt-get install -y -qq --no-install-recommends curl ca-certificates git
-  - curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y -qq nodejs
-  - pip install --quiet uv
-  - uv sync --extra dev
-  - uv run worldline --help || echo "worldline CLI not yet wired; see AGENTS.md"
-  - echo "WORLDLINE flow environment ready: $(python --version), node $(node --version), uv $(uv --version)"
+setup_script: |
+  apt-get update -qq && apt-get install -y -qq --no-install-recommends curl ca-certificates git
+  pip install --quiet uv
+  uv sync --extra dev
+  uv run worldline --help > /dev/null
+  echo "WORLDLINE flow environment ready: $(python --version), uv $(uv --version)"
 
 cache:
   key:
