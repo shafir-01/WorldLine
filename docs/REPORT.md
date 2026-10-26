@@ -81,6 +81,10 @@ Three custom Duo agents and three flows were created through the catalog API and
 
 What this shows. The kernel stops agents from misreporting what ran. It does not stop a repair from being vacuous. That gap belongs to the Skeptic role and to a stronger repair contract: a repair must come with a scenario where the non-default decision is still reachable. The contract in AGENTS.md should be amended accordingly. Our own Skeptic flow failed to start under the merge-request trigger because its definition read an input that trigger does not supply; it ran correctly when started with an explicit goal.
 
+## Experiment 6: first kernel run on the GitLab runner
+
+The first main-branch pipeline with the signing key present (pipeline 2991432180) passed test, explore, pages and kernel-verify, then **authorize DENIED** the commit: `missing: no acceptable record for 'tests:unit'`, `downgraded: tests:unit is UNKNOWN < EMPIRICALLY_VALIDATED`. Cause: the test job published `report.xml` only as a JUnit report, which GitLab does not hand to downstream jobs as a file, so the kernel could not recompute the test claim and typed it UNKNOWN. The policy requires EMPIRICALLY_VALIDATED for that claim, so the release was refused. This is the intended behaviour of the kernel under a missing signal and was fixed by publishing the file as a regular artifact. Both outcomes are in the pipeline history.
+
 ## Determinism
 
 Same scenario, seed and schedule produce byte-identical trace digests in-process and across a fresh interpreter (tested by subprocess). Root `port_alert` digest with seed 20261026: `sha256:d16ac439…`. Any change to delivery policy, rule, or inject changes it.
