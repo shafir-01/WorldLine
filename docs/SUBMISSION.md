@@ -20,7 +20,8 @@ Path A (new project, created after 5 October 2026). Autonomy tier: **Supervised*
 - Live viewer (GitLab Pages, built from the pipeline's own output): https://worldline-3e380d.gitlab.io
 - Pipelines: https://gitlab.com/shafir2/WorldLine/-/pipelines
 - Investigation issue with the real witness: https://gitlab.com/shafir2/WorldLine/-/work_items/1
-- Duo agent sessions: https://gitlab.com/shafir2/WorldLine/-/automate/agent-sessions/10080962 (Investigator) `[add Repairer MR and Skeptic session links]`
+- Duo agent sessions: Investigator https://gitlab.com/shafir2/WorldLine/-/automate/agent-sessions/10080962; Repairer https://gitlab.com/shafir2/WorldLine/-/automate/agent-sessions/10081188 and follow-up https://gitlab.com/shafir2/WorldLine/-/automate/agent-sessions/10081957; Skeptic https://gitlab.com/shafir2/WorldLine/-/automate/agent-sessions/10081961
+- Repair merge request (left open on purpose, see description): https://gitlab.com/shafir2/WorldLine/-/merge_requests/1
 - Video (under 3 minutes): `[YouTube URL]`
 
 ## Inspiration
@@ -35,7 +36,7 @@ When a world fails, delta debugging reduces it to a 1-minimal set of interventio
 
 Every claim is typed: PROVED_WITHIN_MODEL, EMPIRICALLY_VALIDATED, ATTESTED, FAILED or UNKNOWN. Evidence is hash-chained and Ed25519-sealed. Agents can never emit ATTESTED. The kernel recomputes what agents report; a mismatch becomes a FAILED integrity record that denies the release. Authorization binds to the exact commit digest and is revoked when an assumption is invalidated.
 
-On GitLab: the pipeline runs test, explore, kernel-verify, authorize and pages. Three custom Duo agents (Investigator, Repairer, Skeptic) and three flows are enabled on the project. The Investigator reads the FAIL witness and posts the investigation; the Repairer opens a merge request under a repair contract (make the failing branch pass without weakening invariants, add a regression scenario); the Skeptic reviews merge requests for unbacked claims. Agents never evaluate themselves; the kernel jobs are protected by CODEOWNERS.
+On GitLab: the pipeline runs test, explore, kernel-verify, authorize and pages. Three custom Duo agents (Investigator, Repairer, Skeptic) and three flows are enabled on the project. The Investigator re-ran the exploration in a hosted session, confirmed identical digests and posted the witness. The Repairer opened a merge request under a repair contract. GitLab's Code Review found the repair vacuous; the Repairer addressed it; our Skeptic agent still failed it for sidestepping the fault rather than tolerating it. Every step is a real session with a transcript. The merge request is left open because the Skeptic is right, and that is the point: agents never evaluate themselves, and the kernel jobs are protected by CODEOWNERS.
 
 ## The measured result
 
