@@ -208,7 +208,10 @@ def failure_oracle(scenario: Scenario, invariants: dict[str, Invariant], target_
     ev = rule_evaluator(scenario)
 
     def oracle(schedule: tuple) -> bool:
-        tr = run(scenario, tuple(schedule))
+        try:
+            tr = run(scenario, tuple(schedule))
+        except ValueError:  # subset violates the time rule: it cannot be the failing world
+            return False
         vs = check_all(tr, inv, scenario=scenario, evaluate_rule=ev, now_ns=now_ns)
         return any(v.result == Verdict.FAIL for v in vs)
 

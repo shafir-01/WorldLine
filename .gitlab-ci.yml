@@ -20,7 +20,7 @@ variables:
   UV_LINK_MODE: copy
   WORLDLINE_OUT: "experiments/out"
   WORLDLINE_SCENARIO: "scenarios/port_alert.yaml"
-  WORLDLINE_CHALLENGE_SCENARIO: "scenarios/triage_board.yaml"
+  WORLDLINE_CHALLENGE_SCENARIO: "scenarios/convoy_lostlink.yaml"
   WORLDLINE_BUDGET: "200"
   WORLDLINE_SEED: "42"
 

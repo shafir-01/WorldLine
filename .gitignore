@@ -6,3 +6,6 @@ node_modules/
 ui/dist/
 experiments/out/
 .hypothesis/
+policies/kernel_private.pem
+experiments/out/
+report.xml
