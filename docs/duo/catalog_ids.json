@@ -1,0 +1,64 @@
+{
+  "project_id": 88121109,
+  "agents": {
+    "WORLDLINE Investigator": {
+      "id": "gid://gitlab/Ai::Catalog::Item/1019929",
+      "name": "WORLDLINE Investigator",
+      "itemType": "AGENT",
+      "latestVersion": {
+        "id": "gid://gitlab/Ai::Catalog::ItemVersion/1038369"
+      },
+      "project": {
+        "fullPath": "shafir2/WorldLine"
+      }
+    },
+    "WORLDLINE Repairer": {
+      "id": "gid://gitlab/Ai::Catalog::Item/1019930",
+      "name": "WORLDLINE Repairer",
+      "itemType": "AGENT",
+      "latestVersion": {
+        "id": "gid://gitlab/Ai::Catalog::ItemVersion/1038370"
+      },
+      "project": {
+        "fullPath": "shafir2/WorldLine"
+      }
+    },
+    "WORLDLINE Skeptic": {
+      "id": "gid://gitlab/Ai::Catalog::Item/1019931",
+      "name": "WORLDLINE Skeptic",
+      "itemType": "AGENT",
+      "latestVersion": {
+        "id": "gid://gitlab/Ai::Catalog::ItemVersion/1038371"
+      },
+      "project": {
+        "fullPath": "shafir2/WorldLine"
+      }
+    }
+  },
+  "flows": {
+    "WORLDLINE Investigate": {
+      "id": "gid://gitlab/Ai::Catalog::Item/1019933",
+      "name": "WORLDLINE Investigate",
+      "latestVersion": {
+        "id": "gid://gitlab/Ai::Catalog::ItemVersion/1038373"
+      },
+      "webPath": "/explore/ai-catalog/flows/1019933"
+    },
+    "WORLDLINE Repair": {
+      "id": "gid://gitlab/Ai::Catalog::Item/1019934",
+      "name": "WORLDLINE Repair",
+      "latestVersion": {
+        "id": "gid://gitlab/Ai::Catalog::ItemVersion/1038374"
+      },
+      "webPath": "/explore/ai-catalog/flows/1019934"
+    },
+    "WORLDLINE Skeptic Review": {
+      "id": "gid://gitlab/Ai::Catalog::Item/1019935",
+      "name": "WORLDLINE Skeptic Review",
+      "latestVersion": {
+        "id": "gid://gitlab/Ai::Catalog::ItemVersion/1038375"
+      },
+      "webPath": "/explore/ai-catalog/flows/1019935"
+    }
+  }
+}
