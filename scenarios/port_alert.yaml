@@ -9,6 +9,8 @@
 #   sighting remains and the decision is "monitor". If delivery of correction-001 is
 #   delayed by roughly 90s or more it arrives after the decision point and the same
 #   rule says "escalate" on stale information.
+# SPECIMEN: deliberately defective laboratory scenario. Frozen. Repairs land on scenarios/product/ (see AGENTS.md).
+specimen: true
 id: port_alert
 seed: 20261026
 clock:

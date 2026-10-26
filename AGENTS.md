@@ -54,7 +54,7 @@ A `VerdictRecord` has `invariant_id`, `result`, `witness` (list of event ids), `
 
 A repair MR is acceptable only if all of the following hold:
 
-1. The branch that produced the FAIL (same scenario, same seed, same minimal fault schedule) now yields PASS for the target invariant, shown by re-running `explore`/`run` with the same inputs and quoting the new digest in the MR description.
+1. The branch that produced the FAIL (same seed, same minimal fault schedule) now yields PASS for the target invariant on the **product copy** of the scenario, shown by re-running `run` with the same inputs and quoting the new digest in the MR description. Scenarios directly under `scenarios/` are laboratory *specimens*: deliberately defective, frozen, and labelled `specimen: true` in their header so the explorer and the genome pipeline keep something to find. Repairs never edit a specimen. They land on `scenarios/product/<same file name>` (create it from the specimen if it does not exist), which is the version a real deployment would ship. A test must show the specimen still FAILs under the same schedule, so the repair is not a deletion of the test case.
 2. No invariant was weakened: `invariants/` and `worldline/evidence/` are untouched, and no check in `worldline/invariants/` became more permissive (no widened windows, no removed conditions, no `UNKNOWN` where there used to be `FAIL`).
 3. A regression scenario was added under `scenarios/regressions/<invariant>_<short>.yaml` that instantiates the minimal fault schedule concretely, plus a test in `tests/` asserting PASS on it.
 4. `uv run pytest -q` passes; no test was deleted, skipped or marked xfail.

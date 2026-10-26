@@ -7,6 +7,8 @@
 # observation past the decision window") have an analogue here?
 #
 # Nothing here is a real route, unit or threat. All synthetic.
+# SPECIMEN: deliberately defective laboratory scenario. Frozen. Repairs land on scenarios/product/ (see AGENTS.md).
+specimen: true
 id: convoy_lostlink_immune
 seed: 7
 # IMMUNE VARIANT (negative control): identical to convoy_lostlink except the reroute rule
