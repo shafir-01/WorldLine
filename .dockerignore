@@ -1,0 +1,16 @@
+.git
+.venv
+.cache
+.hypothesis
+.pytest_cache
+__pycache__
+**/__pycache__
+*.pyc
+node_modules
+ui/node_modules
+ui/dist
+ui/public/data
+docs/screens
+report.xml
+duo
+policies/kernel_private.pem

@@ -157,6 +157,7 @@ worldline/
   genome/          FailureGenome extract and challenge
   evidence/        typed records, sealed Bundle, Policy, authorize, kernel recompute
   cli/             `worldline` command
+service/           FastAPI public verifier (Cloud Run): viewer + /api/verify + /api/authorize
 scenarios/         port_alert, convoy_lostlink, convoy_lostlink_immune (negative control)
 invariants/        core.yaml
 policies/          release.yaml, kernel_public.pem
@@ -207,6 +208,15 @@ cd ui && npm run build           # type-checks with strict TypeScript
 ```
 
 ## Deployment
+
+**Public verifier on Google Cloud Run.** `service/` is a FastAPI application that serves the viewer and exposes the authorization kernel as a public API holding only the public key: `POST /api/verify` returns the tamper findings for any bundle, `POST /api/authorize?artifact_digest=…` returns the policy decision for an exact artifact, `GET /api/evidence` returns the deployed release's bundle and authorization. Anyone can check a release without trusting the pipeline that produced it. Build and deploy:
+
+```bash
+gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com
+gcloud run deploy worldline-verifier --source . --region europe-north1 --allow-unauthenticated
+```
+
+The manual `deploy-gcp` CI job does the same from a protected ref once `GCP_PROJECT` and `GCP_SA_KEY` are set. Details and IAM roles: [service/README.md](service/README.md).
 
 The `pages` CI job builds the viewer and publishes it with the pipeline's own `experiments/out` as data, so the published page shows what the pipeline actually computed. The viewer is static and can also be served from any bucket or Cloud Run container; there is no backend.
 

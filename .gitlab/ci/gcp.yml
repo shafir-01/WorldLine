@@ -1,0 +1,63 @@
+# Google Cloud Run deployment of the WORLDLINE public verifier (service/, Dockerfile).
+# Included from .gitlab-ci.yml. Manual, protected refs only, after the release gate authorized.
+#
+# CI variables (Settings > CI/CD > Variables, protected + masked where possible):
+#   GCP_PROJECT   GCP project id
+#   GCP_SA_KEY    type "File": JSON key of a service account with the roles listed in service/README.md
+#   GCP_REGION    optional, default europe-north1
+#   GCP_SERVICE   optional, default worldline-verifier
+
+deploy-gcp:
+  stage: authorize
+  image: google/cloud-sdk:slim
+  when: manual
+  allow_failure: true
+  interruptible: false
+  resource_group: worldline-gcp
+  needs:
+    - job: authorize
+      artifacts: true
+    - job: pages
+      artifacts: false
+  rules:
+    - if: $CI_COMMIT_REF_PROTECTED == "true" && $GCP_PROJECT && $GCP_SA_KEY
+  variables:
+    GCP_REGION: europe-north1
+    GCP_SERVICE: worldline-verifier
+    GIT_STRATEGY: clone
+  script:
+    - gcloud auth activate-service-account --key-file "$GCP_SA_KEY"
+    - gcloud config set project "$GCP_PROJECT"
+    - gcloud config set run/region "$GCP_REGION"
+    # Never ship the signing key, even if a runner happens to have it on disk.
+    - rm -f policies/kernel_private.pem
+    # The image bakes the authorized evidence from this pipeline (artifacts of `authorize`).
+    - test -f experiments/out/bundle.json && test -f experiments/out/authorization.json
+    - |
+      gcloud run deploy "$GCP_SERVICE" \
+        --source . \
+        --region "$GCP_REGION" \
+        --allow-unauthenticated \
+        --port 8080 \
+        --memory 512Mi \
+        --cpu 1 \
+        --min-instances 0 \
+        --max-instances 3 \
+        --set-env-vars "GIT_COMMIT=$CI_COMMIT_SHA" \
+        --labels "worldline-commit=${CI_COMMIT_SHORT_SHA},worldline-pipeline=${CI_PIPELINE_ID}" \
+        --quiet
+    - URL="$(gcloud run services describe "$GCP_SERVICE" --region "$GCP_REGION" --format 'value(status.url)')"
+    - echo "WORLDLINE public verifier deployed to $URL"
+    - curl --fail --silent --show-error "$URL/api/version"; echo
+    - |
+      printf '{"service":"%s","region":"%s","project":"%s","url":"%s","commit":"%s","pipeline":"%s","deployed_at":"%s"}\n' \
+        "$GCP_SERVICE" "$GCP_REGION" "$GCP_PROJECT" "$URL" "$CI_COMMIT_SHA" "$CI_PIPELINE_URL" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+        > experiments/out/deploy.json
+    - cat experiments/out/deploy.json
+  environment:
+    name: gcp/$CI_COMMIT_REF_SLUG
+    url: https://console.cloud.google.com/run/detail/$GCP_REGION/$GCP_SERVICE/metrics?project=$GCP_PROJECT
+  artifacts:
+    paths:
+      - experiments/out/deploy.json
+    expire_in: 2 weeks
