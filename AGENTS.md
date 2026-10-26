@@ -60,6 +60,7 @@ A repair MR is acceptable only if all of the following hold:
 4. `uv run pytest -q` passes; no test was deleted, skipped or marked xfail.
 5. The MR description states: the invariant id and version, the witness event ids before the fix, the mechanism in one sentence, what changed and why, and the claim ceiling (`EMPIRICALLY_VALIDATED`, never `ATTESTED`; only the kernel emits ATTESTED).
 6. No wall-clock time, no randomness outside `DeterministicRNG`, no LLM call in the simulated world's decision path.
+7. The repair is not vacuous: alongside the PASS on the minimal fault schedule, include a scenario variant (or test) in which the repaired rule still produces its non-default option when the evidence supports it. A rule that can no longer reach `escalate` has not been repaired, it has been disabled. State reachability explicitly in the MR description.
 
 Fixes that only change the scenario so the fault no longer occurs are not repairs; they are deletions of the test case. A repair changes a decision rule, a delivery policy, an actor's required signals, or runner code so the system tolerates the fault.
 
