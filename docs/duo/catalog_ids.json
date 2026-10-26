@@ -60,5 +60,77 @@
       },
       "webPath": "/explore/ai-catalog/flows/1019935"
     }
+  },
+  "consumers": {
+    "WORLDLINE Investigator": {
+      "id": "gid://gitlab/Ai::Catalog::ItemConsumer/13282370",
+      "enabled": true,
+      "serviceAccount": null,
+      "flowTriggers": [],
+      "webPath": "/shafir2/WorldLine/-/automate/agents/1019929"
+    },
+    "WORLDLINE Repairer": {
+      "id": "gid://gitlab/Ai::Catalog::ItemConsumer/13282378",
+      "enabled": true,
+      "serviceAccount": null,
+      "flowTriggers": [],
+      "webPath": "/shafir2/WorldLine/-/automate/agents/1019930"
+    },
+    "WORLDLINE Skeptic": {
+      "id": "gid://gitlab/Ai::Catalog::ItemConsumer/13282380",
+      "enabled": true,
+      "serviceAccount": null,
+      "flowTriggers": [],
+      "webPath": "/shafir2/WorldLine/-/automate/agents/1019931"
+    },
+    "WORLDLINE Investigate": {
+      "id": "gid://gitlab/Ai::Catalog::ItemConsumer/13282383",
+      "enabled": true,
+      "serviceAccount": null,
+      "flowTriggers": [
+        {
+          "id": "gid://gitlab/Ai::FlowTrigger/3183981",
+          "eventTypes": [
+            0,
+            7
+          ],
+          "active": true,
+          "description": "Auto-created triggers for WORLDLINE Investigate"
+        }
+      ],
+      "webPath": "/shafir2/WorldLine/-/automate/flows/1019933"
+    },
+    "WORLDLINE Repair": {
+      "id": "gid://gitlab/Ai::Catalog::ItemConsumer/13282386",
+      "enabled": true,
+      "serviceAccount": null,
+      "flowTriggers": [
+        {
+          "id": "gid://gitlab/Ai::FlowTrigger/3183982",
+          "eventTypes": [
+            0
+          ],
+          "active": true,
+          "description": "Auto-created triggers for WORLDLINE Repair"
+        }
+      ],
+      "webPath": "/shafir2/WorldLine/-/automate/flows/1019934"
+    },
+    "WORLDLINE Skeptic Review": {
+      "id": "gid://gitlab/Ai::Catalog::ItemConsumer/13282388",
+      "enabled": true,
+      "serviceAccount": null,
+      "flowTriggers": [
+        {
+          "id": "gid://gitlab/Ai::FlowTrigger/3183983",
+          "eventTypes": [
+            6
+          ],
+          "active": true,
+          "description": "Auto-created triggers for WORLDLINE Skeptic Review"
+        }
+      ],
+      "webPath": "/shafir2/WorldLine/-/automate/flows/1019935"
+    }
   }
 }
