@@ -70,6 +70,17 @@ Command: demo run, steps `report`, `verify`, `authorize`.
 
 Claim ceiling: the kernel protects against agents misreporting what the pipeline computed and against bundle tampering. It does not protect against a compromised CI runner or a stolen signing key; those are the standard supply-chain assumptions and are listed as such.
 
+## Experiment 5: the agent loop on GitLab (observed, not designed)
+
+Three custom Duo agents and three flows were created through the catalog API and enabled on the project. Observed sequence on issue 1:
+
+1. Investigator session (hosted, Claude Sonnet 5.5 via Vertex, image python:3.12): ran `explore` twice, confirmed byte-identical trace digests, minimized a 3-intervention schedule to the delayed correction, posted a report with exact witnesses and digests. Correct in every checkable detail.
+2. Repairer session: opened a merge request with a grace-window rule in a regression scenario, five tests including a non-vacuity test against the original scenario, no protected path touched, and an honest limitations section. All 163 tests pass.
+3. GitLab's built-in Code Review flow requested changes: with the chosen cutoff the rule can never produce `escalate` for that inject set, so the PASS results demonstrate a constant rule, not a correct one. The finding is right. Neither the test suite nor the kernel would have caught it: tests only asserted the default option, and the kernel recomputes claims, it does not judge whether a repair is meaningful.
+4. A follow-up Repairer session was dispatched with the review to add an escalation-reachability variant.
+
+What this shows. The kernel stops agents from misreporting what ran. It does not stop a repair from being vacuous. That gap belongs to the Skeptic role and to a stronger repair contract: a repair must come with a scenario where the non-default decision is still reachable. The contract in AGENTS.md should be amended accordingly. Our own Skeptic flow failed to start under the merge-request trigger because its definition read an input that trigger does not supply; it ran correctly when started with an explicit goal.
+
 ## Determinism
 
 Same scenario, seed and schedule produce byte-identical trace digests in-process and across a fresh interpreter (tested by subprocess). Root `port_alert` digest with seed 20261026: `sha256:d16ac439…`. Any change to delivery policy, rule, or inject changes it.
