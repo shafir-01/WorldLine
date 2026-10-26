@@ -1,0 +1,14 @@
+{
+  "artifact_digest": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52",
+  "bundle_file": "experiments\\out\\bundle_tampered.json",
+  "decision": "DENIED",
+  "downgraded": [],
+  "evaluated_at": "2026-10-26T18:42:47.154992+00:00",
+  "missing": [],
+  "policy": "release",
+  "reasons": [
+    "integrity:record_edited@1: record 1 content does not match its hash"
+  ],
+  "satisfied": [],
+  "stale": []
+}

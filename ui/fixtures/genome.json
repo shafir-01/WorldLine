@@ -1,50 +1,51 @@
 {
-  "synthetic": true,
-  "id": "sha256:85fb965597f4fd634d0f83c2f5c7774b7c10f608ad75606e93cbc67cd8a32fbb",
-  "violated_invariant": "decision_matches_truth@1.1",
+  "claim_ceiling": "transfer within the shared Event v1 substrate across scenarios; not across heterogeneous codebases",
+  "evidence_kind": "EMPIRICALLY_VALIDATED",
+  "id": "genome:94f0ad69dd5483d0",
   "mechanism": [
     {
       "op": "delay",
-      "target": {
-        "kind": "correction",
-        "role": "<decider_role>",
-        "nth": 1,
-        "relative_to": "decision_point",
-        "relation": "received_after"
-      },
       "params": {
-        "by_ns": "> decision_at_ns - correction_event_time_ns - role_latency_ns"
+        "margin_ns": 1000000000,
+        "until": "after_decision"
+      },
+      "selector": {
+        "kind": "correction",
+        "position": "last_before_decision",
+        "relation": "corrects_dependency",
+        "role": "decision_role"
       }
     }
   ],
-  "preconditions": [
-    "has_decision_rule_depending_on(kind=correction)",
-    "exists_truth_event(kind=correction) before decision_at_ns",
-    "role_latency(decider_role) + delay > decision_at_ns - correction_event_time_ns",
-    "decision_rule.otherwise != decision_rule.then"
-  ],
-  "witness_shape": {
-    "missing_from_view": [
-      {
-        "kind": "correction",
-        "nth": 1
-      }
-    ],
-    "decision": {
-      "rule_kind": "exists(...) and not exists(kind='correction')",
-      "chosen": "then",
-      "truth_option": "otherwise"
-    },
-    "lag_class": "information_lag_over_decision_point"
-  },
+  "mechanism_sentence": "delay the last before decision 'correction' event (corrects dependency) seen by the decision role until after the decision, so that decision.consistent_with_truth fails.",
   "origin": {
+    "branch_id": "root/sha256:943aaf87dbeec20db593ff3c191c59cb417f7a39e0a06705f6df3ff20f4ca97f",
+    "code_commit": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52",
+    "fault_schedule_hash": "sha256:943aaf87dbeec20db593ff3c191c59cb417f7a39e0a06705f6df3ff20f4ca97f",
+    "invariant_version": "1.0",
+    "invariants_path": "invariants",
+    "minimal_schedule_hash": "sha256:943aaf87dbeec20db593ff3c191c59cb417f7a39e0a06705f6df3ff20f4ca97f",
     "scenario_id": "port_alert",
-    "seed": 42,
-    "branch_id": "root/3412b87eda53",
-    "trace_digest": "sha256:d0e64d344da6362d69bea4efb35b8de6f809702f4eec49f0823f9f0a0ebfaebd",
-    "minimal_schedule_hash": "3412b87eda53",
-    "code_commit": "synthetic-fixture"
+    "scenario_path": "scenarios\\port_alert.yaml",
+    "seed": 20261026,
+    "trace_digest": "sha256:6ede77e3a634ba2faf8c0ee8f15b551b68a1640b27445d2c6167934fca5990d4",
+    "witness": [
+      "correction-001",
+      "ais-006",
+      "patrol-001"
+    ]
   },
-  "evidence_kind": "EMPIRICALLY_VALIDATED",
-  "claim_ceiling": "Transfer is within the shared Event v1 substrate, not across heterogeneous codebases."
+  "preconditions": [
+    "decision_rule_depends_on_a_corrected_kind",
+    "event_received_by_decision_role_before_decision",
+    "exists_kind:correction:with_payload_field:corrects",
+    "has_decision_rule"
+  ],
+  "violated_invariant": "decision.consistent_with_truth",
+  "witness_shape": {
+    "decision_actor": "duty_officer",
+    "decision_rule": "escalate_or_monitor",
+    "kind": "truth_events_missing_from_decision_role_view_at_decision_time",
+    "n_witness_events": 3
+  }
 }

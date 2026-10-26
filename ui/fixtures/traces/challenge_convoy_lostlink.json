@@ -1,0 +1,3078 @@
+{
+  "branch_id": "root/sha256:6f7958657d8eb059fbcbade5f0712c3f78cbab2bb5664d5322e19f3979f55d73",
+  "clock_end": {
+    "epoch_ns": 0,
+    "now_ns": 2700000000000,
+    "tick_ns": 1000000000
+  },
+  "decisions": [
+    {
+      "event_time_ns": 1200000000000,
+      "geometry": null,
+      "id": "decision:watch_officer:reroute_or_continue",
+      "kind": "decision",
+      "payload": {
+        "actor": "watch_officer",
+        "at_ns": 1200000000000,
+        "known_event_ids": [
+          "pos-001",
+          "pos-002",
+          "fuel-001",
+          "pos-003",
+          "pos-004",
+          "roster-001",
+          "threat-001",
+          "pos-005",
+          "threat-002",
+          "pos-006",
+          "pos-007"
+        ],
+        "option": "reroute",
+        "predicate_value": true,
+        "rule_id": "reroute_or_continue"
+      },
+      "policy_labels": [],
+      "priority": 0,
+      "provenance_ids": [],
+      "quality": null,
+      "received_time_ns": 1200000000000,
+      "scenario_id": "convoy_lostlink",
+      "schema_version": "event.v1",
+      "source_id": "watch_officer",
+      "unit": null
+    },
+    {
+      "event_time_ns": 1800000000000,
+      "geometry": null,
+      "id": "decision:scout_operator:hold_if_link_lost",
+      "kind": "decision",
+      "payload": {
+        "actor": "scout_operator",
+        "at_ns": 1800000000000,
+        "known_event_ids": [
+          "pos-001",
+          "tele-001",
+          "pos-002",
+          "fuel-001",
+          "pos-003",
+          "tele-002",
+          "pos-004",
+          "roster-001",
+          "tele-003",
+          "threat-001",
+          "pos-005",
+          "threat-002",
+          "pos-006",
+          "tele-004",
+          "retract-001",
+          "pos-007",
+          "pos-008",
+          "tele-005",
+          "recon-001",
+          "pos-009",
+          "link-001",
+          "fuel-002",
+          "link-002",
+          "pos-010"
+        ],
+        "option": "hold_convoy",
+        "predicate_value": true,
+        "rule_id": "hold_if_link_lost"
+      },
+      "policy_labels": [],
+      "priority": 0,
+      "provenance_ids": [],
+      "quality": null,
+      "received_time_ns": 1800000000000,
+      "scenario_id": "convoy_lostlink",
+      "schema_version": "event.v1",
+      "source_id": "scout_operator",
+      "unit": null
+    }
+  ],
+  "digest": "sha256:9129ec8e596a261a551e1368aa27d6b7601b2f57da8b8307456a093219728c61",
+  "fault_schedule_hash": "sha256:6f7958657d8eb059fbcbade5f0712c3f78cbab2bb5664d5322e19f3979f55d73",
+  "scenario": {
+    "actors": [
+      {
+        "decision_rules": [
+          {
+            "at_ns": 1200000000000,
+            "id": "reroute_or_continue",
+            "otherwise": "continue",
+            "then": "reroute",
+            "when": "count(kind='threat_report', payload.confidence>=0.5, not_corrected) >= 1",
+            "window_ns": 900000000000
+          }
+        ],
+        "id": "watch_officer",
+        "role": "ops_center"
+      },
+      {
+        "decision_rules": [
+          {
+            "at_ns": 1800000000000,
+            "id": "hold_if_link_lost",
+            "otherwise": "proceed",
+            "then": "hold_convoy",
+            "when": "exists(kind='lost_link')",
+            "window_ns": 600000000000
+          }
+        ],
+        "id": "scout_operator",
+        "role": "convoy_lead"
+      }
+    ],
+    "clock": {
+      "epoch_ns": 0,
+      "horizon_ns": 2700000000000,
+      "tick_ns": 1000000000
+    },
+    "id": "convoy_lostlink",
+    "injects": [
+      {
+        "at_ns": 0,
+        "geometry": null,
+        "id": "pos-001",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 0.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "source_id": "convoy_gps"
+      },
+      {
+        "at_ns": 180000000000,
+        "geometry": null,
+        "id": "pos-002",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 2.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "source_id": "convoy_gps"
+      },
+      {
+        "at_ns": 360000000000,
+        "geometry": null,
+        "id": "pos-003",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 4.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "source_id": "convoy_gps"
+      },
+      {
+        "at_ns": 540000000000,
+        "geometry": null,
+        "id": "pos-004",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 6.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "source_id": "convoy_gps"
+      },
+      {
+        "at_ns": 720000000000,
+        "geometry": null,
+        "id": "pos-005",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 8.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "source_id": "convoy_gps"
+      },
+      {
+        "at_ns": 900000000000,
+        "geometry": null,
+        "id": "pos-006",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 10.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "source_id": "convoy_gps"
+      },
+      {
+        "at_ns": 1080000000000,
+        "geometry": null,
+        "id": "pos-007",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 12.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "source_id": "convoy_gps"
+      },
+      {
+        "at_ns": 1260000000000,
+        "geometry": null,
+        "id": "pos-008",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 14.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "source_id": "convoy_gps"
+      },
+      {
+        "at_ns": 1440000000000,
+        "geometry": null,
+        "id": "pos-009",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 16.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "source_id": "convoy_gps"
+      },
+      {
+        "at_ns": 1620000000000,
+        "geometry": null,
+        "id": "pos-010",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 18.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "source_id": "convoy_gps"
+      },
+      {
+        "at_ns": 1800000000000,
+        "geometry": null,
+        "id": "pos-011",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 20.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "source_id": "convoy_gps"
+      },
+      {
+        "at_ns": 1980000000000,
+        "geometry": null,
+        "id": "pos-012",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 22.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "source_id": "convoy_gps"
+      },
+      {
+        "at_ns": 2160000000000,
+        "geometry": null,
+        "id": "pos-013",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 24.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "source_id": "convoy_gps"
+      },
+      {
+        "at_ns": 2340000000000,
+        "geometry": null,
+        "id": "pos-014",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 26.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "source_id": "convoy_gps"
+      },
+      {
+        "at_ns": 2520000000000,
+        "geometry": null,
+        "id": "pos-015",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 28.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "source_id": "convoy_gps"
+      },
+      {
+        "at_ns": 60000000000,
+        "geometry": null,
+        "id": "tele-001",
+        "kind": "scout_telemetry",
+        "payload": {
+          "alt_m": 120,
+          "battery_pct": 96,
+          "link_db": -62
+        },
+        "policy_labels": [
+          "convoy_internal"
+        ],
+        "priority": 0,
+        "source_id": "scout_uas"
+      },
+      {
+        "at_ns": 360000000000,
+        "geometry": null,
+        "id": "tele-002",
+        "kind": "scout_telemetry",
+        "payload": {
+          "alt_m": 120,
+          "battery_pct": 90,
+          "link_db": -66
+        },
+        "policy_labels": [
+          "convoy_internal"
+        ],
+        "priority": 0,
+        "source_id": "scout_uas"
+      },
+      {
+        "at_ns": 660000000000,
+        "geometry": null,
+        "id": "tele-003",
+        "kind": "scout_telemetry",
+        "payload": {
+          "alt_m": 120,
+          "battery_pct": 84,
+          "link_db": -71
+        },
+        "policy_labels": [
+          "convoy_internal"
+        ],
+        "priority": 0,
+        "source_id": "scout_uas"
+      },
+      {
+        "at_ns": 960000000000,
+        "geometry": null,
+        "id": "tele-004",
+        "kind": "scout_telemetry",
+        "payload": {
+          "alt_m": 120,
+          "battery_pct": 78,
+          "link_db": -78
+        },
+        "policy_labels": [
+          "convoy_internal"
+        ],
+        "priority": 0,
+        "source_id": "scout_uas"
+      },
+      {
+        "at_ns": 1260000000000,
+        "geometry": null,
+        "id": "tele-005",
+        "kind": "scout_telemetry",
+        "payload": {
+          "alt_m": 120,
+          "battery_pct": 72,
+          "link_db": -84
+        },
+        "policy_labels": [
+          "convoy_internal"
+        ],
+        "priority": 0,
+        "source_id": "scout_uas"
+      },
+      {
+        "at_ns": 2100000000000,
+        "geometry": null,
+        "id": "tele-006",
+        "kind": "scout_telemetry",
+        "payload": {
+          "alt_m": 120,
+          "battery_pct": 60,
+          "link_db": -70
+        },
+        "policy_labels": [
+          "convoy_internal"
+        ],
+        "priority": 0,
+        "source_id": "scout_uas"
+      },
+      {
+        "at_ns": 700000000000,
+        "geometry": null,
+        "id": "threat-001",
+        "kind": "threat_report",
+        "payload": {
+          "confidence": 0.7,
+          "km_ahead": 6.5,
+          "note": "possible roadblock, low sun",
+          "type": "obstruction"
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 10,
+        "source_id": "scout_uas"
+      },
+      {
+        "at_ns": 820000000000,
+        "geometry": null,
+        "id": "threat-002",
+        "kind": "threat_report",
+        "payload": {
+          "confidence": 0.35,
+          "km_ahead": 9.0,
+          "note": "stationary civilian truck",
+          "type": "vehicle"
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "source_id": "route_recon"
+      },
+      {
+        "at_ns": 1040000000000,
+        "geometry": null,
+        "id": "retract-001",
+        "kind": "correction",
+        "payload": {
+          "confidence": 0.1,
+          "corrects": "threat-001",
+          "reason": "second pass: agricultural machinery on verge"
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 5,
+        "source_id": "scout_uas"
+      },
+      {
+        "at_ns": 1300000000000,
+        "geometry": null,
+        "id": "recon-001",
+        "kind": "route_status",
+        "payload": {
+          "segment": "S4",
+          "state": "clear"
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "source_id": "route_recon"
+      },
+      {
+        "at_ns": 1500000000000,
+        "geometry": null,
+        "id": "link-001",
+        "kind": "lost_link",
+        "payload": {
+          "last_fix_km": 17.2
+        },
+        "policy_labels": [
+          "convoy_internal"
+        ],
+        "priority": 10,
+        "source_id": "scout_uas"
+      },
+      {
+        "at_ns": 1590000000000,
+        "geometry": null,
+        "id": "link-002",
+        "kind": "link_reacquired",
+        "payload": {
+          "acks": "link-001",
+          "outage_s": 90
+        },
+        "policy_labels": [
+          "convoy_internal"
+        ],
+        "priority": 10,
+        "source_id": "scout_uas"
+      },
+      {
+        "at_ns": 1850000000000,
+        "geometry": null,
+        "id": "order-001",
+        "kind": "order",
+        "payload": {
+          "text": "resume planned speed"
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "source_id": "convoy_cmd"
+      },
+      {
+        "at_ns": 300000000000,
+        "geometry": null,
+        "id": "fuel-001",
+        "kind": "fuel_state",
+        "payload": {
+          "litres": 1800
+        },
+        "policy_labels": [
+          "ops_only"
+        ],
+        "priority": 0,
+        "source_id": "ops_logistics"
+      },
+      {
+        "at_ns": 1500000000000,
+        "geometry": null,
+        "id": "fuel-002",
+        "kind": "fuel_state",
+        "payload": {
+          "litres": 1500
+        },
+        "policy_labels": [
+          "ops_only"
+        ],
+        "priority": 0,
+        "source_id": "ops_logistics"
+      },
+      {
+        "at_ns": 600000000000,
+        "geometry": null,
+        "id": "roster-001",
+        "kind": "roster",
+        "payload": {
+          "shift": "B"
+        },
+        "policy_labels": [
+          "ops_only"
+        ],
+        "priority": 0,
+        "source_id": "ops_logistics"
+      }
+    ],
+    "invariants": [
+      "epistemic.no_future_knowledge",
+      "decision.consistent_with_truth",
+      "absence.no_corrupted_in_decision"
+    ],
+    "roles": [
+      {
+        "delivery": {
+          "base_latency_ns": 1000000000,
+          "drop_probability": 0.0,
+          "jitter_ns": 1000000000,
+          "ordering": "fifo"
+        },
+        "id": "convoy_lead",
+        "visibility": [
+          "*"
+        ]
+      },
+      {
+        "delivery": {
+          "base_latency_ns": 45000000000,
+          "drop_probability": 0.0,
+          "jitter_ns": 20000000000,
+          "ordering": "network"
+        },
+        "id": "ops_center",
+        "visibility": [
+          "shared",
+          "ops_only"
+        ]
+      },
+      {
+        "delivery": {
+          "base_latency_ns": 0,
+          "drop_probability": 0.0,
+          "jitter_ns": 0,
+          "ordering": "fifo"
+        },
+        "id": "evaluator",
+        "visibility": [
+          "*"
+        ]
+      }
+    ],
+    "seed": 7,
+    "transitions": [
+      {
+        "from_ns": 2000000000000,
+        "id": "relay_outage",
+        "kind": "outage",
+        "params": {},
+        "roles": [],
+        "source_id": "convoy_gps",
+        "to_ns": 2200000000000
+      }
+    ]
+  },
+  "scenario_id": "convoy_lostlink",
+  "seed": 7,
+  "truth": {
+    "digest": "sha256:896ad0d2e9db4369dfac08995787f646907870fb741e38952f28032154d23d3d",
+    "events": [
+      {
+        "event_time_ns": 0,
+        "geometry": null,
+        "id": "pos-001",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 0.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "convoy_gps",
+        "unit": null
+      },
+      {
+        "event_time_ns": 60000000000,
+        "geometry": null,
+        "id": "tele-001",
+        "kind": "scout_telemetry",
+        "payload": {
+          "alt_m": 120,
+          "battery_pct": 96,
+          "link_db": -62
+        },
+        "policy_labels": [
+          "convoy_internal"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "scout_uas",
+        "unit": null
+      },
+      {
+        "event_time_ns": 180000000000,
+        "geometry": null,
+        "id": "pos-002",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 2.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "convoy_gps",
+        "unit": null
+      },
+      {
+        "event_time_ns": 300000000000,
+        "geometry": null,
+        "id": "fuel-001",
+        "kind": "fuel_state",
+        "payload": {
+          "litres": 1800
+        },
+        "policy_labels": [
+          "ops_only"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "ops_logistics",
+        "unit": null
+      },
+      {
+        "event_time_ns": 360000000000,
+        "geometry": null,
+        "id": "pos-003",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 4.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "convoy_gps",
+        "unit": null
+      },
+      {
+        "event_time_ns": 360000000000,
+        "geometry": null,
+        "id": "tele-002",
+        "kind": "scout_telemetry",
+        "payload": {
+          "alt_m": 120,
+          "battery_pct": 90,
+          "link_db": -66
+        },
+        "policy_labels": [
+          "convoy_internal"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "scout_uas",
+        "unit": null
+      },
+      {
+        "event_time_ns": 540000000000,
+        "geometry": null,
+        "id": "pos-004",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 6.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "convoy_gps",
+        "unit": null
+      },
+      {
+        "event_time_ns": 600000000000,
+        "geometry": null,
+        "id": "roster-001",
+        "kind": "roster",
+        "payload": {
+          "shift": "B"
+        },
+        "policy_labels": [
+          "ops_only"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "ops_logistics",
+        "unit": null
+      },
+      {
+        "event_time_ns": 660000000000,
+        "geometry": null,
+        "id": "tele-003",
+        "kind": "scout_telemetry",
+        "payload": {
+          "alt_m": 120,
+          "battery_pct": 84,
+          "link_db": -71
+        },
+        "policy_labels": [
+          "convoy_internal"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "scout_uas",
+        "unit": null
+      },
+      {
+        "event_time_ns": 700000000000,
+        "geometry": null,
+        "id": "threat-001",
+        "kind": "threat_report",
+        "payload": {
+          "confidence": 0.7,
+          "km_ahead": 6.5,
+          "note": "possible roadblock, low sun",
+          "type": "obstruction"
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 10,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "scout_uas",
+        "unit": null
+      },
+      {
+        "event_time_ns": 720000000000,
+        "geometry": null,
+        "id": "pos-005",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 8.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "convoy_gps",
+        "unit": null
+      },
+      {
+        "event_time_ns": 820000000000,
+        "geometry": null,
+        "id": "threat-002",
+        "kind": "threat_report",
+        "payload": {
+          "confidence": 0.35,
+          "km_ahead": 9.0,
+          "note": "stationary civilian truck",
+          "type": "vehicle"
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "route_recon",
+        "unit": null
+      },
+      {
+        "event_time_ns": 900000000000,
+        "geometry": null,
+        "id": "pos-006",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 10.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "convoy_gps",
+        "unit": null
+      },
+      {
+        "event_time_ns": 960000000000,
+        "geometry": null,
+        "id": "tele-004",
+        "kind": "scout_telemetry",
+        "payload": {
+          "alt_m": 120,
+          "battery_pct": 78,
+          "link_db": -78
+        },
+        "policy_labels": [
+          "convoy_internal"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "scout_uas",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1040000000000,
+        "geometry": null,
+        "id": "retract-001",
+        "kind": "correction",
+        "payload": {
+          "confidence": 0.1,
+          "corrects": "threat-001",
+          "reason": "second pass: agricultural machinery on verge"
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 5,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "scout_uas",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1080000000000,
+        "geometry": null,
+        "id": "pos-007",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 12.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "convoy_gps",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1260000000000,
+        "geometry": null,
+        "id": "pos-008",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 14.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "convoy_gps",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1260000000000,
+        "geometry": null,
+        "id": "tele-005",
+        "kind": "scout_telemetry",
+        "payload": {
+          "alt_m": 120,
+          "battery_pct": 72,
+          "link_db": -84
+        },
+        "policy_labels": [
+          "convoy_internal"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "scout_uas",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1300000000000,
+        "geometry": null,
+        "id": "recon-001",
+        "kind": "route_status",
+        "payload": {
+          "segment": "S4",
+          "state": "clear"
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "route_recon",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1440000000000,
+        "geometry": null,
+        "id": "pos-009",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 16.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "convoy_gps",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1500000000000,
+        "geometry": null,
+        "id": "link-001",
+        "kind": "lost_link",
+        "payload": {
+          "last_fix_km": 17.2
+        },
+        "policy_labels": [
+          "convoy_internal"
+        ],
+        "priority": 10,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "scout_uas",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1500000000000,
+        "geometry": null,
+        "id": "fuel-002",
+        "kind": "fuel_state",
+        "payload": {
+          "litres": 1500
+        },
+        "policy_labels": [
+          "ops_only"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "ops_logistics",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1590000000000,
+        "geometry": null,
+        "id": "link-002",
+        "kind": "link_reacquired",
+        "payload": {
+          "acks": "link-001",
+          "outage_s": 90
+        },
+        "policy_labels": [
+          "convoy_internal"
+        ],
+        "priority": 10,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "scout_uas",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1620000000000,
+        "geometry": null,
+        "id": "pos-010",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 18.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "convoy_gps",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1800000000000,
+        "geometry": null,
+        "id": "pos-011",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 20.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "convoy_gps",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1850000000000,
+        "geometry": null,
+        "id": "order-001",
+        "kind": "order",
+        "payload": {
+          "text": "resume planned speed"
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "convoy_cmd",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1980000000000,
+        "geometry": null,
+        "id": "pos-012",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 22.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "convoy_gps",
+        "unit": null
+      },
+      {
+        "event_time_ns": 2100000000000,
+        "geometry": null,
+        "id": "tele-006",
+        "kind": "scout_telemetry",
+        "payload": {
+          "alt_m": 120,
+          "battery_pct": 60,
+          "link_db": -70
+        },
+        "policy_labels": [
+          "convoy_internal"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "scout_uas",
+        "unit": null
+      },
+      {
+        "event_time_ns": 2160000000000,
+        "geometry": null,
+        "id": "pos-013",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 24.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "convoy_gps",
+        "unit": null
+      },
+      {
+        "event_time_ns": 2340000000000,
+        "geometry": null,
+        "id": "pos-014",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 26.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "convoy_gps",
+        "unit": null
+      },
+      {
+        "event_time_ns": 2520000000000,
+        "geometry": null,
+        "id": "pos-015",
+        "kind": "convoy_position",
+        "payload": {
+          "km": 28.0,
+          "speed_kmh": 40
+        },
+        "policy_labels": [
+          "shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "convoy_lostlink",
+        "schema_version": "event.v1",
+        "source_id": "convoy_gps",
+        "unit": null
+      }
+    ]
+  },
+  "views": {
+    "convoy_lead": {
+      "digest": "sha256:837f91d0067edfe29784133943ff83ec72c318ebcf415096466c7efcd91fec71",
+      "events": [
+        {
+          "event_time_ns": 0,
+          "geometry": null,
+          "id": "pos-001",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 0.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1262713994,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 60000000000,
+          "geometry": null,
+          "id": "tele-001",
+          "kind": "scout_telemetry",
+          "payload": {
+            "alt_m": 120,
+            "battery_pct": 96,
+            "link_db": -62
+          },
+          "policy_labels": [
+            "convoy_internal"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 61335872724,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 180000000000,
+          "geometry": null,
+          "id": "pos-002",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 2.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 181281042096,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 300000000000,
+          "geometry": null,
+          "id": "fuel-001",
+          "kind": "fuel_state",
+          "payload": {
+            "litres": 1800
+          },
+          "policy_labels": [
+            "ops_only"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 301852981361,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "ops_logistics",
+          "unit": null
+        },
+        {
+          "event_time_ns": 360000000000,
+          "geometry": null,
+          "id": "pos-003",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 4.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 361887874591,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 360000000000,
+          "geometry": null,
+          "id": "tele-002",
+          "kind": "scout_telemetry",
+          "payload": {
+            "alt_m": 120,
+            "battery_pct": 90,
+            "link_db": -66
+          },
+          "policy_labels": [
+            "convoy_internal"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 361887874591,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 540000000000,
+          "geometry": null,
+          "id": "pos-004",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 6.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 541526053835,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 600000000000,
+          "geometry": null,
+          "id": "roster-001",
+          "kind": "roster",
+          "payload": {
+            "shift": "B"
+          },
+          "policy_labels": [
+            "ops_only"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 601375510781,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "ops_logistics",
+          "unit": null
+        },
+        {
+          "event_time_ns": 660000000000,
+          "geometry": null,
+          "id": "tele-003",
+          "kind": "scout_telemetry",
+          "payload": {
+            "alt_m": 120,
+            "battery_pct": 84,
+            "link_db": -71
+          },
+          "policy_labels": [
+            "convoy_internal"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 661194528497,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 700000000000,
+          "geometry": null,
+          "id": "threat-001",
+          "kind": "threat_report",
+          "payload": {
+            "confidence": 0.7,
+            "km_ahead": 6.5,
+            "note": "possible roadblock, low sun",
+            "type": "obstruction"
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 10,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 701940714509,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 720000000000,
+          "geometry": null,
+          "id": "pos-005",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 8.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 721111521799,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 820000000000,
+          "geometry": null,
+          "id": "threat-002",
+          "kind": "threat_report",
+          "payload": {
+            "confidence": 0.35,
+            "km_ahead": 9.0,
+            "note": "stationary civilian truck",
+            "type": "vehicle"
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 821663946862,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "route_recon",
+          "unit": null
+        },
+        {
+          "event_time_ns": 900000000000,
+          "geometry": null,
+          "id": "pos-006",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 10.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 901845838444,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 960000000000,
+          "geometry": null,
+          "id": "tele-004",
+          "kind": "scout_telemetry",
+          "payload": {
+            "alt_m": 120,
+            "battery_pct": 78,
+            "link_db": -78
+          },
+          "policy_labels": [
+            "convoy_internal"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 961306802868,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1040000000000,
+          "geometry": null,
+          "id": "retract-001",
+          "kind": "correction",
+          "payload": {
+            "confidence": 0.1,
+            "corrects": "threat-001",
+            "reason": "second pass: agricultural machinery on verge"
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 5,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1041341452304,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1080000000000,
+          "geometry": null,
+          "id": "pos-007",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 12.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1081524703562,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1260000000000,
+          "geometry": null,
+          "id": "pos-008",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 14.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1261962735838,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1260000000000,
+          "geometry": null,
+          "id": "tele-005",
+          "kind": "scout_telemetry",
+          "payload": {
+            "alt_m": 120,
+            "battery_pct": 72,
+            "link_db": -84
+          },
+          "policy_labels": [
+            "convoy_internal"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1261962735838,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1300000000000,
+          "geometry": null,
+          "id": "recon-001",
+          "kind": "route_status",
+          "payload": {
+            "segment": "S4",
+            "state": "clear"
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1301757861466,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "route_recon",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1440000000000,
+          "geometry": null,
+          "id": "pos-009",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 16.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1441968794444,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1500000000000,
+          "geometry": null,
+          "id": "link-001",
+          "kind": "lost_link",
+          "payload": {
+            "last_fix_km": 17.2
+          },
+          "policy_labels": [
+            "convoy_internal"
+          ],
+          "priority": 10,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1501764886185,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1500000000000,
+          "geometry": null,
+          "id": "fuel-002",
+          "kind": "fuel_state",
+          "payload": {
+            "litres": 1500
+          },
+          "policy_labels": [
+            "ops_only"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1501764886185,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "ops_logistics",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1590000000000,
+          "geometry": null,
+          "id": "link-002",
+          "kind": "link_reacquired",
+          "payload": {
+            "acks": "link-001",
+            "outage_s": 90
+          },
+          "policy_labels": [
+            "convoy_internal"
+          ],
+          "priority": 10,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1591148930768,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1620000000000,
+          "geometry": null,
+          "id": "pos-010",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 18.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1621658859024,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1800000000000,
+          "geometry": null,
+          "id": "pos-011",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 20.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1801651454400,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1850000000000,
+          "geometry": null,
+          "id": "order-001",
+          "kind": "order",
+          "payload": {
+            "text": "resume planned speed"
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1851905420337,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_cmd",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1980000000000,
+          "geometry": null,
+          "id": "pos-012",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 22.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1981669820417,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2100000000000,
+          "geometry": null,
+          "id": "tele-006",
+          "kind": "scout_telemetry",
+          "payload": {
+            "alt_m": 120,
+            "battery_pct": 60,
+            "link_db": -70
+          },
+          "policy_labels": [
+            "convoy_internal"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2101348647760,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2340000000000,
+          "geometry": null,
+          "id": "pos-014",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 26.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2341788092053,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2520000000000,
+          "geometry": null,
+          "id": "pos-015",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 28.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2521003917400,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        }
+      ]
+    },
+    "evaluator": {
+      "digest": "sha256:938ca03cafb7380b72d43b613877f8adb2ddb031bf55f9334a1c594744c5bf10",
+      "events": [
+        {
+          "event_time_ns": 0,
+          "geometry": null,
+          "id": "pos-001",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 0.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 0,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 60000000000,
+          "geometry": null,
+          "id": "tele-001",
+          "kind": "scout_telemetry",
+          "payload": {
+            "alt_m": 120,
+            "battery_pct": 96,
+            "link_db": -62
+          },
+          "policy_labels": [
+            "convoy_internal"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 60000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 180000000000,
+          "geometry": null,
+          "id": "pos-002",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 2.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 180000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 300000000000,
+          "geometry": null,
+          "id": "fuel-001",
+          "kind": "fuel_state",
+          "payload": {
+            "litres": 1800
+          },
+          "policy_labels": [
+            "ops_only"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 300000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "ops_logistics",
+          "unit": null
+        },
+        {
+          "event_time_ns": 360000000000,
+          "geometry": null,
+          "id": "pos-003",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 4.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 360000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 360000000000,
+          "geometry": null,
+          "id": "tele-002",
+          "kind": "scout_telemetry",
+          "payload": {
+            "alt_m": 120,
+            "battery_pct": 90,
+            "link_db": -66
+          },
+          "policy_labels": [
+            "convoy_internal"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 360000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 540000000000,
+          "geometry": null,
+          "id": "pos-004",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 6.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 540000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 600000000000,
+          "geometry": null,
+          "id": "roster-001",
+          "kind": "roster",
+          "payload": {
+            "shift": "B"
+          },
+          "policy_labels": [
+            "ops_only"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 600000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "ops_logistics",
+          "unit": null
+        },
+        {
+          "event_time_ns": 660000000000,
+          "geometry": null,
+          "id": "tele-003",
+          "kind": "scout_telemetry",
+          "payload": {
+            "alt_m": 120,
+            "battery_pct": 84,
+            "link_db": -71
+          },
+          "policy_labels": [
+            "convoy_internal"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 660000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 700000000000,
+          "geometry": null,
+          "id": "threat-001",
+          "kind": "threat_report",
+          "payload": {
+            "confidence": 0.7,
+            "km_ahead": 6.5,
+            "note": "possible roadblock, low sun",
+            "type": "obstruction"
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 10,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 700000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 720000000000,
+          "geometry": null,
+          "id": "pos-005",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 8.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 720000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 820000000000,
+          "geometry": null,
+          "id": "threat-002",
+          "kind": "threat_report",
+          "payload": {
+            "confidence": 0.35,
+            "km_ahead": 9.0,
+            "note": "stationary civilian truck",
+            "type": "vehicle"
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 820000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "route_recon",
+          "unit": null
+        },
+        {
+          "event_time_ns": 900000000000,
+          "geometry": null,
+          "id": "pos-006",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 10.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 900000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 960000000000,
+          "geometry": null,
+          "id": "tele-004",
+          "kind": "scout_telemetry",
+          "payload": {
+            "alt_m": 120,
+            "battery_pct": 78,
+            "link_db": -78
+          },
+          "policy_labels": [
+            "convoy_internal"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 960000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1040000000000,
+          "geometry": null,
+          "id": "retract-001",
+          "kind": "correction",
+          "payload": {
+            "confidence": 0.1,
+            "corrects": "threat-001",
+            "reason": "second pass: agricultural machinery on verge"
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 5,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1040000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1080000000000,
+          "geometry": null,
+          "id": "pos-007",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 12.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1080000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1260000000000,
+          "geometry": null,
+          "id": "pos-008",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 14.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1260000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1260000000000,
+          "geometry": null,
+          "id": "tele-005",
+          "kind": "scout_telemetry",
+          "payload": {
+            "alt_m": 120,
+            "battery_pct": 72,
+            "link_db": -84
+          },
+          "policy_labels": [
+            "convoy_internal"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1260000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1300000000000,
+          "geometry": null,
+          "id": "recon-001",
+          "kind": "route_status",
+          "payload": {
+            "segment": "S4",
+            "state": "clear"
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1300000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "route_recon",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1440000000000,
+          "geometry": null,
+          "id": "pos-009",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 16.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1440000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1500000000000,
+          "geometry": null,
+          "id": "link-001",
+          "kind": "lost_link",
+          "payload": {
+            "last_fix_km": 17.2
+          },
+          "policy_labels": [
+            "convoy_internal"
+          ],
+          "priority": 10,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1500000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1500000000000,
+          "geometry": null,
+          "id": "fuel-002",
+          "kind": "fuel_state",
+          "payload": {
+            "litres": 1500
+          },
+          "policy_labels": [
+            "ops_only"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1500000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "ops_logistics",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1590000000000,
+          "geometry": null,
+          "id": "link-002",
+          "kind": "link_reacquired",
+          "payload": {
+            "acks": "link-001",
+            "outage_s": 90
+          },
+          "policy_labels": [
+            "convoy_internal"
+          ],
+          "priority": 10,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1590000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1620000000000,
+          "geometry": null,
+          "id": "pos-010",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 18.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1620000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1800000000000,
+          "geometry": null,
+          "id": "pos-011",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 20.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1800000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1850000000000,
+          "geometry": null,
+          "id": "order-001",
+          "kind": "order",
+          "payload": {
+            "text": "resume planned speed"
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1850000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_cmd",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1980000000000,
+          "geometry": null,
+          "id": "pos-012",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 22.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1980000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2100000000000,
+          "geometry": null,
+          "id": "tele-006",
+          "kind": "scout_telemetry",
+          "payload": {
+            "alt_m": 120,
+            "battery_pct": 60,
+            "link_db": -70
+          },
+          "policy_labels": [
+            "convoy_internal"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2100000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2340000000000,
+          "geometry": null,
+          "id": "pos-014",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 26.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2340000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2520000000000,
+          "geometry": null,
+          "id": "pos-015",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 28.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2520000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        }
+      ]
+    },
+    "ops_center": {
+      "digest": "sha256:138cc9be55b601ce680d97c48d1c9e286709a9692fa6c5172ff12b3449123186",
+      "events": [
+        {
+          "event_time_ns": 0,
+          "geometry": null,
+          "id": "pos-001",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 0.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 52144055848,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 180000000000,
+          "geometry": null,
+          "id": "pos-002",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 2.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 236326207994,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 300000000000,
+          "geometry": null,
+          "id": "fuel-001",
+          "kind": "fuel_state",
+          "payload": {
+            "litres": 1800
+          },
+          "policy_labels": [
+            "ops_only"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 349501213685,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "ops_logistics",
+          "unit": null
+        },
+        {
+          "event_time_ns": 360000000000,
+          "geometry": null,
+          "id": "pos-003",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 4.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 411651974837,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 540000000000,
+          "geometry": null,
+          "id": "pos-004",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 6.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 604828033443,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 600000000000,
+          "geometry": null,
+          "id": "roster-001",
+          "kind": "roster",
+          "payload": {
+            "shift": "B"
+          },
+          "policy_labels": [
+            "ops_only"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 655087749977,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "ops_logistics",
+          "unit": null
+        },
+        {
+          "event_time_ns": 700000000000,
+          "geometry": null,
+          "id": "threat-001",
+          "kind": "threat_report",
+          "payload": {
+            "confidence": 0.7,
+            "km_ahead": 6.5,
+            "note": "possible roadblock, low sun",
+            "type": "obstruction"
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 10,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 755515655084,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 720000000000,
+          "geometry": null,
+          "id": "pos-005",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 8.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 779955971671,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 820000000000,
+          "geometry": null,
+          "id": "threat-002",
+          "kind": "threat_report",
+          "payload": {
+            "confidence": 0.35,
+            "km_ahead": 9.0,
+            "note": "stationary civilian truck",
+            "type": "vehicle"
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 867169311547,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "route_recon",
+          "unit": null
+        },
+        {
+          "event_time_ns": 900000000000,
+          "geometry": null,
+          "id": "pos-006",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 10.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 958759052502,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1080000000000,
+          "geometry": null,
+          "id": "pos-007",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 12.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1129149871665,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1040000000000,
+          "geometry": null,
+          "id": "retract-001",
+          "kind": "correction",
+          "payload": {
+            "confidence": 0.1,
+            "corrects": "threat-001",
+            "reason": "second pass: agricultural machinery on verge"
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 5,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1201000000000,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "scout_uas",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1260000000000,
+          "geometry": null,
+          "id": "pos-008",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 14.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1322148224778,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1300000000000,
+          "geometry": null,
+          "id": "recon-001",
+          "kind": "route_status",
+          "payload": {
+            "segment": "S4",
+            "state": "clear"
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1359886141988,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "route_recon",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1440000000000,
+          "geometry": null,
+          "id": "pos-009",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 16.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1493290187169,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1500000000000,
+          "geometry": null,
+          "id": "fuel-002",
+          "kind": "fuel_state",
+          "payload": {
+            "litres": 1500
+          },
+          "policy_labels": [
+            "ops_only"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1557973959687,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "ops_logistics",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1620000000000,
+          "geometry": null,
+          "id": "pos-010",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 18.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1665855943293,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1800000000000,
+          "geometry": null,
+          "id": "pos-011",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 20.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1854448637332,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1850000000000,
+          "geometry": null,
+          "id": "order-001",
+          "kind": "order",
+          "payload": {
+            "text": "resume planned speed"
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1900695861943,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_cmd",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1980000000000,
+          "geometry": null,
+          "id": "pos-012",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 22.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2040457399717,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2340000000000,
+          "geometry": null,
+          "id": "pos-014",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 26.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2399964384327,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2520000000000,
+          "geometry": null,
+          "id": "pos-015",
+          "kind": "convoy_position",
+          "payload": {
+            "km": 28.0,
+            "speed_kmh": 40
+          },
+          "policy_labels": [
+            "shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2578137496579,
+          "scenario_id": "convoy_lostlink",
+          "schema_version": "event.v1",
+          "source_id": "convoy_gps",
+          "unit": null
+        }
+      ]
+    }
+  }
+}

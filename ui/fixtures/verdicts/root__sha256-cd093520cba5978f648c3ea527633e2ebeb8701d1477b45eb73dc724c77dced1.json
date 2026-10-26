@@ -1,0 +1,59 @@
+[
+  {
+    "derived_at_ns": 0,
+    "explanation": "decision decision:duty_officer:escalate_or_monitor relied on sighting-001 matching {'corrupted': True}",
+    "invariant_id": "absence.no_corrupted_in_decision",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "FAIL",
+    "trace_digest": "sha256:da24014fec190a9f5b89e57007a4b086dda1b1f340a67b8212ba7392aa405d2c",
+    "witness": [
+      "decision:duty_officer:escalate_or_monitor",
+      "sighting-001"
+    ]
+  },
+  {
+    "derived_at_ns": 0,
+    "explanation": "decision decision:duty_officer:escalate_or_monitor (escalate_or_monitor) chose 'escalate' but truth as of 1500000000000 gives 'monitor'; actor had not received ['correction-001', 'ais-006', 'patrol-001']",
+    "invariant_id": "decision.consistent_with_truth",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "FAIL",
+    "trace_digest": "sha256:da24014fec190a9f5b89e57007a4b086dda1b1f340a67b8212ba7392aa405d2c",
+    "witness": [
+      "correction-001",
+      "ais-006",
+      "patrol-001"
+    ]
+  },
+  {
+    "derived_at_ns": 0,
+    "explanation": "role 'coast_guard' never received an event labelled 'harbour_private'",
+    "invariant_id": "epistemic.label_isolation",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "PASS",
+    "trace_digest": "sha256:da24014fec190a9f5b89e57007a4b086dda1b1f340a67b8212ba7392aa405d2c",
+    "witness": []
+  },
+  {
+    "derived_at_ns": 0,
+    "explanation": "no view or decision knows anything before it was received",
+    "invariant_id": "epistemic.no_future_knowledge",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "PASS",
+    "trace_digest": "sha256:da24014fec190a9f5b89e57007a4b086dda1b1f340a67b8212ba7392aa405d2c",
+    "witness": []
+  },
+  {
+    "derived_at_ns": 0,
+    "explanation": "all 1 alert events acknowledged within 300000000000ns by harbour_ops",
+    "invariant_id": "response.alert_ack",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "PASS",
+    "trace_digest": "sha256:da24014fec190a9f5b89e57007a4b086dda1b1f340a67b8212ba7392aa405d2c",
+    "witness": []
+  }
+]

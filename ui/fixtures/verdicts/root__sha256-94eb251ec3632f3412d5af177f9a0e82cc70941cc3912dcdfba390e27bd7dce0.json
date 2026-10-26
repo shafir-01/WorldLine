@@ -1,0 +1,64 @@
+[
+  {
+    "derived_at_ns": 0,
+    "explanation": "no decision relied on an event matching {'corrupted': True}",
+    "invariant_id": "absence.no_corrupted_in_decision",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "PASS",
+    "trace_digest": "sha256:78b7a74acba9e2ad76bac5abc995052d8f56bbe98d5e6b975d50eaceddbe6a6e",
+    "witness": []
+  },
+  {
+    "derived_at_ns": 0,
+    "explanation": "decision decision:coast_watch:stand_down_if_acknowledged (stand_down_if_acknowledged) chose 'dispatch_patrol' but truth as of 2400000000000 gives 'stand_down'; actor had not received ['berth-001', 'crew-001', 'shift-001', 'radar-002', 'radar-003', 'radar-004', 'ais-009', 'tide-003']",
+    "invariant_id": "decision.consistent_with_truth",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "FAIL",
+    "trace_digest": "sha256:78b7a74acba9e2ad76bac5abc995052d8f56bbe98d5e6b975d50eaceddbe6a6e",
+    "witness": [
+      "berth-001",
+      "crew-001",
+      "shift-001",
+      "radar-002",
+      "radar-003",
+      "radar-004",
+      "ais-009",
+      "tide-003"
+    ]
+  },
+  {
+    "derived_at_ns": 0,
+    "explanation": "role 'coast_guard' never received an event labelled 'harbour_private'",
+    "invariant_id": "epistemic.label_isolation",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "PASS",
+    "trace_digest": "sha256:78b7a74acba9e2ad76bac5abc995052d8f56bbe98d5e6b975d50eaceddbe6a6e",
+    "witness": []
+  },
+  {
+    "derived_at_ns": 0,
+    "explanation": "no view or decision knows anything before it was received",
+    "invariant_id": "epistemic.no_future_knowledge",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "PASS",
+    "trace_digest": "sha256:78b7a74acba9e2ad76bac5abc995052d8f56bbe98d5e6b975d50eaceddbe6a6e",
+    "witness": []
+  },
+  {
+    "derived_at_ns": 0,
+    "explanation": "alert alert-001 received by harbour_ops at 62573300551 had no ack by 362573300551",
+    "invariant_id": "response.alert_ack",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "FAIL",
+    "trace_digest": "sha256:78b7a74acba9e2ad76bac5abc995052d8f56bbe98d5e6b975d50eaceddbe6a6e",
+    "witness": [
+      "alert-001",
+      "ais-002"
+    ]
+  }
+]

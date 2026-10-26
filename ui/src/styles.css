@@ -291,3 +291,45 @@ ul.plain { list-style: none; padding: 0; margin: 4px 0; display: flex; flex-dire
 .decision-authorized .decision-word { color: var(--pass); }
 .decision-denied .decision-word { color: var(--fail); }
 .reasons { list-style: none; padding: 0; margin: 4px 0; display: flex; flex-direction: column; gap: 6px; }
+
+/* ---- real-data additions: segmented control, tables, flags, challenge cards, benchmark ---- */
+.seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 8px; overflow: hidden; }
+.seg-btn { padding: 5px 12px; background: var(--bg-elev); border: 0; border-right: 1px solid var(--line); cursor: pointer; font-size: 12.5px; }
+.seg-btn:last-child { border-right: 0; }
+.seg-btn.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.seg-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+.table th, .table td { padding: 5px 10px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+.table th { font-weight: 600; color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.05em; font-size: 10.5px; cursor: help; }
+.table th.num, .table td.num { text-align: right; font-family: var(--mono); }
+.table tbody tr.active { background: var(--accent-soft); }
+.table.compare tbody tr { cursor: pointer; }
+.table.compare tbody tr:hover { background: color-mix(in srgb, var(--accent-soft) 60%, var(--bg-elev)); }
+.table td.best { color: var(--pass); font-weight: 700; }
+.compare-panel { margin-bottom: 16px; padding: 12px 18px; }
+.compare-panel .card-head { margin-bottom: 4px; }
+.flags { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; align-items: center; }
+.flag-pill { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-family: var(--mono); padding: 2px 8px; border-radius: 6px; border: 1px solid var(--line); }
+.flag-pill.ok { color: var(--pass); border-color: var(--pass); background: var(--pass-soft); }
+.flag-pill.nok { color: var(--fail); border-color: var(--fail); background: var(--fail-soft); }
+.details { margin-top: 10px; }
+.details summary { cursor: pointer; color: var(--accent); }
+.details[open] summary { margin-bottom: 6px; }
+.sentence { font-size: 14px; font-style: italic; color: var(--fg); border-left: 3px solid var(--accent); padding-left: 10px; }
+.challenge { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin: 10px 0; background: var(--bg); }
+.challenge.primary { border-left: 4px solid var(--fail); }
+.challenge.control { border-left: 4px solid var(--pass); }
+.challenge.unexpected { border-left-color: var(--warn); }
+.challenge .card-head { margin-bottom: 4px; }
+.eyebrow { display: block; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--fg-muted); }
+.ch-title { margin: 0; text-transform: none; letter-spacing: 0; font-size: 14px; color: var(--fg); }
+.control-note { padding: 6px 8px; border-radius: 6px; background: var(--pass-soft); color: var(--fg); margin: 4px 0 6px; }
+.flag-tampered { border-color: var(--fail); background: color-mix(in srgb, var(--fail-soft) 60%, var(--bg)); }
+.flag-tag-tampered { background: var(--fail); color: var(--on-kind); }
+.bench { margin-top: 16px; }
+.bench-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 20px; align-items: start; }
+@media (max-width: 1100px) { .bench-grid { grid-template-columns: 1fr; } }
+.bench h4 { margin-top: 4px; }
+.dec-root { fill: var(--fg-muted); font-size: 10px; }
+.reasons code.good { color: var(--pass); }
+.list-good li, .list-bad li { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 2px 0; }

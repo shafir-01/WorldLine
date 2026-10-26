@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useData } from "./data";
+import { useData, useTraceRegistry } from "./data";
+import type { LoadedData } from "./types";
 import Worlds from "./views/Worlds";
 import Timeline from "./views/Timeline";
 import Mechanism from "./views/Mechanism";
@@ -7,10 +8,10 @@ import Evidence from "./views/Evidence";
 
 type View = "worlds" | "timeline" | "mechanism" | "evidence";
 const VIEWS: { id: View; label: string; hint: string }[] = [
-  { id: "worlds", label: "Worlds", hint: "branch tree" },
+  { id: "worlds", label: "Worlds", hint: "guided vs random" },
   { id: "timeline", label: "Timeline", hint: "per-role lanes" },
   { id: "mechanism", label: "Mechanism", hint: "ddmin · genome · challenge" },
-  { id: "evidence", label: "Evidence", hint: "bundle · authorization" },
+  { id: "evidence", label: "Evidence", hint: "bundle · authorization · benchmark" },
 ];
 
 function readHash(): { view: View; branch: string | null } {
@@ -39,7 +40,8 @@ export default function App() {
   // Default: select the minimal failing branch when data arrives and nothing is chosen.
   useEffect(() => {
     if (data.status === "ready" && !branch) {
-      const first = data.data.minimal.minimal_branch_id ?? data.data.exploration.failing[0] ?? "root";
+      const d = data.data;
+      const first = d.minimal.minimal_branch_id ?? Object.values(d.exploration.runs)[0]?.failing[0] ?? "root";
       go(view, first);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -72,8 +74,14 @@ export default function App() {
               <div className="small muted">selected branch</div>
               <code className="block small">{selected}</code>
               <div className="small muted">
-                scenario <b>{data.data.exploration.scenario_id}</b>
+                scenario <b>{data.data.exploration.scenario_id}</b> · seed {data.data.exploration.seed}
               </div>
+              {data.data.index.code_commit && (
+                <div className="small muted" title={data.data.index.code_commit}>
+                  commit <code>{data.data.index.code_commit.slice(0, 10)}</code>
+                </div>
+              )}
+              {data.data.index.generated_at && <div className="small muted">generated {data.data.index.generated_at}</div>}
               {data.data.index.synthetic && <span className="pill pill-synthetic">SYNTHETIC DATA</span>}
             </>
           )}
@@ -85,20 +93,31 @@ export default function App() {
         {data.status === "error" && (
           <div className="panel empty error">
             <b>Could not load data.</b> {data.error}
-            <p className="small">The viewer fetches <code>./data/*.json</code> relative to the page. Run <code>npm run copy-data</code> (or <code>npm run dev</code>, which serves <code>ui/fixtures</code>).</p>
+            <p className="small">
+              The viewer fetches <code>./data/*.json</code> relative to the page. Run <code>npm run copy-data</code> (or <code>npm run dev</code>, which serves <code>ui/fixtures</code>).
+            </p>
           </div>
         )}
-        {data.status === "ready" && view === "worlds" && <Worlds exploration={data.data.exploration} index={data.data.index} selected={selected} onSelect={select} onOpenTimeline={() => go("timeline")} />}
-        {data.status === "ready" && view === "timeline" && <Timeline exploration={data.data.exploration} index={data.data.index} selected={selected} onSelect={select} />}
-        {data.status === "ready" && view === "mechanism" && <Mechanism minimal={data.data.minimal} genome={data.data.genome} challenge={data.data.challenge} onSelectBranch={(b) => go("timeline", b)} />}
-        {data.status === "ready" && view === "evidence" && <Evidence bundle={data.data.bundle} authorization={data.data.authorization} />}
+        {data.status === "ready" && <Ready data={data.data} view={view} selected={selected} select={select} go={go} />}
       </main>
 
       <footer className="footer">
-        <span>All data synthetic.</span>
-        <span>Transfer is within the shared Event v1 substrate, not across heterogeneous codebases.</span>
+        <span>All scenarios synthetic.</span>
+        <span>{data.status === "ready" && data.data.index.claim_ceiling ? data.data.index.claim_ceiling : "Transfer is within the shared Event v1 substrate, not across heterogeneous codebases."}</span>
         <span className="muted">Every FAIL has a witness; every UNKNOWN names its missing signal; every claim carries its EvidenceKind.</span>
       </footer>
     </div>
+  );
+}
+
+function Ready({ data, view, selected, select, go }: { data: LoadedData; view: View; selected: string; select: (b: string) => void; go: (v: View, b?: string | null) => void }) {
+  const registry = useTraceRegistry(data);
+  return (
+    <>
+      {view === "worlds" && <Worlds data={data} registry={registry} selected={selected} onSelect={select} onOpenTimeline={(b) => go("timeline", b ?? selected)} />}
+      {view === "timeline" && <Timeline data={data} registry={registry} selected={selected} onSelect={select} />}
+      {view === "mechanism" && <Mechanism data={data} registry={registry} onOpenTimeline={(b) => go("timeline", b)} />}
+      {view === "evidence" && <Evidence data={data} />}
+    </>
   );
 }

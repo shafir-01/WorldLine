@@ -1,0 +1,361 @@
+{
+  "budget": 150,
+  "claim_ceiling": "EMPIRICALLY_VALIDATED on one synthetic scenario and this machine; wall times are not portable",
+  "definitions": {
+    "aggregate": "mean and median over seeds per strategy; first_decision_fail_index aggregates over non-null values and reports how many seeds found none.",
+    "failing_rate_per_100": "100 * n_failing / max(1, n_nodes - 1): failing branches per 100 non-root branches run.",
+    "first_decision_fail_index": "Index in exploration order (root = 0) of the first branch failing decision.consistent_with_truth; null if none within budget.",
+    "minimal_size": "Number of interventions in the 1-minimal schedule ddmin returned.",
+    "n_failing": "Branches whose verdicts contain a FAIL for an invariant that PASSes on the root trace.",
+    "n_nodes": "Branches actually run for the strategy, root included. Below budget+1 when schedules repeat (deduplicated by schedule hash) or are rejected for violating the time rule.",
+    "one_minimal_verified": "Independent check: the minimal schedule fails and every single-intervention removal passes.",
+    "oracle_calls": "Distinct schedules ddmin executed (cache hits excluded).",
+    "original_size": "Number of interventions in the failing schedule handed to ddmin.",
+    "wall_ms": "Wall-clock milliseconds for explore() including every branch run and verdict check (time.perf_counter_ns, this machine, see environment)."
+  },
+  "environment": {
+    "commit": "bd0e5fef790e6e5cfe399f79de54d0778bdfaaf3",
+    "machine": "AMD64",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "python": "3.12.15",
+    "python_full": "3.12.15 (main, Oct 21 2026, 17:48:33) [MSC v.1944 64 bit (AMD64)]",
+    "uv": "uv 0.13.5 (46776a95d 2026-10-21 x86_64-pc-windows-msvc)"
+  },
+  "exploration": {
+    "aggregate": {
+      "guided": {
+        "failing_rate_per_100": {
+          "mean": 44.53209370157688,
+          "median": 47.82608695652174,
+          "n": 5,
+          "n_null": 0
+        },
+        "first_decision_fail_index": {
+          "mean": 3.4,
+          "median": 2,
+          "n": 5,
+          "n_null": 0
+        },
+        "n_failing": {
+          "mean": 27.2,
+          "median": 26,
+          "n": 5,
+          "n_null": 0
+        },
+        "n_nodes": {
+          "mean": 62.4,
+          "median": 64,
+          "n": 5,
+          "n_null": 0
+        },
+        "wall_ms": {
+          "mean": 255.6162,
+          "median": 254.7512,
+          "n": 5,
+          "n_null": 0
+        }
+      },
+      "random": {
+        "failing_rate_per_100": {
+          "mean": 30.528692237994562,
+          "median": 31.16883116883117,
+          "n": 5,
+          "n_null": 0
+        },
+        "first_decision_fail_index": {
+          "mean": 14.0,
+          "median": 18,
+          "n": 5,
+          "n_null": 0
+        },
+        "n_failing": {
+          "mean": 22.8,
+          "median": 24,
+          "n": 5,
+          "n_null": 0
+        },
+        "n_nodes": {
+          "mean": 75.8,
+          "median": 78,
+          "n": 5,
+          "n_null": 0
+        },
+        "wall_ms": {
+          "mean": 293.4801,
+          "median": 298.9267,
+          "n": 5,
+          "n_null": 0
+        }
+      }
+    },
+    "rows": [
+      {
+        "failing_rate_per_100": 34.92063492063492,
+        "first_decision_fail_index": 1,
+        "n_failing": 22,
+        "n_nodes": 64,
+        "seed": 1,
+        "strategy": "guided",
+        "wall_ms": 254.7512
+      },
+      {
+        "failing_rate_per_100": 25.714285714285715,
+        "first_decision_fail_index": 18,
+        "n_failing": 18,
+        "n_nodes": 71,
+        "seed": 1,
+        "strategy": "random",
+        "wall_ms": 277.6223
+      },
+      {
+        "failing_rate_per_100": 48.0,
+        "first_decision_fail_index": 2,
+        "n_failing": 36,
+        "n_nodes": 76,
+        "seed": 2,
+        "strategy": "guided",
+        "wall_ms": 291.9007
+      },
+      {
+        "failing_rate_per_100": 31.16883116883117,
+        "first_decision_fail_index": 19,
+        "n_failing": 24,
+        "n_nodes": 78,
+        "seed": 2,
+        "strategy": "random",
+        "wall_ms": 300.8277
+      },
+      {
+        "failing_rate_per_100": 47.82608695652174,
+        "first_decision_fail_index": 3,
+        "n_failing": 22,
+        "n_nodes": 47,
+        "seed": 3,
+        "strategy": "guided",
+        "wall_ms": 213.1599
+      },
+      {
+        "failing_rate_per_100": 34.883720930232556,
+        "first_decision_fail_index": 29,
+        "n_failing": 30,
+        "n_nodes": 87,
+        "seed": 3,
+        "strategy": "random",
+        "wall_ms": 328.1538
+      },
+      {
+        "failing_rate_per_100": 49.056603773584904,
+        "first_decision_fail_index": 2,
+        "n_failing": 26,
+        "n_nodes": 54,
+        "seed": 4,
+        "strategy": "guided",
+        "wall_ms": 238.5002
+      },
+      {
+        "failing_rate_per_100": 37.5,
+        "first_decision_fail_index": 2,
+        "n_failing": 24,
+        "n_nodes": 65,
+        "seed": 4,
+        "strategy": "random",
+        "wall_ms": 261.87
+      },
+      {
+        "failing_rate_per_100": 42.857142857142854,
+        "first_decision_fail_index": 9,
+        "n_failing": 30,
+        "n_nodes": 71,
+        "seed": 5,
+        "strategy": "guided",
+        "wall_ms": 279.769
+      },
+      {
+        "failing_rate_per_100": 23.376623376623378,
+        "first_decision_fail_index": 2,
+        "n_failing": 18,
+        "n_nodes": 78,
+        "seed": 5,
+        "strategy": "random",
+        "wall_ms": 298.9267
+      }
+    ]
+  },
+  "minimization": {
+    "aggregate": {
+      "minimal_size": {
+        "mean": 1.0,
+        "median": 1,
+        "n": 5,
+        "n_null": 0
+      },
+      "one_minimal_verified_all": true,
+      "oracle_calls": {
+        "mean": 3.4,
+        "median": 4,
+        "n": 5,
+        "n_null": 0
+      },
+      "original_size": {
+        "mean": 3.6,
+        "median": 4,
+        "n": 5,
+        "n_null": 0
+      },
+      "wall_ms": {
+        "mean": 20.63422,
+        "median": 21.0328,
+        "n": 5,
+        "n_null": 0
+      }
+    },
+    "cases": [
+      {
+        "cache_hits": 0,
+        "minimal": [
+          {
+            "op": "corrupt",
+            "params": {
+              "field": "payload.corrects",
+              "value": "CORRUPT"
+            },
+            "target": {
+              "event_id": "correction-001"
+            }
+          }
+        ],
+        "minimal_size": 1,
+        "one_minimal_verified": true,
+        "oracle_calls": 3,
+        "original_size": 4,
+        "seed": 1,
+        "strategy": "guided@size4",
+        "wall_ms": 19.2662,
+        "witness": [
+          "ais-006",
+          "patrol-001"
+        ]
+      },
+      {
+        "cache_hits": 0,
+        "minimal": [
+          {
+            "op": "drop",
+            "params": {
+              "role": "harbour_ops"
+            },
+            "target": {
+              "event_id": "correction-001"
+            }
+          }
+        ],
+        "minimal_size": 1,
+        "one_minimal_verified": true,
+        "oracle_calls": 2,
+        "original_size": 3,
+        "seed": 2,
+        "strategy": "guided",
+        "wall_ms": 15.7326,
+        "witness": [
+          "correction-001",
+          "ais-006",
+          "patrol-001"
+        ]
+      },
+      {
+        "cache_hits": 0,
+        "minimal": [
+          {
+            "op": "revoke",
+            "params": {
+              "from_ns": 1350000000000,
+              "role": "harbour_ops"
+            },
+            "target": {}
+          }
+        ],
+        "minimal_size": 1,
+        "one_minimal_verified": true,
+        "oracle_calls": 4,
+        "original_size": 4,
+        "seed": 3,
+        "strategy": "guided@size4",
+        "wall_ms": 21.0328,
+        "witness": [
+          "sighting-004",
+          "correction-001",
+          "ais-006",
+          "patrol-001"
+        ]
+      },
+      {
+        "cache_hits": 0,
+        "minimal": [
+          {
+            "op": "corrupt",
+            "params": {
+              "field": "payload.acknowledges",
+              "value": "CORRUPT"
+            },
+            "target": {
+              "event_id": "ack-001"
+            }
+          }
+        ],
+        "minimal_size": 1,
+        "one_minimal_verified": true,
+        "oracle_calls": 4,
+        "original_size": 3,
+        "seed": 4,
+        "strategy": "guided",
+        "wall_ms": 24.3541,
+        "witness": [
+          "berth-001",
+          "crew-001",
+          "shift-001",
+          "radar-002",
+          "radar-003",
+          "radar-004",
+          "ais-009",
+          "tide-003"
+        ]
+      },
+      {
+        "cache_hits": 0,
+        "minimal": [
+          {
+            "op": "drop",
+            "params": {},
+            "target": {
+              "event_id": "correction-001"
+            }
+          }
+        ],
+        "minimal_size": 1,
+        "one_minimal_verified": true,
+        "oracle_calls": 4,
+        "original_size": 4,
+        "seed": 5,
+        "strategy": "guided@size4",
+        "wall_ms": 22.7854,
+        "witness": [
+          "correction-001",
+          "ais-006",
+          "patrol-001"
+        ]
+      }
+    ],
+    "skipped": []
+  },
+  "scenario_id": "port_alert",
+  "scenario_path": "scenarios/port_alert.yaml",
+  "schedule_size": 3,
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "target_invariant": "decision.consistent_with_truth"
+}

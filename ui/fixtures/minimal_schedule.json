@@ -1,0 +1,199 @@
+{
+  "branch_id": "root/sha256:61c18bdca138f525fbb05eb5b8fc6d2109fb83bc33206b07490cc078655473fd",
+  "cache_hits": 0,
+  "candidates_considered": [
+    {
+      "branch_id": "root/sha256:3208f294ab5bf2d8c96287453231938a2b1ae7650ccd3310ab52a6b45b250711",
+      "minimal_size": 1,
+      "oracle_calls": 2,
+      "original_size": 3,
+      "self_explaining": false
+    },
+    {
+      "branch_id": "root/sha256:cd093520cba5978f648c3ea527633e2ebeb8701d1477b45eb73dc724c77dced1",
+      "minimal_size": 1,
+      "oracle_calls": 3,
+      "original_size": 3,
+      "self_explaining": false
+    },
+    {
+      "branch_id": "root/sha256:62d833d26c90e0c06517410637989f44977cf280f207d75a2c576152601950f6",
+      "minimal_size": 1,
+      "oracle_calls": 2,
+      "original_size": 3,
+      "self_explaining": false
+    },
+    {
+      "branch_id": "root/sha256:61c18bdca138f525fbb05eb5b8fc6d2109fb83bc33206b07490cc078655473fd",
+      "minimal_size": 1,
+      "oracle_calls": 3,
+      "original_size": 3,
+      "self_explaining": true
+    },
+    {
+      "branch_id": "root/sha256:94eb251ec3632f3412d5af177f9a0e82cc70941cc3912dcdfba390e27bd7dce0",
+      "minimal_size": 1,
+      "oracle_calls": 4,
+      "original_size": 3,
+      "self_explaining": false
+    },
+    {
+      "branch_id": "root/sha256:614c6aa08e74a2d047aa05fefe413752e02947787f1a4ca40b768d96eac3ec2a",
+      "minimal_size": 1,
+      "oracle_calls": 4,
+      "original_size": 3,
+      "self_explaining": false
+    },
+    {
+      "branch_id": "root/sha256:fe72b58df88fc74ca0d9666cabb308f48d1d3fbb6a226e7850f5f6c3a2a04582",
+      "minimal_size": 1,
+      "oracle_calls": 2,
+      "original_size": 3,
+      "self_explaining": true
+    },
+    {
+      "branch_id": "root/sha256:3f84556d741708f4c0f780835a419aa4ce0fedd1a2048b055114cfb77375fbcc",
+      "minimal_size": 1,
+      "oracle_calls": 2,
+      "original_size": 3,
+      "self_explaining": false
+    }
+  ],
+  "candidates_skipped": [],
+  "causal_diff": {
+    "a": "root",
+    "b": "root/sha256:943aaf87dbeec20db593ff3c191c59cb417f7a39e0a06705f6df3ff20f4ca97f",
+    "decisions": [
+      {
+        "actor": "duty_officer",
+        "known_only_in_a": [
+          "correction-001"
+        ],
+        "known_only_in_b": [],
+        "option_a": "monitor",
+        "option_b": "escalate",
+        "rule_id": "escalate_or_monitor"
+      }
+    ],
+    "differs": true,
+    "truth_identical": true,
+    "views": {
+      "coast_guard": {
+        "only_in_a": [],
+        "only_in_b": [],
+        "payload_changed": [],
+        "received_time_moved": [
+          {
+            "delta_ns": 300000000000,
+            "event_id": "correction-001",
+            "received_a_ns": 1437077207980,
+            "received_b_ns": 1737077207980
+          }
+        ]
+      },
+      "evaluator": {
+        "only_in_a": [],
+        "only_in_b": [],
+        "payload_changed": [],
+        "received_time_moved": [
+          {
+            "delta_ns": 300000000000,
+            "event_id": "correction-001",
+            "received_a_ns": 1407000000000,
+            "received_b_ns": 1707000000000
+          }
+        ]
+      },
+      "harbour_ops": {
+        "only_in_a": [],
+        "only_in_b": [],
+        "payload_changed": [],
+        "received_time_moved": [
+          {
+            "delta_ns": 300000000000,
+            "event_id": "correction-001",
+            "received_a_ns": 1409781717903,
+            "received_b_ns": 1709781717903
+          }
+        ]
+      }
+    }
+  },
+  "explanation": "decision decision:duty_officer:escalate_or_monitor (escalate_or_monitor) chose 'escalate' but truth as of 1500000000000 gives 'monitor'; actor had not received ['correction-001', 'ais-006', 'patrol-001']",
+  "invariants_path": "invariants",
+  "minimal": [
+    {
+      "op": "delay",
+      "params": {
+        "by_ns": 300000000000
+      },
+      "target": {
+        "event_id": "correction-001"
+      }
+    }
+  ],
+  "minimal_branch_id": "root/sha256:943aaf87dbeec20db593ff3c191c59cb417f7a39e0a06705f6df3ff20f4ca97f",
+  "minimal_schedule_hash": "sha256:943aaf87dbeec20db593ff3c191c59cb417f7a39e0a06705f6df3ff20f4ca97f",
+  "one_minimal_verified": true,
+  "oracle_calls": 3,
+  "original": [
+    {
+      "op": "duplicate",
+      "params": {
+        "count": 1
+      },
+      "target": {
+        "event_id": "ack-001"
+      }
+    },
+    {
+      "op": "delay",
+      "params": {
+        "by_ns": 300000000000
+      },
+      "target": {
+        "event_id": "correction-001"
+      }
+    },
+    {
+      "op": "reorder",
+      "params": {
+        "by_ns": 300000000001
+      },
+      "target": {
+        "event_id": "sighting-001"
+      }
+    }
+  ],
+  "requested_invariant": "decision.consistent_with_truth",
+  "scenario_id": "port_alert",
+  "scenario_path": "scenarios\\port_alert.yaml",
+  "selection_rule": "guided run first; branches failing the target; longest original schedule; minimal intervention targets an event in the FAIL witness (self-explaining); fewest other failing invariants; exploration order",
+  "self_explaining": true,
+  "steps": [
+    {
+      "fails": true,
+      "size": 3
+    },
+    {
+      "fails": false,
+      "size": 1
+    },
+    {
+      "fails": true,
+      "size": 1
+    }
+  ],
+  "strategy": "guided",
+  "target_invariant": "decision.consistent_with_truth",
+  "trace_digest": "sha256:6ede77e3a634ba2faf8c0ee8f15b551b68a1640b27445d2c6167934fca5990d4",
+  "trace_files": {
+    "minimal": "traces/minimal.json",
+    "minimal_verdicts": "verdicts/minimal.json"
+  },
+  "witness": [
+    "correction-001",
+    "ais-006",
+    "patrol-001"
+  ]
+}

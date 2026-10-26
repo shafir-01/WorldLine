@@ -1,22 +1,30 @@
-import type { ChallengeResult, FailureGenome, MinimalResult } from "../types";
+import type { ChallengeResult, LoadedData } from "../types";
+import { challengeKey, type TraceEntry } from "../data";
 import { interventionText, secs, shortBranch, shortHash, tClock } from "../format";
 import { ScheduleList } from "../components/Schedule";
 import { KindBadge, VerdictPill } from "../components/Badges";
 
 interface Props {
-  minimal: MinimalResult;
-  genome: FailureGenome;
-  challenge: ChallengeResult;
-  onSelectBranch: (id: string) => void;
+  data: LoadedData;
+  registry: Map<string, TraceEntry>;
+  onOpenTimeline: (key: string) => void;
 }
 
-export default function Mechanism({ minimal, genome, challenge, onSelectBranch }: Props) {
-  const minimalKeys = new Set(minimal.minimal_schedule.map(interventionText));
-  const muted = new Set(minimal.failing_schedule.map((iv, i) => (minimalKeys.has(interventionText(iv)) ? -1 : i)).filter((i) => i >= 0));
-  const hl = minimal.failing_schedule.findIndex((iv) => minimalKeys.has(interventionText(iv)));
-  const ce = challenge.counterexample;
-  const ceDecision = ce?.decisions[0];
-  const ceWitness = new Set(challenge.verdicts.filter((v) => v.result === "FAIL").flatMap((v) => v.witness));
+export default function Mechanism({ data, registry, onOpenTimeline }: Props) {
+  const { minimal, genome, challenge } = data;
+  const minimalKeys = new Set(minimal.minimal.map(interventionText));
+  const muted = new Set(minimal.original.map((iv, i) => (minimalKeys.has(interventionText(iv)) ? -1 : i)).filter((i) => i >= 0));
+  const hl = minimal.original.findIndex((iv) => minimalKeys.has(interventionText(iv)));
+  const cd = minimal.causal_diff;
+  const moved = Object.entries(cd?.views ?? {}).flatMap(([role, v]) => v.received_time_moved.map((m) => ({ role, ...m })));
+  const branchLink = (id: string) =>
+    registry.has(id) ? (
+      <button className="link" onClick={() => onOpenTimeline(id)} title="Open in Timeline">
+        {shortBranch(id)}
+      </button>
+    ) : (
+      <code title="no trace exported">{shortBranch(id)}</code>
+    );
 
   return (
     <div className="view">
@@ -24,8 +32,8 @@ export default function Mechanism({ minimal, genome, challenge, onSelectBranch }
         <div>
           <h1>Mechanism</h1>
           <p className="lede">
-            From a failing world to a portable mechanism: <b>ddmin</b> strips the fault schedule to what is necessary, <b>genome.extract</b> abstracts concrete event ids into selectors and preconditions, and{" "}
-            <b>genome.challenge</b> tries the mechanism on a second scenario.
+            From a failing world to a portable mechanism: <b>ddmin</b> strips the fault schedule to what is necessary and verifies 1-minimality, <b>genome.extract</b> abstracts concrete event ids into selectors and preconditions, and{" "}
+            <b>genome.challenge</b> instantiates the mechanism on other scenarios: one that should break (primary) and one built to be immune (negative control).
           </p>
         </div>
       </header>
@@ -39,44 +47,106 @@ export default function Mechanism({ minimal, genome, challenge, onSelectBranch }
           </div>
           <p className="headline">
             <b>
-              {minimal.minimal_size} intervention{minimal.minimal_size === 1 ? "" : "s"} out of {minimal.original_size}
+              {minimal.minimal.length} of {minimal.original.length} interventions
             </b>{" "}
-            explain{minimal.minimal_size === 1 ? "s" : ""} the failure{minimal.one_minimal ? " (1-minimal)" : ""}.
+            explain{minimal.minimal.length === 1 ? "s" : ""} the failure.
           </p>
-          <h4>Failing schedule</h4>
-          <ScheduleList schedule={minimal.failing_schedule} highlightIndex={hl} mutedIndices={muted} />
+          <div className="flags">
+            <Flag ok={minimal.one_minimal_verified} label="one_minimal_verified" help="Independent check: the minimal schedule fails and every single-intervention removal passes." />
+            <Flag ok={minimal.self_explaining} label="self_explaining" help="The minimal intervention targets an event that appears in the FAIL witness." />
+            <span className="chip" title="Distinct schedules ddmin executed (cache hits excluded)">
+              oracle calls {minimal.oracle_calls}
+            </span>
+            <span className="chip" title="Schedules answered from the cache">
+              cache hits {minimal.cache_hits}
+            </span>
+          </div>
+          <h4>Original failing schedule</h4>
+          <ScheduleList schedule={minimal.original} highlightIndex={hl} mutedIndices={muted} />
           <div className="muted small">
-            branch{" "}
-            <button className="link" onClick={() => onSelectBranch(minimal.failing_branch_id)}>
-              {shortBranch(minimal.failing_branch_id)}
-            </button>{" "}
-            · dimmed interventions were removed without changing the verdict
+            branch {branchLink(minimal.branch_id)} ({minimal.strategy} run) · dimmed interventions were removed without changing the verdict
           </div>
           <h4>Minimal schedule</h4>
-          <ScheduleList schedule={minimal.minimal_schedule} highlightIndex={0} />
-          {minimal.minimal_branch_id && (
-            <div className="muted small">
-              reproduces as branch{" "}
-              <button className="link" onClick={() => onSelectBranch(minimal.minimal_branch_id!)}>
-                {shortBranch(minimal.minimal_branch_id)}
-              </button>{" "}
-              · schedule hash {minimal.minimal_schedule_hash}
-            </div>
-          )}
-          {minimal.explanation && <p className="small">{minimal.explanation}</p>}
-          {minimal.steps && (
+          <ScheduleList schedule={minimal.minimal} highlightIndex={0} />
+          <div className="muted small">
+            reproduces as branch {branchLink(minimal.minimal_branch_id)} · schedule hash <code title={minimal.minimal_schedule_hash}>{shortHash(minimal.minimal_schedule_hash, 14)}</code> · trace{" "}
+            <code title={minimal.trace_digest}>{shortHash(minimal.trace_digest, 14)}</code>
+          </div>
+          <p className="small">{minimal.explanation}</p>
+          <div className="small">
+            witness:{" "}
+            {minimal.witness.map((w) => (
+              <code key={w} className="wit">
+                {w}
+              </code>
+            ))}
+          </div>
+
+          <h4>Reduction steps ({minimal.steps.length})</h4>
+          <ol className="steps">
+            {minimal.steps.map((s, i) => (
+              <li key={i}>
+                <VerdictPill v={s.fails ? "FAIL" : "PASS"} />
+                <span className="small">
+                  subset of size {s.size} {s.fails ? "still fails" : "passes"}
+                </span>
+              </li>
+            ))}
+          </ol>
+
+          {cd && (
             <>
-              <h4>Reduction steps ({minimal.tests_run ?? minimal.steps.length} tests)</h4>
-              <ol className="steps">
-                {minimal.steps.map((s, i) => (
-                  <li key={i}>
-                    <VerdictPill v={s.result} />
-                    <span className="small">{s.subset.length ? s.subset.map(interventionText).join(" + ") : "(empty)"}</span>
+              <h4>
+                Causal diff <span className="muted">{shortBranch(cd.a)} → {shortBranch(cd.b)}</span>
+              </h4>
+              <div className="small muted">
+                truth {cd.truth_identical ? "identical" : "differs"} · views {cd.differs ? "differ" : "identical"}
+              </div>
+              <ul className="plain">
+                {cd.decisions.map((d) => (
+                  <li key={d.rule_id} className="small">
+                    <b>{d.actor}</b> · {d.rule_id}: <code>{d.option_a}</code> → <code className="bad">{d.option_b}</code>
+                    {d.known_only_in_a.length > 0 && <div className="muted">known only in root: {d.known_only_in_a.join(", ")}</div>}
+                    {d.known_only_in_b.length > 0 && <div className="muted">known only in branch: {d.known_only_in_b.join(", ")}</div>}
                   </li>
                 ))}
-              </ol>
+                {moved.map((m) => (
+                  <li key={`${m.role}/${m.event_id}`} className="small">
+                    <code>{m.event_id}</code> in <b>{m.role}</b>: received {tClock(m.received_a_ns)} → {tClock(m.received_b_ns)} <span className="bad">(+{secs(m.delta_ns)})</span>
+                  </li>
+                ))}
+              </ul>
             </>
           )}
+
+          <details className="details">
+            <summary className="small">
+              Selection rule and {minimal.candidates_considered.length} candidates considered
+            </summary>
+            <p className="small muted">{minimal.selection_rule}</p>
+            <table className="table small">
+              <thead>
+                <tr>
+                  <th>branch</th>
+                  <th className="num">orig</th>
+                  <th className="num">min</th>
+                  <th className="num">oracle</th>
+                  <th>self-explaining</th>
+                </tr>
+              </thead>
+              <tbody>
+                {minimal.candidates_considered.map((c) => (
+                  <tr key={c.branch_id} className={c.branch_id === minimal.branch_id ? "active" : ""}>
+                    <td>{branchLink(c.branch_id)}</td>
+                    <td className="num">{c.original_size}</td>
+                    <td className="num">{c.minimal_size}</td>
+                    <td className="num">{c.oracle_calls}</td>
+                    <td>{c.self_explaining ? "yes" : "no"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </details>
         </section>
 
         {/* genome */}
@@ -88,20 +158,29 @@ export default function Mechanism({ minimal, genome, challenge, onSelectBranch }
           <code className="block" title={genome.id}>
             {genome.id}
           </code>
+          {genome.mechanism_sentence && <p className="headline sentence">{genome.mechanism_sentence}</p>}
           <dl className="kv">
             <dt>violates</dt>
             <dd>
               <code>{genome.violated_invariant}</code>
+              {genome.origin.invariant_version && <span className="muted">@{genome.origin.invariant_version}</span>}
             </dd>
             <dt>origin</dt>
             <dd>
-              {genome.origin.scenario_id} · seed {genome.origin.seed} ·{" "}
-              <button className="link" onClick={() => onSelectBranch(genome.origin.branch_id)}>
-                {shortBranch(genome.origin.branch_id)}
-              </button>
+              {genome.origin.scenario_id} · seed {genome.origin.seed} · {branchLink(genome.origin.branch_id)}
               <div className="muted small">
-                trace {shortHash(genome.origin.trace_digest, 14)} · schedule {genome.origin.minimal_schedule_hash} · commit {genome.origin.code_commit}
+                trace {shortHash(genome.origin.trace_digest, 14)} · schedule {shortHash(genome.origin.minimal_schedule_hash, 14)} · commit {genome.origin.code_commit.slice(0, 10)}
               </div>
+              {genome.origin.witness && (
+                <div className="small">
+                  witness:{" "}
+                  {genome.origin.witness.map((w) => (
+                    <code key={w} className="wit">
+                      {w}
+                    </code>
+                  ))}
+                </div>
+              )}
             </dd>
           </dl>
           <h4>Mechanism (abstract selectors only)</h4>
@@ -110,13 +189,13 @@ export default function Mechanism({ minimal, genome, challenge, onSelectBranch }
               <li key={i} className="iv iv-hl">
                 <span className={`op op-${iv.op}`}>{iv.op}</span>
                 <span className="sel">
-                  {Object.entries(iv.target)
+                  {Object.entries(iv.selector)
                     .map(([k, v]) => `${k}=${String(v)}`)
                     .join(" ")}
                 </span>
                 <span className="params">
                   {Object.entries(iv.params)
-                    .map(([k, v]) => `${k}: ${String(v)}`)
+                    .map(([k, v]) => (typeof v === "number" && k.endsWith("_ns") ? `${k.replace(/_ns$/, "")}=${secs(v)}` : `${k}=${String(v)}`))
                     .join(", ")}
                 </span>
               </li>
@@ -138,52 +217,22 @@ export default function Mechanism({ minimal, genome, challenge, onSelectBranch }
         {/* challenge */}
         <section className="card">
           <div className="card-head">
-            <h2>
-              Challenge: <code>{challenge.scenario_id}</code>
-            </h2>
-            <span className={`pill ${challenge.reproduced ? "pill-fail" : "pill-pass"}`}>{challenge.reproduced ? "REPRODUCED" : "NOT REPRODUCED"}</span>
+            <h2>Challenge</h2>
+            <span className={`pill ${challenge.success ? "pill-pass" : "pill-fail"}`}>{challenge.success ? "SUCCESS" : "FAILED"}</span>
           </div>
           <p className="small">
-            Genome {shortHash(challenge.genome_id, 12)} instantiated on a second scenario{challenge.seed != null ? ` (seed ${challenge.seed})` : ""}. Preconditions {challenge.preconditions_met ? "met" : "not met"}.
+            Genome <code>{shortHash(challenge.genome_id.replace(/^genome:/, ""), 12)}</code> instantiated on other scenarios. Success means the primary reproduced <b>and</b> every negative control did not.
+            {challenge.seed_note && (
+              <span className="muted" title={challenge.seed_note}>
+                {" "}
+                (deterministic in each scenario's own seed)
+              </span>
+            )}
           </p>
-          {challenge.preconditions_checked && (
-            <ul className="pre">
-              {challenge.preconditions_checked.map((p) => (
-                <li key={p.precondition} className={p.met ? "ok" : "nok"}>
-                  <span className="tick">{p.met ? "✓" : "✗"}</span> <code>{p.precondition}</code>
-                </li>
-              ))}
-            </ul>
-          )}
-          <h4>Instantiated schedule</h4>
-          <ScheduleList schedule={challenge.instantiated_schedule} highlightIndex={0} />
-          <h4>Verdicts on the counterexample</h4>
-          <ul className="verdicts compact">
-            {challenge.verdicts.map((v) => (
-              <li key={v.invariant_id} className={`verdict verdict-${v.result.toLowerCase()}`}>
-                <div className="verdict-head">
-                  <VerdictPill v={v.result} /> <span className="inv">{v.invariant_id}</span>
-                </div>
-                <div className="small">{v.explanation}</div>
-                {v.missing_data.length > 0 && <div className="small muted">missing signal: {v.missing_data.join(", ")}</div>}
-              </li>
-            ))}
-          </ul>
-          {ce && (
-            <>
-              <h4>Counterexample summary</h4>
-              <div className="small">
-                branch <code>{ce.branch_id}</code> · trace {shortHash(ce.digest, 14)} · {ce.truth.events.length} truth events · roles {Object.keys(ce.views).join(", ")}
-              </div>
-              <MiniTimeline ce={ce} witness={ceWitness} />
-              {ceDecision && (
-                <div className="small">
-                  Decision <b>{String(ceDecision.payload.rule_id)}</b> at {tClock(Number(ceDecision.payload.at_ns))} chose <code className="bad">{String(ceDecision.payload.option)}</code> knowing{" "}
-                  {(ceDecision.payload.known_event_ids as string[]).join(", ")}; the witness {[...ceWitness].join(", ")} arrived later.
-                </div>
-              )}
-            </>
-          )}
+          <ChallengeCard r={challenge.primary} kind="primary" traceKey={registry.has(challengeKey(challenge.primary.scenario_id)) ? challengeKey(challenge.primary.scenario_id) : null} onOpenTimeline={onOpenTimeline} />
+          {challenge.controls.map((c) => (
+            <ChallengeCard key={c.scenario_id} r={c} kind="control" traceKey={registry.has(challengeKey(c.scenario_id)) ? challengeKey(c.scenario_id) : null} onOpenTimeline={onOpenTimeline} />
+          ))}
           <p className="ceiling">{challenge.claim_ceiling ?? "Transfer is within the shared Event v1 substrate, not across heterogeneous codebases."}</p>
         </section>
       </div>
@@ -191,51 +240,83 @@ export default function Mechanism({ minimal, genome, challenge, onSelectBranch }
   );
 }
 
-function MiniTimeline({ ce, witness }: { ce: NonNullable<ChallengeResult["counterexample"]>; witness: Set<string> }) {
-  const roles = Object.keys(ce.views);
-  const horizon = ce.clock_end.horizon_ns ?? ce.clock_end.now_ns;
-  const W = 520;
-  const L = 90;
-  const laneH = 34;
-  const H = roles.length * laneH + 20;
-  const X = (ns: number) => L + (Math.min(horizon, ns) / horizon) * (W - L - 10);
+function Flag({ ok, label, help }: { ok: boolean; label: string; help: string }) {
   return (
-    <svg className="mini-tl" viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label="counterexample timeline">
-      {roles.map((r, i) => {
-        const y = 10 + i * laneH + laneH / 2;
-        return (
-          <g key={r}>
-            <rect x={0} y={10 + i * laneH} width={W} height={laneH - 2} className="lane-bg" />
-            <text x={6} y={y + 4} className="lane-title small">
-              {r}
-            </text>
-            {ce.views[r].events.map((e) => {
-              const recv = e.received_time_ns ?? e.event_time_ns;
-              const w = witness.has(e.id);
-              return (
-                <g key={e.id} className={`ev ${w ? "ev-witness" : ""}`}>
-                  <title>{`${e.id} ${e.kind}: ${tClock(e.event_time_ns)} → ${tClock(recv)} (lag ${secs(recv - e.event_time_ns)})`}</title>
-                  <line x1={X(e.event_time_ns)} x2={X(recv)} y1={y} y2={y} className="lag-line" />
-                  <line x1={X(recv)} x2={X(recv)} y1={y - 4} y2={y + 4} className="recv-tick" />
-                  {w && <circle cx={X(e.event_time_ns)} cy={y} r={7} className="wit-ring" />}
-                  <circle cx={X(e.event_time_ns)} cy={y} r={3.5} className="ev-mark" />
-                </g>
-              );
-            })}
-            {ce.decisions
-              .filter((d) => String(d.payload.actor).startsWith(r.replace(/_/g, ".").split(".")[0]) || i === 0)
-              .map((d) => {
-                const at = Number(d.payload.at_ns);
-                return (
-                  <g key={d.id} className="dec">
-                    <line x1={X(at)} x2={X(at)} y1={10 + i * laneH} y2={10 + (i + 1) * laneH - 2} className="dec-line" />
-                    <path d={`M${X(at)} ${y - 6}L${X(at) + 6} ${y}L${X(at)} ${y + 6}L${X(at) - 6} ${y}z`} className="dec-mark" />
-                  </g>
-                );
-              })}
-          </g>
-        );
-      })}
-    </svg>
+    <span className={`flag-pill ${ok ? "ok" : "nok"}`} title={help}>
+      <span className="tick">{ok ? "✓" : "✗"}</span> {label}
+    </span>
+  );
+}
+
+function ChallengeCard({ r, kind, traceKey, onOpenTimeline }: { r: ChallengeResult; kind: "primary" | "control"; traceKey: string | null; onOpenTimeline: (k: string) => void }) {
+  // For a negative control the desired outcome is NOT reproduced (with preconditions met): the mechanism is specific, not a universal failure.
+  const expected = kind === "primary" ? r.reproduced : r.preconditions_met && !r.reproduced;
+  const outcome = kind === "primary" ? (r.reproduced ? "REPRODUCED" : "NOT REPRODUCED") : !r.preconditions_met ? "NOT APPLICABLE" : r.reproduced ? "REPRODUCED (unexpected)" : "NOT REPRODUCED";
+  const checks = Object.entries(r.preconditions_report);
+  const ceDecision = r.verdicts.find((v) => v.result === "FAIL");
+  return (
+    <div className={`challenge ${kind} ${expected ? "expected" : "unexpected"}`}>
+      <div className="card-head">
+        <div>
+          <span className="eyebrow">{kind === "primary" ? "primary" : "negative control"}</span>
+          <h3 className="ch-title">
+            <code>{r.scenario_id}</code>
+            {r.target_rule && <span className="muted small"> · rule {r.target_rule}</span>}
+          </h3>
+        </div>
+        <span className={`pill ${expected ? "pill-pass" : "pill-fail"}`} title={kind === "control" ? "A control passes when preconditions are met and the mechanism does NOT reproduce" : ""}>
+          {outcome}
+        </span>
+      </div>
+      {kind === "control" && expected && <div className="control-note small">Preconditions met, mechanism instantiated, not reproduced: the control held, so the genome is specific rather than a trivial "any delay breaks everything".</div>}
+      <details className="details" open={kind === "primary"}>
+        <summary className="small">
+          preconditions {checks.filter(([, v]) => v).length}/{checks.length} met · schedule · verdicts
+        </summary>
+        <ul className="pre">
+          {checks.map(([p, met]) => (
+            <li key={p} className={met ? "ok" : "nok"}>
+              <span className="tick">{met ? "✓" : "✗"}</span> <code>{p}</code>
+            </li>
+          ))}
+        </ul>
+        <h4>Instantiated schedule</h4>
+        <ScheduleList schedule={r.instantiated_schedule} highlightIndex={0} />
+        <h4>Verdicts</h4>
+        <ul className="verdicts compact">
+          {r.verdicts.map((v) => (
+            <li key={v.invariant_id} className={`verdict verdict-${v.result.toLowerCase()}`}>
+              <div className="verdict-head">
+                <VerdictPill v={v.result} /> <span className="inv">{v.invariant_id}</span>
+              </div>
+              <div className="small">{v.explanation}</div>
+              {v.witness.length > 0 && (
+                <div className="small">
+                  witness:{" "}
+                  {v.witness.map((w) => (
+                    <code key={w} className="wit">
+                      {w}
+                    </code>
+                  ))}
+                </div>
+              )}
+              {v.missing_data.length > 0 && <div className="small muted">missing signal: {v.missing_data.join(", ")}</div>}
+            </li>
+          ))}
+        </ul>
+      </details>
+      <p className="small">{r.explanation}</p>
+      {r.counterexample_digest && (
+        <div className="small muted">
+          counterexample trace <code title={r.counterexample_digest}>{shortHash(r.counterexample_digest, 14)}</code>
+          {ceDecision && <> · {ceDecision.witness.length} witness events</>}
+        </div>
+      )}
+      {traceKey && (
+        <button className="btn btn-sm" onClick={() => onOpenTimeline(traceKey)}>
+          Open counterexample timeline →
+        </button>
+      )}
+    </div>
   );
 }

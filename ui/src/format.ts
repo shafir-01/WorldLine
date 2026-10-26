@@ -23,7 +23,7 @@ export function shortHash(h: string, n = 10): string {
 export function shortBranch(id: string): string {
   if (id === "root") return "root";
   const [, h] = id.split("/");
-  return `root/${(h ?? "").slice(0, 8)}`;
+  return `root/${(h ?? "").replace(/^sha256:/, "").slice(0, 8)}`;
 }
 
 export function selectorText(t: Selector): string {

@@ -1,175 +1,910 @@
 {
-  "synthetic": true,
-  "version": "bundle.v1",
-  "records": [
+  "checkpoint": {
+    "first_index": 0,
+    "last_index": 30,
+    "root": "sha256:ed4d6252c03b4c42d728080f24c31363b18cf78732890d0004410a5e9bb8be4b",
+    "sealed_at": "2026-10-26T18:42:47Z",
+    "signature": "19d9b18c016e42ea3171b7a5b139cc99dc442b0e3b07fffcda566ff3fdcf271d302bfe35bd0b01fe0082647545a932675465d519abbb2a48b344e0b6e5a62c0b",
+    "signer_key_id": "ed25519:9488a68d97e78e9442330d8b689eaf6c"
+  },
+  "format": "worldline.bundle.v1",
+  "links": [
     {
-      "id": "sha256:2dcb0d7450a396479e3d65aa6cea3f2cd5939df1e12c343aa066bcc593422caa",
-      "kind": "EMPIRICALLY_VALIDATED",
-      "claim": "invariant:decision_matches_truth@1.1 FAIL reproduced on root/3412b87eda53",
-      "subject": "sha256:d0e64d344da6362d69bea4efb35b8de6f809702f4eec49f0823f9f0a0ebfaebd",
-      "procedure": "invariants.check@1.1",
-      "result": {
-        "verdict": "FAIL",
-        "witness": [
-          "e-0010"
-        ]
-      },
-      "assumptions": [
-        "bounded horizon 3600s",
-        "delivery jitter <= 30s"
-      ],
-      "producer": "kernel",
-      "derived_at": "2026-10-26T09:14:02Z",
-      "inputs_hash": "sha256:82012bad170d1dd52e3ac156fcbfcbc9a7d27e402817446517ba5fc108d50e01",
-      "prev": "sha256:genesis"
+      "hash": "sha256:b93fbf2d5450b49c21fa8cab56775ade4cbeaeb74d7903bb97acc1a4d49a9cfd",
+      "prev_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
     },
     {
-      "id": "sha256:d8561089675f0e6c618e180969e805c7a1734b1ef35ba4c65ddcfaefb467cb32",
-      "kind": "EMPIRICALLY_VALIDATED",
-      "claim": "invariant:* PASS on root",
-      "subject": "sha256:1c7e65e1aa016a90ffb74de0cbc275494c38ff0a1b75e92148db2abbe0588ff2",
-      "procedure": "invariants.check@1.1",
-      "result": {
-        "pass": 5,
-        "fail": 0,
-        "unknown": 0
-      },
-      "assumptions": [
-        "bounded horizon 3600s"
-      ],
-      "producer": "kernel",
-      "derived_at": "2026-10-26T09:14:03Z",
-      "inputs_hash": "sha256:7d77aa6892ad4a9782d3a61abf6e775366067ba6f108fd74466c669fbd5f44b6",
-      "prev": "sha256:2dcb0d7450a396479e3d65aa6cea3f2cd5939df1e12c343aa066bcc593422caa"
+      "hash": "sha256:1165a04831b8a3c3a628b083a5d15c2a0714757a14ec4b14ab7e114dba762f12",
+      "prev_hash": "sha256:b93fbf2d5450b49c21fa8cab56775ade4cbeaeb74d7903bb97acc1a4d49a9cfd"
     },
     {
-      "id": "sha256:6c7ff2cef098215dd748a2590f041043c166776100efe0c08f92ae9bb0326441",
-      "kind": "PROVED_WITHIN_MODEL",
-      "claim": "minimal schedule is 1-minimal for decision_matches_truth@1.1",
-      "subject": "sha256:d0e64d344da6362d69bea4efb35b8de6f809702f4eec49f0823f9f0a0ebfaebd",
-      "procedure": "explorer.ddmin",
-      "result": {
-        "original_size": 3,
-        "minimal_size": 1,
-        "tests_run": 3
-      },
-      "assumptions": [
-        "determinism of worlds.run given (scenario, seed, schedule)",
-        "interventions are independent at delivery time"
-      ],
-      "producer": "kernel",
-      "derived_at": "2026-10-26T09:14:05Z",
-      "inputs_hash": "sha256:9a9011a47013a2e427c85d7f745c1d87325adaa57c20b28f86d8e8801a63092e",
-      "prev": "sha256:d8561089675f0e6c618e180969e805c7a1734b1ef35ba4c65ddcfaefb467cb32"
+      "hash": "sha256:ff61237583815efce8d10a4ae27eb566ca442e9324c8636837f66caf966918fe",
+      "prev_hash": "sha256:1165a04831b8a3c3a628b083a5d15c2a0714757a14ec4b14ab7e114dba762f12"
     },
     {
-      "id": "sha256:2aa1fb91ec6a1e12f0f4ac31c183f4079933c327b5b28dc5e53f8e660a7cf69d",
-      "kind": "EMPIRICALLY_VALIDATED",
-      "claim": "genome sha256:85fb965597f4 reproduced on convoy_lostlink",
-      "subject": "sha256:385a24934df76f08567c781c1de49dc79f98f67d19f7bad04ca8c6ca5ad3b9c1",
-      "procedure": "genome.challenge",
-      "result": {
-        "reproduced": true,
-        "preconditions_met": true
-      },
-      "assumptions": [
-        "shared Event v1 substrate",
-        "role latency convoy_lead = 30s"
-      ],
-      "producer": "agent:investigator",
-      "derived_at": "2026-10-26T09:15:40Z",
-      "inputs_hash": "sha256:e9f5e81e6fb0d939a10fa4ee0d67198ccf61cfbfc00fe71815507cbc35853feb",
-      "prev": "sha256:6c7ff2cef098215dd748a2590f041043c166776100efe0c08f92ae9bb0326441"
+      "hash": "sha256:ea6003f5812357e3b99adef379ccedd2e90219b0e623394ae9552ea103de5ecc",
+      "prev_hash": "sha256:ff61237583815efce8d10a4ae27eb566ca442e9324c8636837f66caf966918fe"
     },
     {
-      "id": "sha256:f201cff238228853d0a9750aa35cd250aee6c83863b11e4a202351a18bbbe668",
-      "kind": "ATTESTED",
-      "claim": "tests",
-      "subject": "sha256:25e101e7bc3fe11c5041b36d9bf3a00bf86285915fb8c7677e19a163c7e77a63",
-      "procedure": "pytest",
-      "result": {
-        "passed": 212,
-        "failed": 0,
-        "skipped": 3
-      },
-      "assumptions": [
-        "CI runner image python:3.12"
-      ],
-      "producer": "kernel",
-      "derived_at": "2026-10-26T09:16:10Z",
-      "inputs_hash": "sha256:37154d749b3df5f28b09981198fb3aad2f43337363f5523f7e64328df089ca6b",
-      "prev": "sha256:2aa1fb91ec6a1e12f0f4ac31c183f4079933c327b5b28dc5e53f8e660a7cf69d"
+      "hash": "sha256:311aa1c741bbe04cf3388d1b8fa144d4f3ba56057b80b3e9689d0d66cb9e768d",
+      "prev_hash": "sha256:ea6003f5812357e3b99adef379ccedd2e90219b0e623394ae9552ea103de5ecc"
     },
     {
-      "id": "sha256:5174450813e71cbef29d3c97fd3adafd83927664341efdfa45ed6d70adadda7c",
-      "kind": "FAILED",
-      "claim": "patch:repairer/mr-17 fixes decision_matches_truth on root/3412b87eda53",
-      "subject": "sha256:51033aa519e8b058e168c0588c8552f8aee559381fdd64d67d518c1f272d5930",
-      "procedure": "invariants.check@1.1",
-      "result": {
-        "verdict": "FAIL",
-        "witness": [
-          "e-0010"
-        ],
-        "note": "patch widened window_ns but correction still arrives after at_ns"
-      },
-      "assumptions": [
-        "bounded horizon 3600s"
-      ],
-      "producer": "agent:repairer",
-      "derived_at": "2026-10-26T09:31:00Z",
-      "inputs_hash": "sha256:bca21ad63576021ff8809321be0be6ae44f360df30dca8dc33a22a013b4b6288",
-      "prev": "sha256:f201cff238228853d0a9750aa35cd250aee6c83863b11e4a202351a18bbbe668"
+      "hash": "sha256:6b4ec08b660357a9c6068c20bf3ada6371fbe6673c40e668d4dee544f41c335b",
+      "prev_hash": "sha256:311aa1c741bbe04cf3388d1b8fa144d4f3ba56057b80b3e9689d0d66cb9e768d"
     },
     {
-      "id": "sha256:8f3479b59256ffd3e3ff5b83169e9fdfb4bedf79e67f88224bdc99219c8deec8",
-      "kind": "UNKNOWN",
-      "claim": "invariant:berth_capacity_non_negative@1.0 on convoy_lostlink",
-      "subject": "sha256:385a24934df76f08567c781c1de49dc79f98f67d19f7bad04ca8c6ca5ad3b9c1",
-      "procedure": "invariants.check@1.1",
-      "result": {
-        "verdict": "UNKNOWN",
-        "missing_data": [
-          "capacity"
-        ]
-      },
-      "assumptions": [],
-      "producer": "kernel",
-      "derived_at": "2026-10-26T09:31:12Z",
-      "inputs_hash": "sha256:2e1166f88860883d0e30d5063acfb632312f1d375b39ec7d3418fd251bb1fea3",
-      "prev": "sha256:5174450813e71cbef29d3c97fd3adafd83927664341efdfa45ed6d70adadda7c"
+      "hash": "sha256:e1ce54dc05b4720e480cf20b2e71bf2dfd97c9862633dd8cade7402b8988c3d2",
+      "prev_hash": "sha256:6b4ec08b660357a9c6068c20bf3ada6371fbe6673c40e668d4dee544f41c335b"
     },
     {
-      "id": "sha256:89733dbf83c2e4b63946a53b262ec35fef66ddf1837c5353126331622d22eb93",
-      "kind": "ATTESTED",
-      "claim": "artifact-built-from-commit",
-      "subject": "sha256:25e101e7bc3fe11c5041b36d9bf3a00bf86285915fb8c7677e19a163c7e77a63",
-      "procedure": "ci.build@gitlab",
-      "result": {
-        "commit": "synthetic-fixture",
-        "pipeline": 1042
-      },
-      "assumptions": [
-        "CI-held signing key"
-      ],
-      "producer": "kernel",
-      "derived_at": "2026-10-26T09:32:00Z",
-      "inputs_hash": "sha256:3abbc34001e0bccb383b854dc3ecfb183eb53f0b6f39a4158f7ce0f3d2561c92",
-      "prev": "sha256:8f3479b59256ffd3e3ff5b83169e9fdfb4bedf79e67f88224bdc99219c8deec8"
+      "hash": "sha256:5f98eace3d746ec3e4569eca2db10577b802929dfb8cb3ff75ca29d7ddfca1ce",
+      "prev_hash": "sha256:e1ce54dc05b4720e480cf20b2e71bf2dfd97c9862633dd8cade7402b8988c3d2"
+    },
+    {
+      "hash": "sha256:3831addcf21882032b4773b370c0d3b915be0340fb797e78eebac79b759596a7",
+      "prev_hash": "sha256:5f98eace3d746ec3e4569eca2db10577b802929dfb8cb3ff75ca29d7ddfca1ce"
+    },
+    {
+      "hash": "sha256:565ad474462f2bb3f2bb25ed0fe521d18ba32d8c578c8d5455a2ff61b1c98188",
+      "prev_hash": "sha256:3831addcf21882032b4773b370c0d3b915be0340fb797e78eebac79b759596a7"
+    },
+    {
+      "hash": "sha256:ce70486874db09ffc1973d603f6fc01ac44794310bc21e3968bc1c1c09e7fc44",
+      "prev_hash": "sha256:565ad474462f2bb3f2bb25ed0fe521d18ba32d8c578c8d5455a2ff61b1c98188"
+    },
+    {
+      "hash": "sha256:022d22fe19cd068b1ea0603253d928012f8b0a3bb15df2ef4c8837e74998399f",
+      "prev_hash": "sha256:ce70486874db09ffc1973d603f6fc01ac44794310bc21e3968bc1c1c09e7fc44"
+    },
+    {
+      "hash": "sha256:34dd104fbb2bd908f2f3575039f50d6ce130cbfd7a5dff947095750a3802cbe3",
+      "prev_hash": "sha256:022d22fe19cd068b1ea0603253d928012f8b0a3bb15df2ef4c8837e74998399f"
+    },
+    {
+      "hash": "sha256:fcd9daa63f495f3a7c8b69c836c8e195304a0681ba8c5de8ba2a7712aa7cd944",
+      "prev_hash": "sha256:34dd104fbb2bd908f2f3575039f50d6ce130cbfd7a5dff947095750a3802cbe3"
+    },
+    {
+      "hash": "sha256:43cd5237b459f7aa46a984fac1cd7d40fcaa33ec3e77a4abbfb6bb46dbaef21d",
+      "prev_hash": "sha256:fcd9daa63f495f3a7c8b69c836c8e195304a0681ba8c5de8ba2a7712aa7cd944"
+    },
+    {
+      "hash": "sha256:e4c86bb49154e43f08bfe815bdc76c4461392beef458ac55f0ef26e20483f8f4",
+      "prev_hash": "sha256:43cd5237b459f7aa46a984fac1cd7d40fcaa33ec3e77a4abbfb6bb46dbaef21d"
+    },
+    {
+      "hash": "sha256:0a9a7bccf6fb522f60d80c2fdf97ff902f2ce2d019fa1c26c5d85ebf762dfa32",
+      "prev_hash": "sha256:e4c86bb49154e43f08bfe815bdc76c4461392beef458ac55f0ef26e20483f8f4"
+    },
+    {
+      "hash": "sha256:908472764eceb4df94e948eb98421431ccef85109404851ac57d2a45cdbf506e",
+      "prev_hash": "sha256:0a9a7bccf6fb522f60d80c2fdf97ff902f2ce2d019fa1c26c5d85ebf762dfa32"
+    },
+    {
+      "hash": "sha256:c6b2115e73b3f094f0365c0e83de2b67f674985d1b2d0af16b735db284447772",
+      "prev_hash": "sha256:908472764eceb4df94e948eb98421431ccef85109404851ac57d2a45cdbf506e"
+    },
+    {
+      "hash": "sha256:0a4313caeb67fd56ca9f958304e036d18be97a40e816ecf0767eda3f505166d8",
+      "prev_hash": "sha256:c6b2115e73b3f094f0365c0e83de2b67f674985d1b2d0af16b735db284447772"
+    },
+    {
+      "hash": "sha256:06b4f7d5776600255700698aaa103acb05fe91f9c0a16aadc19411d21eaf1fc2",
+      "prev_hash": "sha256:0a4313caeb67fd56ca9f958304e036d18be97a40e816ecf0767eda3f505166d8"
+    },
+    {
+      "hash": "sha256:6a762fca7e5fbc605d94a46c39d38db0d81bbb94c54d73628c1ee57c59cb00cb",
+      "prev_hash": "sha256:06b4f7d5776600255700698aaa103acb05fe91f9c0a16aadc19411d21eaf1fc2"
+    },
+    {
+      "hash": "sha256:8725f52fb81d755f4301dbb37c32171f46033a421a070deec5a5834de5327bdb",
+      "prev_hash": "sha256:6a762fca7e5fbc605d94a46c39d38db0d81bbb94c54d73628c1ee57c59cb00cb"
+    },
+    {
+      "hash": "sha256:fc5b2f98ed48bad4ec404141ad6b51be0102f7a1ce790a144ce291fa5940fe8b",
+      "prev_hash": "sha256:8725f52fb81d755f4301dbb37c32171f46033a421a070deec5a5834de5327bdb"
+    },
+    {
+      "hash": "sha256:3de8277b6081aa6f8b58231e5e159e65911aff837ec66ddd8dd570efb686beae",
+      "prev_hash": "sha256:fc5b2f98ed48bad4ec404141ad6b51be0102f7a1ce790a144ce291fa5940fe8b"
+    },
+    {
+      "hash": "sha256:083c2248685cbc64b6d58d0e53a7940cf326c8c1e4c639a6435dda15de1ac091",
+      "prev_hash": "sha256:3de8277b6081aa6f8b58231e5e159e65911aff837ec66ddd8dd570efb686beae"
+    },
+    {
+      "hash": "sha256:83c9b038a6415647ef68d87c6e74188003ee442ae5712d89d04f70152d57a3ff",
+      "prev_hash": "sha256:083c2248685cbc64b6d58d0e53a7940cf326c8c1e4c639a6435dda15de1ac091"
+    },
+    {
+      "hash": "sha256:a861fc432d58752ce860e09077ab592eb879f038821f0b00111b2b57d246de4e",
+      "prev_hash": "sha256:83c9b038a6415647ef68d87c6e74188003ee442ae5712d89d04f70152d57a3ff"
+    },
+    {
+      "hash": "sha256:0033bf1000bc06d34b47c24f5b7ee9b84767d18029e2999b34f6cc5ca7c8244b",
+      "prev_hash": "sha256:a861fc432d58752ce860e09077ab592eb879f038821f0b00111b2b57d246de4e"
+    },
+    {
+      "hash": "sha256:c0c6ae81f0c2ff554692cdc53e68d564653307a5163cf7f2c23e77be3e96aa22",
+      "prev_hash": "sha256:0033bf1000bc06d34b47c24f5b7ee9b84767d18029e2999b34f6cc5ca7c8244b"
+    },
+    {
+      "hash": "sha256:ed4d6252c03b4c42d728080f24c31363b18cf78732890d0004410a5e9bb8be4b",
+      "prev_hash": "sha256:c0c6ae81f0c2ff554692cdc53e68d564653307a5163cf7f2c23e77be3e96aa22"
     }
   ],
-  "checkpoint": {
-    "head": "sha256:89733dbf83c2e4b63946a53b262ec35fef66ddf1837c5353126331622d22eb93",
-    "count": 8,
-    "sealed_at": "2026-10-26T09:33:00Z",
-    "signer": "ci-kernel-key-01",
-    "algorithm": "Ed25519",
-    "signature": "base64:01n+jED+lVX+HCrc9wyZyIYwX/J5i/sfa4v/We2Zdwc=",
-    "public_key": "base64:q+vv2bwbmAyTwSzQMqs/mhy/8/+Y6aAVX9wP2ckih28="
-  },
-  "verification": {
-    "ok": true,
-    "findings": [],
-    "checked_at": "2026-10-26T09:33:01Z"
-  }
+  "records": [
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "tests:unit",
+      "derived_at": "2026-10-26T18:42:46Z",
+      "id": "sha256:3c69073a668c469987709cb295cb8b0ac0dff789e9d9eae0ceda282f2d1763cb",
+      "inputs_hash": "sha256:c8042b81721442bd9da5df4508efdec325ccc52569ea73cd27caa8edca411fbf",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "procedure": "pytest --junitxml",
+      "producer": "agent:pipeline",
+      "result": {
+        "errors": 0,
+        "failures": 0,
+        "passed": 144,
+        "skipped": 0,
+        "tests": 144
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "invariant:absence.no_corrupted_in_decision",
+      "derived_at": "2026-10-26T18:42:46Z",
+      "id": "sha256:0b18532234bb0859c81fdf7cb5a1b5ae9867b4f34817d9d04a054d95e555bad0",
+      "inputs_hash": "sha256:9741b859e9645e6dffeb3b78cc7118a218f4d3ac1764ec6611ae9cc623c874b9",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "procedure": "invariants.check@1.0",
+      "producer": "agent:pipeline",
+      "result": {
+        "derived_at_ns": 0,
+        "explanation": "no decision relied on an event matching {'corrupted': True}",
+        "invariant_id": "absence.no_corrupted_in_decision",
+        "invariant_version": "1.0",
+        "missing_data": [],
+        "result": "PASS",
+        "trace_digest": "sha256:d16ac4392733589d5dbc12c893be62d64a28e73184c8eb8ae0a2bbb18354dd17",
+        "witness": []
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "invariant:decision.consistent_with_truth",
+      "derived_at": "2026-10-26T18:42:46Z",
+      "id": "sha256:2e8754681016ed0872f7d2a4f28df90c12a69814601a95a62e73823dbf158604",
+      "inputs_hash": "sha256:9741b859e9645e6dffeb3b78cc7118a218f4d3ac1764ec6611ae9cc623c874b9",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "procedure": "invariants.check@1.0",
+      "producer": "agent:pipeline",
+      "result": {
+        "derived_at_ns": 0,
+        "explanation": "all 2 decision(s) match the rule evaluated over truth",
+        "invariant_id": "decision.consistent_with_truth",
+        "invariant_version": "1.0",
+        "missing_data": [],
+        "result": "PASS",
+        "trace_digest": "sha256:d16ac4392733589d5dbc12c893be62d64a28e73184c8eb8ae0a2bbb18354dd17",
+        "witness": []
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "invariant:epistemic.label_isolation",
+      "derived_at": "2026-10-26T18:42:46Z",
+      "id": "sha256:0331387a51b831259840f986f1e11d76bdcbac16994baaca6e2f5fbdf8a933ed",
+      "inputs_hash": "sha256:9741b859e9645e6dffeb3b78cc7118a218f4d3ac1764ec6611ae9cc623c874b9",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "procedure": "invariants.check@1.0",
+      "producer": "agent:pipeline",
+      "result": {
+        "derived_at_ns": 0,
+        "explanation": "role 'coast_guard' never received an event labelled 'harbour_private'",
+        "invariant_id": "epistemic.label_isolation",
+        "invariant_version": "1.0",
+        "missing_data": [],
+        "result": "PASS",
+        "trace_digest": "sha256:d16ac4392733589d5dbc12c893be62d64a28e73184c8eb8ae0a2bbb18354dd17",
+        "witness": []
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "invariant:epistemic.no_future_knowledge",
+      "derived_at": "2026-10-26T18:42:46Z",
+      "id": "sha256:5ed53d4afe6d8032f394d471bf3bffe410c18d48bb1042736a179a6c9c9202aa",
+      "inputs_hash": "sha256:9741b859e9645e6dffeb3b78cc7118a218f4d3ac1764ec6611ae9cc623c874b9",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "procedure": "invariants.check@1.0",
+      "producer": "agent:pipeline",
+      "result": {
+        "derived_at_ns": 0,
+        "explanation": "no view or decision knows anything before it was received",
+        "invariant_id": "epistemic.no_future_knowledge",
+        "invariant_version": "1.0",
+        "missing_data": [],
+        "result": "PASS",
+        "trace_digest": "sha256:d16ac4392733589d5dbc12c893be62d64a28e73184c8eb8ae0a2bbb18354dd17",
+        "witness": []
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "invariant:response.alert_ack",
+      "derived_at": "2026-10-26T18:42:46Z",
+      "id": "sha256:65b8fa1e7256755878ac04217080504ba46d376b0cc3ad3c39d2539ba727f7a8",
+      "inputs_hash": "sha256:9741b859e9645e6dffeb3b78cc7118a218f4d3ac1764ec6611ae9cc623c874b9",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "procedure": "invariants.check@1.0",
+      "producer": "agent:pipeline",
+      "result": {
+        "derived_at_ns": 0,
+        "explanation": "all 1 alert events acknowledged within 300000000000ns by harbour_ops",
+        "invariant_id": "response.alert_ack",
+        "invariant_version": "1.0",
+        "missing_data": [],
+        "result": "PASS",
+        "trace_digest": "sha256:d16ac4392733589d5dbc12c893be62d64a28e73184c8eb8ae0a2bbb18354dd17",
+        "witness": []
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "counterexample:invariant:absence.no_corrupted_in_decision",
+      "derived_at": "2026-10-26T18:42:46Z",
+      "id": "sha256:5f780a45e1d8d467d601eab3a65176cce579456ca67b32cac8263195024fcd33",
+      "inputs_hash": "sha256:0ec1dff8fbf476230be491d24b79d9507c1a3ed945549a37d289a3e6a7731524",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "procedure": "invariants.check@1.0",
+      "producer": "agent:pipeline",
+      "result": {
+        "derived_at_ns": 0,
+        "explanation": "no decision relied on an event matching {'corrupted': True}",
+        "invariant_id": "absence.no_corrupted_in_decision",
+        "invariant_version": "1.0",
+        "missing_data": [],
+        "result": "PASS",
+        "trace_digest": "sha256:6ede77e3a634ba2faf8c0ee8f15b551b68a1640b27445d2c6167934fca5990d4",
+        "witness": []
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "counterexample:invariant:decision.consistent_with_truth",
+      "derived_at": "2026-10-26T18:42:46Z",
+      "id": "sha256:423a596eb3dda324e8f036a9461acf0b53d3084e6b1e126c1ed58445fe71b783",
+      "inputs_hash": "sha256:0ec1dff8fbf476230be491d24b79d9507c1a3ed945549a37d289a3e6a7731524",
+      "kind": "FAILED",
+      "procedure": "invariants.check@1.0",
+      "producer": "agent:pipeline",
+      "result": {
+        "derived_at_ns": 0,
+        "explanation": "decision decision:duty_officer:escalate_or_monitor (escalate_or_monitor) chose 'escalate' but truth as of 1500000000000 gives 'monitor'; actor had not received ['correction-001', 'ais-006', 'patrol-001']",
+        "invariant_id": "decision.consistent_with_truth",
+        "invariant_version": "1.0",
+        "missing_data": [],
+        "result": "FAIL",
+        "trace_digest": "sha256:6ede77e3a634ba2faf8c0ee8f15b551b68a1640b27445d2c6167934fca5990d4",
+        "witness": [
+          "correction-001",
+          "ais-006",
+          "patrol-001"
+        ]
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "counterexample:invariant:epistemic.label_isolation",
+      "derived_at": "2026-10-26T18:42:46Z",
+      "id": "sha256:7fa215772544d51f5f17ea80aff21405134eaa8b9388a92689e8f1e24e513aab",
+      "inputs_hash": "sha256:0ec1dff8fbf476230be491d24b79d9507c1a3ed945549a37d289a3e6a7731524",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "procedure": "invariants.check@1.0",
+      "producer": "agent:pipeline",
+      "result": {
+        "derived_at_ns": 0,
+        "explanation": "role 'coast_guard' never received an event labelled 'harbour_private'",
+        "invariant_id": "epistemic.label_isolation",
+        "invariant_version": "1.0",
+        "missing_data": [],
+        "result": "PASS",
+        "trace_digest": "sha256:6ede77e3a634ba2faf8c0ee8f15b551b68a1640b27445d2c6167934fca5990d4",
+        "witness": []
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "counterexample:invariant:epistemic.no_future_knowledge",
+      "derived_at": "2026-10-26T18:42:46Z",
+      "id": "sha256:48b7b5e9948b99513fbf5581d7487cc59ee49ec08b51d3e7553d94d3a691d136",
+      "inputs_hash": "sha256:0ec1dff8fbf476230be491d24b79d9507c1a3ed945549a37d289a3e6a7731524",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "procedure": "invariants.check@1.0",
+      "producer": "agent:pipeline",
+      "result": {
+        "derived_at_ns": 0,
+        "explanation": "no view or decision knows anything before it was received",
+        "invariant_id": "epistemic.no_future_knowledge",
+        "invariant_version": "1.0",
+        "missing_data": [],
+        "result": "PASS",
+        "trace_digest": "sha256:6ede77e3a634ba2faf8c0ee8f15b551b68a1640b27445d2c6167934fca5990d4",
+        "witness": []
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "counterexample:invariant:response.alert_ack",
+      "derived_at": "2026-10-26T18:42:46Z",
+      "id": "sha256:ce83c0477b8d1d17625c41d399522e48a4ff6eae2c740f46ef6583400d619f74",
+      "inputs_hash": "sha256:0ec1dff8fbf476230be491d24b79d9507c1a3ed945549a37d289a3e6a7731524",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "procedure": "invariants.check@1.0",
+      "producer": "agent:pipeline",
+      "result": {
+        "derived_at_ns": 0,
+        "explanation": "all 1 alert events acknowledged within 300000000000ns by harbour_ops",
+        "invariant_id": "response.alert_ack",
+        "invariant_version": "1.0",
+        "missing_data": [],
+        "result": "PASS",
+        "trace_digest": "sha256:6ede77e3a634ba2faf8c0ee8f15b551b68a1640b27445d2c6167934fca5990d4",
+        "witness": []
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "explore:guided_vs_random",
+      "derived_at": "2026-10-26T18:42:46Z",
+      "id": "sha256:95dcdd59793705ad687683ab510ac008b4ca4a440d73fd01b2aa6daa16a56021",
+      "inputs_hash": "sha256:37986b6be342e2dd0fe00e3d49e27a993b82753c7207d748b98529b021dac5ec",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "procedure": "explorer.explore",
+      "producer": "agent:pipeline",
+      "result": {
+        "guided": {
+          "failing_rate_per_100": 33.8235294117647,
+          "first_decision_fail_index": 6,
+          "n_failing": 23,
+          "n_nodes": 69
+        },
+        "random": {
+          "failing_rate_per_100": 30.76923076923077,
+          "first_decision_fail_index": null,
+          "n_failing": 20,
+          "n_nodes": 66
+        }
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "minimize:one_minimal",
+      "derived_at": "2026-10-26T18:42:46Z",
+      "id": "sha256:755c305b60324879a108471988d39f45d8968a16bddb1ecdc3c59de2a10dd748",
+      "inputs_hash": "sha256:033a6d3adb91ab8a597b2e1c6969138959cab3ed9ac82cfa090d0a9e57497759",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "procedure": "explorer.ddmin+one_minimal_check",
+      "producer": "agent:pipeline",
+      "result": {
+        "minimal_size": 1,
+        "one_minimal_verified": true,
+        "original_fails": true,
+        "original_size": 3,
+        "target_invariant": "decision.consistent_with_truth"
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "genome:challenge",
+      "derived_at": "2026-10-26T18:42:46Z",
+      "id": "sha256:99b436c3c74f1ed68e525170a784fd245c816bac12afbc9a71ac9c311ee2841c",
+      "inputs_hash": "sha256:ef47848effd863b081a884aa9ddd2e9d36b7b55db184ee4622a852f8cb31ae2d",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "procedure": "genome.challenge",
+      "producer": "agent:pipeline",
+      "result": {
+        "controls": [
+          {
+            "preconditions_met": true,
+            "reproduced": false,
+            "scenario_id": "convoy_lostlink_immune"
+          }
+        ],
+        "genome_id": "genome:94f0ad69dd5483d0",
+        "primary": {
+          "counterexample_digest": "sha256:9129ec8e596a261a551e1368aa27d6b7601b2f57da8b8307456a093219728c61",
+          "preconditions_met": true,
+          "reproduced": true,
+          "scenario_id": "convoy_lostlink"
+        },
+        "transfer_claim": "within the shared Event v1 substrate across scenarios; not across heterogeneous codebases"
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "artifact:manifest",
+      "derived_at": "2026-10-26T18:42:46Z",
+      "id": "sha256:34d552703c7eed288ee3c97d24001e56f5522afe90035d71aa3f8edf96cc72df",
+      "inputs_hash": "sha256:a16590fe57ef4625079efb27379a1d92bd2846bc1072761c732d6ea8fbbfc971",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "procedure": "cli.report",
+      "producer": "agent:pipeline",
+      "result": {
+        "minimal_trace_digest": "sha256:6ede77e3a634ba2faf8c0ee8f15b551b68a1640b27445d2c6167934fca5990d4",
+        "root_trace_digest": "sha256:d16ac4392733589d5dbc12c893be62d64a28e73184c8eb8ae0a2bbb18354dd17"
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "invariant:absence.no_corrupted_in_decision",
+      "derived_at": "2026-10-26T18:42:47Z",
+      "id": "sha256:1c61caee7b32c6d4b7bbf1ad6fa27a482c393d9fe73854a42dc498f7a2a86642",
+      "inputs_hash": "sha256:9741b859e9645e6dffeb3b78cc7118a218f4d3ac1764ec6611ae9cc623c874b9",
+      "kind": "ATTESTED",
+      "procedure": "kernel.recompute",
+      "producer": "kernel",
+      "result": {
+        "derived_at_ns": 0,
+        "explanation": "no decision relied on an event matching {'corrupted': True}",
+        "invariant_id": "absence.no_corrupted_in_decision",
+        "invariant_version": "1.0",
+        "missing_data": [],
+        "result": "PASS",
+        "trace_digest": "sha256:d16ac4392733589d5dbc12c893be62d64a28e73184c8eb8ae0a2bbb18354dd17",
+        "witness": []
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "invariant:decision.consistent_with_truth",
+      "derived_at": "2026-10-26T18:42:47Z",
+      "id": "sha256:513879ac34d16fb2060475e2282b377d343f55cb0dd189521a55a57c46d9aa8f",
+      "inputs_hash": "sha256:9741b859e9645e6dffeb3b78cc7118a218f4d3ac1764ec6611ae9cc623c874b9",
+      "kind": "ATTESTED",
+      "procedure": "kernel.recompute",
+      "producer": "kernel",
+      "result": {
+        "derived_at_ns": 0,
+        "explanation": "all 2 decision(s) match the rule evaluated over truth",
+        "invariant_id": "decision.consistent_with_truth",
+        "invariant_version": "1.0",
+        "missing_data": [],
+        "result": "PASS",
+        "trace_digest": "sha256:d16ac4392733589d5dbc12c893be62d64a28e73184c8eb8ae0a2bbb18354dd17",
+        "witness": []
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "invariant:epistemic.label_isolation",
+      "derived_at": "2026-10-26T18:42:47Z",
+      "id": "sha256:8b79c3b2ed953b8114fb4c6e374c90663b5ea5eebfebaf40085892593f4c79d6",
+      "inputs_hash": "sha256:9741b859e9645e6dffeb3b78cc7118a218f4d3ac1764ec6611ae9cc623c874b9",
+      "kind": "ATTESTED",
+      "procedure": "kernel.recompute",
+      "producer": "kernel",
+      "result": {
+        "derived_at_ns": 0,
+        "explanation": "role 'coast_guard' never received an event labelled 'harbour_private'",
+        "invariant_id": "epistemic.label_isolation",
+        "invariant_version": "1.0",
+        "missing_data": [],
+        "result": "PASS",
+        "trace_digest": "sha256:d16ac4392733589d5dbc12c893be62d64a28e73184c8eb8ae0a2bbb18354dd17",
+        "witness": []
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "invariant:epistemic.no_future_knowledge",
+      "derived_at": "2026-10-26T18:42:47Z",
+      "id": "sha256:f4c8add5ade93fd92423d3f4fc93efb85b41266bfd4c1d627aaa836aa1ecee76",
+      "inputs_hash": "sha256:9741b859e9645e6dffeb3b78cc7118a218f4d3ac1764ec6611ae9cc623c874b9",
+      "kind": "ATTESTED",
+      "procedure": "kernel.recompute",
+      "producer": "kernel",
+      "result": {
+        "derived_at_ns": 0,
+        "explanation": "no view or decision knows anything before it was received",
+        "invariant_id": "epistemic.no_future_knowledge",
+        "invariant_version": "1.0",
+        "missing_data": [],
+        "result": "PASS",
+        "trace_digest": "sha256:d16ac4392733589d5dbc12c893be62d64a28e73184c8eb8ae0a2bbb18354dd17",
+        "witness": []
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "invariant:response.alert_ack",
+      "derived_at": "2026-10-26T18:42:47Z",
+      "id": "sha256:288f02002d4cb82530c4e5b959f825d80eb388a11d4906a3aafc5f0e9a9d1802",
+      "inputs_hash": "sha256:9741b859e9645e6dffeb3b78cc7118a218f4d3ac1764ec6611ae9cc623c874b9",
+      "kind": "ATTESTED",
+      "procedure": "kernel.recompute",
+      "producer": "kernel",
+      "result": {
+        "derived_at_ns": 0,
+        "explanation": "all 1 alert events acknowledged within 300000000000ns by harbour_ops",
+        "invariant_id": "response.alert_ack",
+        "invariant_version": "1.0",
+        "missing_data": [],
+        "result": "PASS",
+        "trace_digest": "sha256:d16ac4392733589d5dbc12c893be62d64a28e73184c8eb8ae0a2bbb18354dd17",
+        "witness": []
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "explore:guided_vs_random",
+      "derived_at": "2026-10-26T18:42:47Z",
+      "id": "sha256:f039ac769219bade2e6eb8885be7641e3f49208666e8b6a99dfdd9a3477b7cf5",
+      "inputs_hash": "sha256:37986b6be342e2dd0fe00e3d49e27a993b82753c7207d748b98529b021dac5ec",
+      "kind": "ATTESTED",
+      "procedure": "kernel.recompute",
+      "producer": "kernel",
+      "result": {
+        "guided": {
+          "failing_rate_per_100": 33.8235294117647,
+          "first_decision_fail_index": 6,
+          "n_failing": 23,
+          "n_nodes": 69
+        },
+        "random": {
+          "failing_rate_per_100": 30.76923076923077,
+          "first_decision_fail_index": null,
+          "n_failing": 20,
+          "n_nodes": 66
+        }
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "counterexample:invariant:absence.no_corrupted_in_decision",
+      "derived_at": "2026-10-26T18:42:47Z",
+      "id": "sha256:77bc33f47c8a2faa60cf921a483275ba6617b016d95ebda05c21765d5b1c155c",
+      "inputs_hash": "sha256:0ec1dff8fbf476230be491d24b79d9507c1a3ed945549a37d289a3e6a7731524",
+      "kind": "ATTESTED",
+      "procedure": "kernel.recompute",
+      "producer": "kernel",
+      "result": {
+        "derived_at_ns": 0,
+        "explanation": "no decision relied on an event matching {'corrupted': True}",
+        "invariant_id": "absence.no_corrupted_in_decision",
+        "invariant_version": "1.0",
+        "missing_data": [],
+        "result": "PASS",
+        "trace_digest": "sha256:6ede77e3a634ba2faf8c0ee8f15b551b68a1640b27445d2c6167934fca5990d4",
+        "witness": []
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "counterexample:invariant:decision.consistent_with_truth",
+      "derived_at": "2026-10-26T18:42:47Z",
+      "id": "sha256:699b00401566b77e42d407f2233b2ee8335f417bfd43e79816d447853015d237",
+      "inputs_hash": "sha256:0ec1dff8fbf476230be491d24b79d9507c1a3ed945549a37d289a3e6a7731524",
+      "kind": "ATTESTED",
+      "procedure": "kernel.recompute",
+      "producer": "kernel",
+      "result": {
+        "derived_at_ns": 0,
+        "explanation": "decision decision:duty_officer:escalate_or_monitor (escalate_or_monitor) chose 'escalate' but truth as of 1500000000000 gives 'monitor'; actor had not received ['correction-001', 'ais-006', 'patrol-001']",
+        "invariant_id": "decision.consistent_with_truth",
+        "invariant_version": "1.0",
+        "missing_data": [],
+        "result": "FAIL",
+        "trace_digest": "sha256:6ede77e3a634ba2faf8c0ee8f15b551b68a1640b27445d2c6167934fca5990d4",
+        "witness": [
+          "correction-001",
+          "ais-006",
+          "patrol-001"
+        ]
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "counterexample:invariant:epistemic.label_isolation",
+      "derived_at": "2026-10-26T18:42:47Z",
+      "id": "sha256:cb78b2737f3ee7744485507dae688135c3f3bd5aeca337d836c22e2ba513bdc2",
+      "inputs_hash": "sha256:0ec1dff8fbf476230be491d24b79d9507c1a3ed945549a37d289a3e6a7731524",
+      "kind": "ATTESTED",
+      "procedure": "kernel.recompute",
+      "producer": "kernel",
+      "result": {
+        "derived_at_ns": 0,
+        "explanation": "role 'coast_guard' never received an event labelled 'harbour_private'",
+        "invariant_id": "epistemic.label_isolation",
+        "invariant_version": "1.0",
+        "missing_data": [],
+        "result": "PASS",
+        "trace_digest": "sha256:6ede77e3a634ba2faf8c0ee8f15b551b68a1640b27445d2c6167934fca5990d4",
+        "witness": []
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "counterexample:invariant:epistemic.no_future_knowledge",
+      "derived_at": "2026-10-26T18:42:47Z",
+      "id": "sha256:a45e4c92556e4f4e248b15e8d52dccc02d3a12f21c80c615cf51ac4ec310b1cd",
+      "inputs_hash": "sha256:0ec1dff8fbf476230be491d24b79d9507c1a3ed945549a37d289a3e6a7731524",
+      "kind": "ATTESTED",
+      "procedure": "kernel.recompute",
+      "producer": "kernel",
+      "result": {
+        "derived_at_ns": 0,
+        "explanation": "no view or decision knows anything before it was received",
+        "invariant_id": "epistemic.no_future_knowledge",
+        "invariant_version": "1.0",
+        "missing_data": [],
+        "result": "PASS",
+        "trace_digest": "sha256:6ede77e3a634ba2faf8c0ee8f15b551b68a1640b27445d2c6167934fca5990d4",
+        "witness": []
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "counterexample:invariant:response.alert_ack",
+      "derived_at": "2026-10-26T18:42:47Z",
+      "id": "sha256:43117c796da8180f0f984b2f5ba3223c2105499881b11d30bb5584bb57f1cb73",
+      "inputs_hash": "sha256:0ec1dff8fbf476230be491d24b79d9507c1a3ed945549a37d289a3e6a7731524",
+      "kind": "ATTESTED",
+      "procedure": "kernel.recompute",
+      "producer": "kernel",
+      "result": {
+        "derived_at_ns": 0,
+        "explanation": "all 1 alert events acknowledged within 300000000000ns by harbour_ops",
+        "invariant_id": "response.alert_ack",
+        "invariant_version": "1.0",
+        "missing_data": [],
+        "result": "PASS",
+        "trace_digest": "sha256:6ede77e3a634ba2faf8c0ee8f15b551b68a1640b27445d2c6167934fca5990d4",
+        "witness": []
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "minimize:one_minimal",
+      "derived_at": "2026-10-26T18:42:47Z",
+      "id": "sha256:461eac9ea380575a3139998f24a2a18828b31849bfc361c6ff5c9edf2c09ecb8",
+      "inputs_hash": "sha256:033a6d3adb91ab8a597b2e1c6969138959cab3ed9ac82cfa090d0a9e57497759",
+      "kind": "ATTESTED",
+      "procedure": "kernel.recompute",
+      "producer": "kernel",
+      "result": {
+        "minimal_size": 1,
+        "one_minimal_verified": true,
+        "original_fails": true,
+        "original_size": 3,
+        "target_invariant": "decision.consistent_with_truth"
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "genome:challenge",
+      "derived_at": "2026-10-26T18:42:47Z",
+      "id": "sha256:82bede4c04447a00819a0dbb466eb2503b57cd883821243b2e8ffc9ead465e53",
+      "inputs_hash": "sha256:ef47848effd863b081a884aa9ddd2e9d36b7b55db184ee4622a852f8cb31ae2d",
+      "kind": "ATTESTED",
+      "procedure": "kernel.recompute",
+      "producer": "kernel",
+      "result": {
+        "controls": [
+          {
+            "preconditions_met": true,
+            "reproduced": false,
+            "scenario_id": "convoy_lostlink_immune"
+          }
+        ],
+        "genome_id": "genome:94f0ad69dd5483d0",
+        "primary": {
+          "counterexample_digest": "sha256:9129ec8e596a261a551e1368aa27d6b7601b2f57da8b8307456a093219728c61",
+          "preconditions_met": true,
+          "reproduced": true,
+          "scenario_id": "convoy_lostlink"
+        },
+        "transfer_claim": "within the shared Event v1 substrate across scenarios; not across heterogeneous codebases"
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "tests:unit",
+      "derived_at": "2026-10-26T18:42:47Z",
+      "id": "sha256:98f41b5e99bac0d60a527c81305e5ddd647eab2d2203f6b2f42f5b9e40ad85b6",
+      "inputs_hash": "sha256:c8042b81721442bd9da5df4508efdec325ccc52569ea73cd27caa8edca411fbf",
+      "kind": "ATTESTED",
+      "procedure": "kernel.recompute",
+      "producer": "kernel",
+      "result": {
+        "errors": 0,
+        "failures": 0,
+        "passed": 144,
+        "skipped": 0,
+        "tests": 144
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [],
+      "claim": "artifact:digest",
+      "derived_at": "2026-10-26T18:42:47Z",
+      "id": "sha256:a00be0def35021f2d4d2f85c2a8741bcef621c48be1c6c97a73eab0c2dde94a3",
+      "inputs_hash": "sha256:3ae873aacf9d34c17271441f3b749a32a323da3e9d00c874df1e5ffb7b25ee01",
+      "kind": "ATTESTED",
+      "procedure": "kernel.recompute",
+      "producer": "kernel",
+      "result": {
+        "minimal_trace_digest": "sha256:6ede77e3a634ba2faf8c0ee8f15b551b68a1640b27445d2c6167934fca5990d4",
+        "root_trace_digest": "sha256:d16ac4392733589d5dbc12c893be62d64a28e73184c8eb8ae0a2bbb18354dd17"
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "artifact:manifest",
+      "derived_at": "2026-10-26T18:42:47Z",
+      "id": "sha256:06156fe2f63f207624eb5643f0885f2b1e480c0e763d307ef470341745fdbf73",
+      "inputs_hash": "sha256:a16590fe57ef4625079efb27379a1d92bd2846bc1072761c732d6ea8fbbfc971",
+      "kind": "ATTESTED",
+      "procedure": "kernel.recompute",
+      "producer": "kernel",
+      "result": {
+        "minimal_trace_digest": "sha256:6ede77e3a634ba2faf8c0ee8f15b551b68a1640b27445d2c6167934fca5990d4",
+        "root_trace_digest": "sha256:d16ac4392733589d5dbc12c893be62d64a28e73184c8eb8ae0a2bbb18354dd17"
+      },
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    }
+  ]
 }

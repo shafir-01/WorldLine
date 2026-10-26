@@ -1,0 +1,3809 @@
+{
+  "branch_id": "root/sha256:61c18bdca138f525fbb05eb5b8fc6d2109fb83bc33206b07490cc078655473fd",
+  "clock_end": {
+    "epoch_ns": 0,
+    "now_ns": 3600000000000,
+    "tick_ns": 1000000000
+  },
+  "decisions": [
+    {
+      "event_time_ns": 1500000000000,
+      "geometry": null,
+      "id": "decision:duty_officer:escalate_or_monitor",
+      "kind": "decision",
+      "payload": {
+        "actor": "duty_officer",
+        "at_ns": 1500000000000,
+        "known_event_ids": [
+          "ais-001",
+          "tide-001",
+          "alert-001",
+          "berth-001",
+          "ack-001",
+          "ack-001#dup1",
+          "ais-002",
+          "ais-003",
+          "weather-001",
+          "ais-004",
+          "crew-001",
+          "sighting-001",
+          "sighting-002",
+          "ais-005",
+          "sighting-003",
+          "tide-002",
+          "sighting-004"
+        ],
+        "option": "escalate",
+        "predicate_value": true,
+        "rule_id": "escalate_or_monitor"
+      },
+      "policy_labels": [],
+      "priority": 0,
+      "provenance_ids": [],
+      "quality": null,
+      "received_time_ns": 1500000000000,
+      "scenario_id": "port_alert",
+      "schema_version": "event.v1",
+      "source_id": "duty_officer",
+      "unit": null
+    },
+    {
+      "event_time_ns": 2400000000000,
+      "geometry": null,
+      "id": "decision:coast_watch:stand_down_if_acknowledged",
+      "kind": "decision",
+      "payload": {
+        "actor": "coast_watch",
+        "at_ns": 2400000000000,
+        "known_event_ids": [
+          "ais-001",
+          "tide-001",
+          "alert-001",
+          "ais-002",
+          "ack-001",
+          "ack-001#dup1",
+          "weather-001",
+          "ais-003",
+          "ais-004",
+          "sighting-001",
+          "sighting-002",
+          "sighting-003",
+          "ais-005",
+          "tide-002",
+          "sighting-004",
+          "ais-006",
+          "patrol-001",
+          "radar-001",
+          "correction-001",
+          "weather-002",
+          "ais-007",
+          "ais-008",
+          "radar-005"
+        ],
+        "option": "stand_down",
+        "predicate_value": true,
+        "rule_id": "stand_down_if_acknowledged"
+      },
+      "policy_labels": [],
+      "priority": 0,
+      "provenance_ids": [],
+      "quality": null,
+      "received_time_ns": 2400000000000,
+      "scenario_id": "port_alert",
+      "schema_version": "event.v1",
+      "source_id": "coast_watch",
+      "unit": null
+    }
+  ],
+  "digest": "sha256:123d4c7745e92f4ad788248eadfc5fabcab0fa571a4a260cf3e4f3aa3dae37c6",
+  "fault_schedule_hash": "sha256:61c18bdca138f525fbb05eb5b8fc6d2109fb83bc33206b07490cc078655473fd",
+  "scenario": {
+    "actors": [
+      {
+        "decision_rules": [
+          {
+            "at_ns": 1500000000000,
+            "id": "escalate_or_monitor",
+            "otherwise": "monitor",
+            "then": "escalate",
+            "when": "count(kind='sighting', payload.confidence>=0.6, not_corrected) >= 2",
+            "window_ns": 600000000000
+          }
+        ],
+        "id": "duty_officer",
+        "role": "harbour_ops"
+      },
+      {
+        "decision_rules": [
+          {
+            "at_ns": 2400000000000,
+            "id": "stand_down_if_acknowledged",
+            "otherwise": "dispatch_patrol",
+            "then": "stand_down",
+            "when": "acknowledged(kind='alert', within_ns=600s)",
+            "window_ns": 2400000000000
+          }
+        ],
+        "id": "coast_watch",
+        "role": "coast_guard"
+      }
+    ],
+    "clock": {
+      "epoch_ns": 0,
+      "horizon_ns": 3600000000000,
+      "tick_ns": 1000000000
+    },
+    "id": "port_alert",
+    "injects": [
+      {
+        "at_ns": 0,
+        "geometry": null,
+        "id": "ais-001",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.5401,
+          "lon": 9.98,
+          "mmsi": 211000001
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "source_id": "ais_feed"
+      },
+      {
+        "at_ns": 300000000000,
+        "geometry": null,
+        "id": "ais-002",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.541,
+          "lon": 9.979,
+          "mmsi": 211000001
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "source_id": "ais_feed"
+      },
+      {
+        "at_ns": 600000000000,
+        "geometry": null,
+        "id": "ais-003",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.542,
+          "lon": 9.9781,
+          "mmsi": 211000001
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "source_id": "ais_feed"
+      },
+      {
+        "at_ns": 900000000000,
+        "geometry": null,
+        "id": "ais-004",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.53,
+          "lon": 9.99,
+          "mmsi": 211000002
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "source_id": "ais_feed"
+      },
+      {
+        "at_ns": 1200000000000,
+        "geometry": null,
+        "id": "ais-005",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.531,
+          "lon": 9.989,
+          "mmsi": 211000002
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "source_id": "ais_feed"
+      },
+      {
+        "at_ns": 1500000000000,
+        "geometry": null,
+        "id": "ais-006",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.5321,
+          "lon": 9.9881,
+          "mmsi": 211000002
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "source_id": "ais_feed"
+      },
+      {
+        "at_ns": 1800000000000,
+        "geometry": null,
+        "id": "ais-007",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.52,
+          "lon": 10.001,
+          "mmsi": 211000003
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "source_id": "ais_feed"
+      },
+      {
+        "at_ns": 2100000000000,
+        "geometry": null,
+        "id": "ais-008",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.5211,
+          "lon": 10.0001,
+          "mmsi": 211000003
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "source_id": "ais_feed"
+      },
+      {
+        "at_ns": 2400000000000,
+        "geometry": null,
+        "id": "ais-009",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.5222,
+          "lon": 9.9992,
+          "mmsi": 211000003
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "source_id": "ais_feed"
+      },
+      {
+        "at_ns": 2700000000000,
+        "geometry": null,
+        "id": "ais-010",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.543,
+          "lon": 9.977,
+          "mmsi": 211000001
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "source_id": "ais_feed"
+      },
+      {
+        "at_ns": 3000000000000,
+        "geometry": null,
+        "id": "ais-011",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.544,
+          "lon": 9.976,
+          "mmsi": 211000001
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "source_id": "ais_feed"
+      },
+      {
+        "at_ns": 3300000000000,
+        "geometry": null,
+        "id": "ais-012",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.533,
+          "lon": 9.987,
+          "mmsi": 211000002
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "source_id": "ais_feed"
+      },
+      {
+        "at_ns": 0,
+        "geometry": null,
+        "id": "tide-001",
+        "kind": "tide",
+        "payload": {
+          "height_m": 1.9,
+          "trend": "rising"
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "source_id": "tide_gauge"
+      },
+      {
+        "at_ns": 1200000000000,
+        "geometry": null,
+        "id": "tide-002",
+        "kind": "tide",
+        "payload": {
+          "height_m": 2.3,
+          "trend": "rising"
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "source_id": "tide_gauge"
+      },
+      {
+        "at_ns": 2400000000000,
+        "geometry": null,
+        "id": "tide-003",
+        "kind": "tide",
+        "payload": {
+          "height_m": 2.6,
+          "trend": "slack"
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "source_id": "tide_gauge"
+      },
+      {
+        "at_ns": 600000000000,
+        "geometry": null,
+        "id": "weather-001",
+        "kind": "weather",
+        "payload": {
+          "visibility_km": 4.0,
+          "wind_kt": 12
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "source_id": "met_office"
+      },
+      {
+        "at_ns": 1800000000000,
+        "geometry": null,
+        "id": "weather-002",
+        "kind": "weather",
+        "payload": {
+          "visibility_km": 2.5,
+          "wind_kt": 16
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "source_id": "met_office"
+      },
+      {
+        "at_ns": 3000000000000,
+        "geometry": null,
+        "id": "weather-003",
+        "kind": "weather",
+        "payload": {
+          "visibility_km": 3.0,
+          "wind_kt": 14
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "source_id": "met_office"
+      },
+      {
+        "at_ns": 120000000000,
+        "geometry": null,
+        "id": "berth-001",
+        "kind": "berth_schedule",
+        "payload": {
+          "berth": "B7",
+          "eta_s": 2400,
+          "vessel": "MV Nordlicht"
+        },
+        "policy_labels": [
+          "harbour_private"
+        ],
+        "priority": 0,
+        "source_id": "harbour_admin"
+      },
+      {
+        "at_ns": 900000000000,
+        "geometry": null,
+        "id": "crew-001",
+        "kind": "crew_manifest",
+        "payload": {
+          "crew": 14,
+          "vessel": "MV Nordlicht"
+        },
+        "policy_labels": [
+          "harbour_private"
+        ],
+        "priority": 0,
+        "source_id": "harbour_admin"
+      },
+      {
+        "at_ns": 1800000000000,
+        "geometry": null,
+        "id": "shift-001",
+        "kind": "shift_change",
+        "payload": {
+          "incoming": "watch_b",
+          "outgoing": "watch_a"
+        },
+        "policy_labels": [
+          "harbour_private"
+        ],
+        "priority": 0,
+        "source_id": "harbour_admin"
+      },
+      {
+        "at_ns": 2700000000000,
+        "geometry": null,
+        "id": "berth-002",
+        "kind": "berth_schedule",
+        "payload": {
+          "berth": "B3",
+          "eta_s": 3300,
+          "vessel": "MV Aurora"
+        },
+        "policy_labels": [
+          "harbour_private"
+        ],
+        "priority": 0,
+        "source_id": "harbour_admin"
+      },
+      {
+        "at_ns": 60000000000,
+        "geometry": null,
+        "id": "alert-001",
+        "kind": "alert",
+        "payload": {
+          "level": "amber",
+          "text": "unidentified vessel approaching restricted zone",
+          "vessel": "UNK-1"
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 10,
+        "source_id": "harbour_vts"
+      },
+      {
+        "at_ns": 300000000000,
+        "geometry": null,
+        "id": "ack-001",
+        "kind": "ack",
+        "payload": {
+          "acknowledges": "alert-001",
+          "by": "duty_officer"
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 5,
+        "source_id": "duty_officer"
+      },
+      {
+        "at_ns": 700000000000,
+        "geometry": null,
+        "id": "sighting-001",
+        "kind": "sighting",
+        "payload": {
+          "bearing_deg": 85,
+          "confidence": 0.3,
+          "note": "possible small craft, haze",
+          "vessel": "UNK-1"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 0,
+        "source_id": "lookout_east"
+      },
+      {
+        "at_ns": 1000000000000,
+        "geometry": null,
+        "id": "sighting-002",
+        "kind": "sighting",
+        "payload": {
+          "bearing_deg": 92,
+          "confidence": 0.8,
+          "note": "visual, grey hull, no AIS",
+          "vessel": "UNK-1"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 0,
+        "source_id": "patrol_boat_a"
+      },
+      {
+        "at_ns": 1200000000000,
+        "geometry": null,
+        "id": "sighting-003",
+        "kind": "sighting",
+        "payload": {
+          "bearing_deg": 140,
+          "confidence": 0.65,
+          "note": "radar contact, intermittent",
+          "vessel": "UNK-2"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 0,
+        "source_id": "radar_north"
+      },
+      {
+        "at_ns": 1350000000000,
+        "geometry": null,
+        "id": "sighting-004",
+        "kind": "sighting",
+        "payload": {
+          "bearing_deg": 95,
+          "confidence": 0.4,
+          "note": "lost in rain",
+          "vessel": "UNK-1"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 0,
+        "source_id": "lookout_east"
+      },
+      {
+        "at_ns": 1407000000000,
+        "geometry": null,
+        "id": "correction-001",
+        "kind": "correction",
+        "payload": {
+          "confidence": 0.15,
+          "corrects": "sighting-003",
+          "reason": "radar ghost, sea clutter confirmed by patrol_boat_a"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 5,
+        "source_id": "patrol_boat_a"
+      },
+      {
+        "at_ns": 1500000000000,
+        "geometry": null,
+        "id": "patrol-001",
+        "kind": "patrol_status",
+        "payload": {
+          "sector": "north",
+          "state": "on_station"
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "source_id": "cg_cutter_7"
+      },
+      {
+        "at_ns": 2600000000000,
+        "geometry": null,
+        "id": "sighting-005",
+        "kind": "sighting",
+        "payload": {
+          "bearing_deg": 101,
+          "confidence": 0.9,
+          "note": "fishing vessel, AIS switched off, identified",
+          "vessel": "UNK-1"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 0,
+        "source_id": "patrol_boat_b"
+      },
+      {
+        "at_ns": 3300000000000,
+        "geometry": null,
+        "id": "status-001",
+        "kind": "status",
+        "payload": {
+          "alert": "alert-001",
+          "state": "all_clear"
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 5,
+        "source_id": "harbour_vts"
+      },
+      {
+        "at_ns": 1700000000000,
+        "geometry": null,
+        "id": "radar-001",
+        "kind": "radar_contact",
+        "payload": {
+          "range_nm": 6.1,
+          "track": "T41"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 0,
+        "source_id": "radar_north"
+      },
+      {
+        "at_ns": 1850000000000,
+        "geometry": null,
+        "id": "radar-002",
+        "kind": "radar_contact",
+        "payload": {
+          "range_nm": 5.4,
+          "track": "T41"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 0,
+        "source_id": "radar_north"
+      },
+      {
+        "at_ns": 1950000000000,
+        "geometry": null,
+        "id": "radar-003",
+        "kind": "radar_contact",
+        "payload": {
+          "range_nm": 8.0,
+          "track": "T42"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 0,
+        "source_id": "radar_north"
+      },
+      {
+        "at_ns": 2050000000000,
+        "geometry": null,
+        "id": "radar-004",
+        "kind": "radar_contact",
+        "payload": {
+          "range_nm": 4.7,
+          "track": "T41"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 0,
+        "source_id": "radar_north"
+      },
+      {
+        "at_ns": 2200000000000,
+        "geometry": null,
+        "id": "radar-005",
+        "kind": "radar_contact",
+        "payload": {
+          "range_nm": 4.1,
+          "track": "T41"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 0,
+        "source_id": "radar_north"
+      }
+    ],
+    "invariants": [
+      "epistemic.no_future_knowledge",
+      "epistemic.label_isolation",
+      "response.alert_ack",
+      "absence.no_corrupted_in_decision",
+      "decision.consistent_with_truth"
+    ],
+    "roles": [
+      {
+        "delivery": {
+          "base_latency_ns": 2000000000,
+          "drop_probability": 0.0,
+          "jitter_ns": 1000000000,
+          "ordering": "fifo"
+        },
+        "id": "harbour_ops",
+        "visibility": [
+          "*"
+        ]
+      },
+      {
+        "delivery": {
+          "base_latency_ns": 20000000000,
+          "drop_probability": 0.0,
+          "jitter_ns": 15000000000,
+          "ordering": "network"
+        },
+        "id": "coast_guard",
+        "visibility": [
+          "public",
+          "coast_shared"
+        ]
+      },
+      {
+        "delivery": {
+          "base_latency_ns": 0,
+          "drop_probability": 0.0,
+          "jitter_ns": 0,
+          "ordering": "fifo"
+        },
+        "id": "evaluator",
+        "visibility": [
+          "*"
+        ]
+      }
+    ],
+    "seed": 20261026,
+    "transitions": [
+      {
+        "from_ns": 1800000000000,
+        "id": "radar_outage",
+        "kind": "outage",
+        "params": {},
+        "roles": [],
+        "source_id": "radar_north",
+        "to_ns": 2100000000000
+      }
+    ]
+  },
+  "scenario_id": "port_alert",
+  "seed": 20261026,
+  "truth": {
+    "digest": "sha256:00ba3d7d8d4e2840e7cd164ad247ad170856c51e4aa1c59fd0c6605af81e673a",
+    "events": [
+      {
+        "event_time_ns": 0,
+        "geometry": null,
+        "id": "ais-001",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.5401,
+          "lon": 9.98,
+          "mmsi": 211000001
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "ais_feed",
+        "unit": null
+      },
+      {
+        "event_time_ns": 0,
+        "geometry": null,
+        "id": "tide-001",
+        "kind": "tide",
+        "payload": {
+          "height_m": 1.9,
+          "trend": "rising"
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "tide_gauge",
+        "unit": null
+      },
+      {
+        "event_time_ns": 60000000000,
+        "geometry": null,
+        "id": "alert-001",
+        "kind": "alert",
+        "payload": {
+          "level": "amber",
+          "text": "unidentified vessel approaching restricted zone",
+          "vessel": "UNK-1"
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 10,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "harbour_vts",
+        "unit": null
+      },
+      {
+        "event_time_ns": 120000000000,
+        "geometry": null,
+        "id": "berth-001",
+        "kind": "berth_schedule",
+        "payload": {
+          "berth": "B7",
+          "eta_s": 2400,
+          "vessel": "MV Nordlicht"
+        },
+        "policy_labels": [
+          "harbour_private"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "harbour_admin",
+        "unit": null
+      },
+      {
+        "event_time_ns": 300000000000,
+        "geometry": null,
+        "id": "ack-001",
+        "kind": "ack",
+        "payload": {
+          "acknowledges": "alert-001",
+          "by": "duty_officer"
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 5,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "duty_officer",
+        "unit": null
+      },
+      {
+        "event_time_ns": 300000000000,
+        "geometry": null,
+        "id": "ais-002",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.541,
+          "lon": 9.979,
+          "mmsi": 211000001
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "ais_feed",
+        "unit": null
+      },
+      {
+        "event_time_ns": 600000000000,
+        "geometry": null,
+        "id": "ais-003",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.542,
+          "lon": 9.9781,
+          "mmsi": 211000001
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "ais_feed",
+        "unit": null
+      },
+      {
+        "event_time_ns": 600000000000,
+        "geometry": null,
+        "id": "weather-001",
+        "kind": "weather",
+        "payload": {
+          "visibility_km": 4.0,
+          "wind_kt": 12
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "met_office",
+        "unit": null
+      },
+      {
+        "event_time_ns": 700000000000,
+        "geometry": null,
+        "id": "sighting-001",
+        "kind": "sighting",
+        "payload": {
+          "bearing_deg": 85,
+          "confidence": 0.3,
+          "note": "possible small craft, haze",
+          "vessel": "UNK-1"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "lookout_east",
+        "unit": null
+      },
+      {
+        "event_time_ns": 900000000000,
+        "geometry": null,
+        "id": "ais-004",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.53,
+          "lon": 9.99,
+          "mmsi": 211000002
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "ais_feed",
+        "unit": null
+      },
+      {
+        "event_time_ns": 900000000000,
+        "geometry": null,
+        "id": "crew-001",
+        "kind": "crew_manifest",
+        "payload": {
+          "crew": 14,
+          "vessel": "MV Nordlicht"
+        },
+        "policy_labels": [
+          "harbour_private"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "harbour_admin",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1000000000000,
+        "geometry": null,
+        "id": "sighting-002",
+        "kind": "sighting",
+        "payload": {
+          "bearing_deg": 92,
+          "confidence": 0.8,
+          "note": "visual, grey hull, no AIS",
+          "vessel": "UNK-1"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "patrol_boat_a",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1200000000000,
+        "geometry": null,
+        "id": "ais-005",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.531,
+          "lon": 9.989,
+          "mmsi": 211000002
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "ais_feed",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1200000000000,
+        "geometry": null,
+        "id": "sighting-003",
+        "kind": "sighting",
+        "payload": {
+          "bearing_deg": 140,
+          "confidence": 0.65,
+          "note": "radar contact, intermittent",
+          "vessel": "UNK-2"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "radar_north",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1200000000000,
+        "geometry": null,
+        "id": "tide-002",
+        "kind": "tide",
+        "payload": {
+          "height_m": 2.3,
+          "trend": "rising"
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "tide_gauge",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1350000000000,
+        "geometry": null,
+        "id": "sighting-004",
+        "kind": "sighting",
+        "payload": {
+          "bearing_deg": 95,
+          "confidence": 0.4,
+          "note": "lost in rain",
+          "vessel": "UNK-1"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "lookout_east",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1407000000000,
+        "geometry": null,
+        "id": "correction-001",
+        "kind": "correction",
+        "payload": {
+          "confidence": 0.15,
+          "corrects": "sighting-003",
+          "reason": "radar ghost, sea clutter confirmed by patrol_boat_a"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 5,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "patrol_boat_a",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1500000000000,
+        "geometry": null,
+        "id": "ais-006",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.5321,
+          "lon": 9.9881,
+          "mmsi": 211000002
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "ais_feed",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1500000000000,
+        "geometry": null,
+        "id": "patrol-001",
+        "kind": "patrol_status",
+        "payload": {
+          "sector": "north",
+          "state": "on_station"
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "cg_cutter_7",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1700000000000,
+        "geometry": null,
+        "id": "radar-001",
+        "kind": "radar_contact",
+        "payload": {
+          "range_nm": 6.1,
+          "track": "T41"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "radar_north",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1800000000000,
+        "geometry": null,
+        "id": "ais-007",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.52,
+          "lon": 10.001,
+          "mmsi": 211000003
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "ais_feed",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1800000000000,
+        "geometry": null,
+        "id": "shift-001",
+        "kind": "shift_change",
+        "payload": {
+          "incoming": "watch_b",
+          "outgoing": "watch_a"
+        },
+        "policy_labels": [
+          "harbour_private"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "harbour_admin",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1800000000000,
+        "geometry": null,
+        "id": "weather-002",
+        "kind": "weather",
+        "payload": {
+          "visibility_km": 2.5,
+          "wind_kt": 16
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "met_office",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1850000000000,
+        "geometry": null,
+        "id": "radar-002",
+        "kind": "radar_contact",
+        "payload": {
+          "range_nm": 5.4,
+          "track": "T41"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "radar_north",
+        "unit": null
+      },
+      {
+        "event_time_ns": 1950000000000,
+        "geometry": null,
+        "id": "radar-003",
+        "kind": "radar_contact",
+        "payload": {
+          "range_nm": 8.0,
+          "track": "T42"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "radar_north",
+        "unit": null
+      },
+      {
+        "event_time_ns": 2050000000000,
+        "geometry": null,
+        "id": "radar-004",
+        "kind": "radar_contact",
+        "payload": {
+          "range_nm": 4.7,
+          "track": "T41"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "radar_north",
+        "unit": null
+      },
+      {
+        "event_time_ns": 2100000000000,
+        "geometry": null,
+        "id": "ais-008",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.5211,
+          "lon": 10.0001,
+          "mmsi": 211000003
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "ais_feed",
+        "unit": null
+      },
+      {
+        "event_time_ns": 2200000000000,
+        "geometry": null,
+        "id": "radar-005",
+        "kind": "radar_contact",
+        "payload": {
+          "range_nm": 4.1,
+          "track": "T41"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "radar_north",
+        "unit": null
+      },
+      {
+        "event_time_ns": 2400000000000,
+        "geometry": null,
+        "id": "ais-009",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.5222,
+          "lon": 9.9992,
+          "mmsi": 211000003
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "ais_feed",
+        "unit": null
+      },
+      {
+        "event_time_ns": 2400000000000,
+        "geometry": null,
+        "id": "tide-003",
+        "kind": "tide",
+        "payload": {
+          "height_m": 2.6,
+          "trend": "slack"
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "tide_gauge",
+        "unit": null
+      },
+      {
+        "event_time_ns": 2600000000000,
+        "geometry": null,
+        "id": "sighting-005",
+        "kind": "sighting",
+        "payload": {
+          "bearing_deg": 101,
+          "confidence": 0.9,
+          "note": "fishing vessel, AIS switched off, identified",
+          "vessel": "UNK-1"
+        },
+        "policy_labels": [
+          "coast_shared"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "patrol_boat_b",
+        "unit": null
+      },
+      {
+        "event_time_ns": 2700000000000,
+        "geometry": null,
+        "id": "ais-010",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.543,
+          "lon": 9.977,
+          "mmsi": 211000001
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "ais_feed",
+        "unit": null
+      },
+      {
+        "event_time_ns": 2700000000000,
+        "geometry": null,
+        "id": "berth-002",
+        "kind": "berth_schedule",
+        "payload": {
+          "berth": "B3",
+          "eta_s": 3300,
+          "vessel": "MV Aurora"
+        },
+        "policy_labels": [
+          "harbour_private"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "harbour_admin",
+        "unit": null
+      },
+      {
+        "event_time_ns": 3000000000000,
+        "geometry": null,
+        "id": "ais-011",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.544,
+          "lon": 9.976,
+          "mmsi": 211000001
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "ais_feed",
+        "unit": null
+      },
+      {
+        "event_time_ns": 3000000000000,
+        "geometry": null,
+        "id": "weather-003",
+        "kind": "weather",
+        "payload": {
+          "visibility_km": 3.0,
+          "wind_kt": 14
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "met_office",
+        "unit": null
+      },
+      {
+        "event_time_ns": 3300000000000,
+        "geometry": null,
+        "id": "status-001",
+        "kind": "status",
+        "payload": {
+          "alert": "alert-001",
+          "state": "all_clear"
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 5,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "harbour_vts",
+        "unit": null
+      },
+      {
+        "event_time_ns": 3300000000000,
+        "geometry": null,
+        "id": "ais-012",
+        "kind": "ais_position",
+        "payload": {
+          "lat": 53.533,
+          "lon": 9.987,
+          "mmsi": 211000002
+        },
+        "policy_labels": [
+          "public"
+        ],
+        "priority": 0,
+        "provenance_ids": [],
+        "quality": null,
+        "received_time_ns": null,
+        "scenario_id": "port_alert",
+        "schema_version": "event.v1",
+        "source_id": "ais_feed",
+        "unit": null
+      }
+    ]
+  },
+  "views": {
+    "coast_guard": {
+      "digest": "sha256:37ba6c670c4533dddfcc9f9cbfd763b6d1bfef03dae2b70c63dace4613206bf6",
+      "events": [
+        {
+          "event_time_ns": 0,
+          "geometry": null,
+          "id": "ais-001",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.5401,
+            "lon": 9.98,
+            "mmsi": 211000001
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 20027384146,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 0,
+          "geometry": null,
+          "id": "tide-001",
+          "kind": "tide",
+          "payload": {
+            "height_m": 1.9,
+            "trend": "rising"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 26958727725,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "tide_gauge",
+          "unit": null
+        },
+        {
+          "event_time_ns": 60000000000,
+          "geometry": null,
+          "id": "alert-001",
+          "kind": "alert",
+          "payload": {
+            "level": "amber",
+            "text": "unidentified vessel approaching restricted zone",
+            "vessel": "UNK-1"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 10,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 89479521130,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "harbour_vts",
+          "unit": null
+        },
+        {
+          "event_time_ns": 300000000000,
+          "geometry": null,
+          "id": "ais-002",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.541,
+            "lon": 9.979,
+            "mmsi": 211000001
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 322703532466,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 300000000000,
+          "geometry": null,
+          "id": "ack-001",
+          "kind": "ack",
+          "payload": {
+            "acknowledges": "alert-001",
+            "by": "duty_officer"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 5,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 334084927813,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "duty_officer",
+          "unit": null
+        },
+        {
+          "event_time_ns": 300000000000,
+          "geometry": null,
+          "id": "ack-001#dup1",
+          "kind": "ack",
+          "payload": {
+            "acknowledges": "alert-001",
+            "by": "duty_officer"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 5,
+          "provenance_ids": [
+            "ack-001"
+          ],
+          "quality": null,
+          "received_time_ns": 334084927813,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "duty_officer",
+          "unit": null
+        },
+        {
+          "event_time_ns": 600000000000,
+          "geometry": null,
+          "id": "weather-001",
+          "kind": "weather",
+          "payload": {
+            "visibility_km": 4.0,
+            "wind_kt": 12
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 621655514270,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "met_office",
+          "unit": null
+        },
+        {
+          "event_time_ns": 600000000000,
+          "geometry": null,
+          "id": "ais-003",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.542,
+            "lon": 9.9781,
+            "mmsi": 211000001
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 622714372934,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 900000000000,
+          "geometry": null,
+          "id": "ais-004",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.53,
+            "lon": 9.99,
+            "mmsi": 211000002
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 933090763183,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 700000000000,
+          "geometry": null,
+          "id": "sighting-001",
+          "kind": "sighting",
+          "payload": {
+            "bearing_deg": 85,
+            "confidence": 0.3,
+            "note": "possible small craft, haze",
+            "vessel": "UNK-1"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1021389354331,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "lookout_east",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1000000000000,
+          "geometry": null,
+          "id": "sighting-002",
+          "kind": "sighting",
+          "payload": {
+            "bearing_deg": 92,
+            "confidence": 0.8,
+            "note": "visual, grey hull, no AIS",
+            "vessel": "UNK-1"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1025366138757,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "patrol_boat_a",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1200000000000,
+          "geometry": null,
+          "id": "sighting-003",
+          "kind": "sighting",
+          "payload": {
+            "bearing_deg": 140,
+            "confidence": 0.65,
+            "note": "radar contact, intermittent",
+            "vessel": "UNK-2"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1220480858211,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "radar_north",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1200000000000,
+          "geometry": null,
+          "id": "ais-005",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.531,
+            "lon": 9.989,
+            "mmsi": 211000002
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1226182545425,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1200000000000,
+          "geometry": null,
+          "id": "tide-002",
+          "kind": "tide",
+          "payload": {
+            "height_m": 2.3,
+            "trend": "rising"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1229125064569,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "tide_gauge",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1350000000000,
+          "geometry": null,
+          "id": "sighting-004",
+          "kind": "sighting",
+          "payload": {
+            "bearing_deg": 95,
+            "confidence": 0.4,
+            "note": "lost in rain",
+            "vessel": "UNK-1"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1375492027486,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "lookout_east",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1500000000000,
+          "geometry": null,
+          "id": "ais-006",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.5321,
+            "lon": 9.9881,
+            "mmsi": 211000002
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1528123592563,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1500000000000,
+          "geometry": null,
+          "id": "patrol-001",
+          "kind": "patrol_status",
+          "payload": {
+            "sector": "north",
+            "state": "on_station"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1528653978702,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "cg_cutter_7",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1700000000000,
+          "geometry": null,
+          "id": "radar-001",
+          "kind": "radar_contact",
+          "payload": {
+            "range_nm": 6.1,
+            "track": "T41"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1720560496752,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "radar_north",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1407000000000,
+          "geometry": null,
+          "id": "correction-001",
+          "kind": "correction",
+          "payload": {
+            "confidence": 0.15,
+            "corrects": "sighting-003",
+            "reason": "radar ghost, sea clutter confirmed by patrol_boat_a"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 5,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1737077207980,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "patrol_boat_a",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1800000000000,
+          "geometry": null,
+          "id": "weather-002",
+          "kind": "weather",
+          "payload": {
+            "visibility_km": 2.5,
+            "wind_kt": 16
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1821891734554,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "met_office",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1800000000000,
+          "geometry": null,
+          "id": "ais-007",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.52,
+            "lon": 10.001,
+            "mmsi": 211000003
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1822719230173,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2100000000000,
+          "geometry": null,
+          "id": "ais-008",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.5211,
+            "lon": 10.0001,
+            "mmsi": 211000003
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2124117453862,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2200000000000,
+          "geometry": null,
+          "id": "radar-005",
+          "kind": "radar_contact",
+          "payload": {
+            "range_nm": 4.1,
+            "track": "T41"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2233403986562,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "radar_north",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2400000000000,
+          "geometry": null,
+          "id": "tide-003",
+          "kind": "tide",
+          "payload": {
+            "height_m": 2.6,
+            "trend": "slack"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2423309068457,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "tide_gauge",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2400000000000,
+          "geometry": null,
+          "id": "ais-009",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.5222,
+            "lon": 9.9992,
+            "mmsi": 211000003
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2425013062761,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2600000000000,
+          "geometry": null,
+          "id": "sighting-005",
+          "kind": "sighting",
+          "payload": {
+            "bearing_deg": 101,
+            "confidence": 0.9,
+            "note": "fishing vessel, AIS switched off, identified",
+            "vessel": "UNK-1"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2629921785019,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "patrol_boat_b",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2700000000000,
+          "geometry": null,
+          "id": "ais-010",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.543,
+            "lon": 9.977,
+            "mmsi": 211000001
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2728047320000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 3000000000000,
+          "geometry": null,
+          "id": "ais-011",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.544,
+            "lon": 9.976,
+            "mmsi": 211000001
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 3022328496532,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 3000000000000,
+          "geometry": null,
+          "id": "weather-003",
+          "kind": "weather",
+          "payload": {
+            "visibility_km": 3.0,
+            "wind_kt": 14
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 3031866861010,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "met_office",
+          "unit": null
+        },
+        {
+          "event_time_ns": 3300000000000,
+          "geometry": null,
+          "id": "status-001",
+          "kind": "status",
+          "payload": {
+            "alert": "alert-001",
+            "state": "all_clear"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 5,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 3320897928246,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "harbour_vts",
+          "unit": null
+        },
+        {
+          "event_time_ns": 3300000000000,
+          "geometry": null,
+          "id": "ais-012",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.533,
+            "lon": 9.987,
+            "mmsi": 211000002
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 3323607151407,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        }
+      ]
+    },
+    "evaluator": {
+      "digest": "sha256:16133fc7b75bf4cb49c4b2049c4e1cfa035ef288d017bf9dcc699a39765e29cf",
+      "events": [
+        {
+          "event_time_ns": 0,
+          "geometry": null,
+          "id": "ais-001",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.5401,
+            "lon": 9.98,
+            "mmsi": 211000001
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 0,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 0,
+          "geometry": null,
+          "id": "tide-001",
+          "kind": "tide",
+          "payload": {
+            "height_m": 1.9,
+            "trend": "rising"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 0,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "tide_gauge",
+          "unit": null
+        },
+        {
+          "event_time_ns": 60000000000,
+          "geometry": null,
+          "id": "alert-001",
+          "kind": "alert",
+          "payload": {
+            "level": "amber",
+            "text": "unidentified vessel approaching restricted zone",
+            "vessel": "UNK-1"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 10,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 60000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "harbour_vts",
+          "unit": null
+        },
+        {
+          "event_time_ns": 120000000000,
+          "geometry": null,
+          "id": "berth-001",
+          "kind": "berth_schedule",
+          "payload": {
+            "berth": "B7",
+            "eta_s": 2400,
+            "vessel": "MV Nordlicht"
+          },
+          "policy_labels": [
+            "harbour_private"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 120000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "harbour_admin",
+          "unit": null
+        },
+        {
+          "event_time_ns": 300000000000,
+          "geometry": null,
+          "id": "ack-001",
+          "kind": "ack",
+          "payload": {
+            "acknowledges": "alert-001",
+            "by": "duty_officer"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 5,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 300000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "duty_officer",
+          "unit": null
+        },
+        {
+          "event_time_ns": 300000000000,
+          "geometry": null,
+          "id": "ack-001#dup1",
+          "kind": "ack",
+          "payload": {
+            "acknowledges": "alert-001",
+            "by": "duty_officer"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 5,
+          "provenance_ids": [
+            "ack-001"
+          ],
+          "quality": null,
+          "received_time_ns": 300000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "duty_officer",
+          "unit": null
+        },
+        {
+          "event_time_ns": 300000000000,
+          "geometry": null,
+          "id": "ais-002",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.541,
+            "lon": 9.979,
+            "mmsi": 211000001
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 300000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 600000000000,
+          "geometry": null,
+          "id": "ais-003",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.542,
+            "lon": 9.9781,
+            "mmsi": 211000001
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 600000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 600000000000,
+          "geometry": null,
+          "id": "weather-001",
+          "kind": "weather",
+          "payload": {
+            "visibility_km": 4.0,
+            "wind_kt": 12
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 600000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "met_office",
+          "unit": null
+        },
+        {
+          "event_time_ns": 900000000000,
+          "geometry": null,
+          "id": "ais-004",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.53,
+            "lon": 9.99,
+            "mmsi": 211000002
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 900000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 900000000000,
+          "geometry": null,
+          "id": "crew-001",
+          "kind": "crew_manifest",
+          "payload": {
+            "crew": 14,
+            "vessel": "MV Nordlicht"
+          },
+          "policy_labels": [
+            "harbour_private"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 900000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "harbour_admin",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1000000000000,
+          "geometry": null,
+          "id": "sighting-002",
+          "kind": "sighting",
+          "payload": {
+            "bearing_deg": 92,
+            "confidence": 0.8,
+            "note": "visual, grey hull, no AIS",
+            "vessel": "UNK-1"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1000000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "patrol_boat_a",
+          "unit": null
+        },
+        {
+          "event_time_ns": 700000000000,
+          "geometry": null,
+          "id": "sighting-001",
+          "kind": "sighting",
+          "payload": {
+            "bearing_deg": 85,
+            "confidence": 0.3,
+            "note": "possible small craft, haze",
+            "vessel": "UNK-1"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1000000000001,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "lookout_east",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1200000000000,
+          "geometry": null,
+          "id": "ais-005",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.531,
+            "lon": 9.989,
+            "mmsi": 211000002
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1200000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1200000000000,
+          "geometry": null,
+          "id": "sighting-003",
+          "kind": "sighting",
+          "payload": {
+            "bearing_deg": 140,
+            "confidence": 0.65,
+            "note": "radar contact, intermittent",
+            "vessel": "UNK-2"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1200000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "radar_north",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1200000000000,
+          "geometry": null,
+          "id": "tide-002",
+          "kind": "tide",
+          "payload": {
+            "height_m": 2.3,
+            "trend": "rising"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1200000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "tide_gauge",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1350000000000,
+          "geometry": null,
+          "id": "sighting-004",
+          "kind": "sighting",
+          "payload": {
+            "bearing_deg": 95,
+            "confidence": 0.4,
+            "note": "lost in rain",
+            "vessel": "UNK-1"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1350000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "lookout_east",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1500000000000,
+          "geometry": null,
+          "id": "ais-006",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.5321,
+            "lon": 9.9881,
+            "mmsi": 211000002
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1500000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1500000000000,
+          "geometry": null,
+          "id": "patrol-001",
+          "kind": "patrol_status",
+          "payload": {
+            "sector": "north",
+            "state": "on_station"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1500000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "cg_cutter_7",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1700000000000,
+          "geometry": null,
+          "id": "radar-001",
+          "kind": "radar_contact",
+          "payload": {
+            "range_nm": 6.1,
+            "track": "T41"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1700000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "radar_north",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1407000000000,
+          "geometry": null,
+          "id": "correction-001",
+          "kind": "correction",
+          "payload": {
+            "confidence": 0.15,
+            "corrects": "sighting-003",
+            "reason": "radar ghost, sea clutter confirmed by patrol_boat_a"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 5,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1707000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "patrol_boat_a",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1800000000000,
+          "geometry": null,
+          "id": "ais-007",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.52,
+            "lon": 10.001,
+            "mmsi": 211000003
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1800000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1800000000000,
+          "geometry": null,
+          "id": "shift-001",
+          "kind": "shift_change",
+          "payload": {
+            "incoming": "watch_b",
+            "outgoing": "watch_a"
+          },
+          "policy_labels": [
+            "harbour_private"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1800000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "harbour_admin",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1800000000000,
+          "geometry": null,
+          "id": "weather-002",
+          "kind": "weather",
+          "payload": {
+            "visibility_km": 2.5,
+            "wind_kt": 16
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1800000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "met_office",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2100000000000,
+          "geometry": null,
+          "id": "ais-008",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.5211,
+            "lon": 10.0001,
+            "mmsi": 211000003
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2100000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2200000000000,
+          "geometry": null,
+          "id": "radar-005",
+          "kind": "radar_contact",
+          "payload": {
+            "range_nm": 4.1,
+            "track": "T41"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2200000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "radar_north",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2400000000000,
+          "geometry": null,
+          "id": "ais-009",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.5222,
+            "lon": 9.9992,
+            "mmsi": 211000003
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2400000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2400000000000,
+          "geometry": null,
+          "id": "tide-003",
+          "kind": "tide",
+          "payload": {
+            "height_m": 2.6,
+            "trend": "slack"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2400000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "tide_gauge",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2600000000000,
+          "geometry": null,
+          "id": "sighting-005",
+          "kind": "sighting",
+          "payload": {
+            "bearing_deg": 101,
+            "confidence": 0.9,
+            "note": "fishing vessel, AIS switched off, identified",
+            "vessel": "UNK-1"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2600000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "patrol_boat_b",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2700000000000,
+          "geometry": null,
+          "id": "ais-010",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.543,
+            "lon": 9.977,
+            "mmsi": 211000001
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2700000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2700000000000,
+          "geometry": null,
+          "id": "berth-002",
+          "kind": "berth_schedule",
+          "payload": {
+            "berth": "B3",
+            "eta_s": 3300,
+            "vessel": "MV Aurora"
+          },
+          "policy_labels": [
+            "harbour_private"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2700000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "harbour_admin",
+          "unit": null
+        },
+        {
+          "event_time_ns": 3000000000000,
+          "geometry": null,
+          "id": "ais-011",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.544,
+            "lon": 9.976,
+            "mmsi": 211000001
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 3000000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 3000000000000,
+          "geometry": null,
+          "id": "weather-003",
+          "kind": "weather",
+          "payload": {
+            "visibility_km": 3.0,
+            "wind_kt": 14
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 3000000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "met_office",
+          "unit": null
+        },
+        {
+          "event_time_ns": 3300000000000,
+          "geometry": null,
+          "id": "status-001",
+          "kind": "status",
+          "payload": {
+            "alert": "alert-001",
+            "state": "all_clear"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 5,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 3300000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "harbour_vts",
+          "unit": null
+        },
+        {
+          "event_time_ns": 3300000000000,
+          "geometry": null,
+          "id": "ais-012",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.533,
+            "lon": 9.987,
+            "mmsi": 211000002
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 3300000000000,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        }
+      ]
+    },
+    "harbour_ops": {
+      "digest": "sha256:52be19663cd2a16a9c42493b7127a33d22432d45946da3cc53f1d05b5ba71de4",
+      "events": [
+        {
+          "event_time_ns": 0,
+          "geometry": null,
+          "id": "ais-001",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.5401,
+            "lon": 9.98,
+            "mmsi": 211000001
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2821058370,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 0,
+          "geometry": null,
+          "id": "tide-001",
+          "kind": "tide",
+          "payload": {
+            "height_m": 1.9,
+            "trend": "rising"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2821058370,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "tide_gauge",
+          "unit": null
+        },
+        {
+          "event_time_ns": 60000000000,
+          "geometry": null,
+          "id": "alert-001",
+          "kind": "alert",
+          "payload": {
+            "level": "amber",
+            "text": "unidentified vessel approaching restricted zone",
+            "vessel": "UNK-1"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 10,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 62573300551,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "harbour_vts",
+          "unit": null
+        },
+        {
+          "event_time_ns": 120000000000,
+          "geometry": null,
+          "id": "berth-001",
+          "kind": "berth_schedule",
+          "payload": {
+            "berth": "B7",
+            "eta_s": 2400,
+            "vessel": "MV Nordlicht"
+          },
+          "policy_labels": [
+            "harbour_private"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 122371209067,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "harbour_admin",
+          "unit": null
+        },
+        {
+          "event_time_ns": 300000000000,
+          "geometry": null,
+          "id": "ack-001",
+          "kind": "ack",
+          "payload": {
+            "acknowledges": "alert-001",
+            "by": "duty_officer"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 5,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 302567157904,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "duty_officer",
+          "unit": null
+        },
+        {
+          "event_time_ns": 300000000000,
+          "geometry": null,
+          "id": "ack-001#dup1",
+          "kind": "ack",
+          "payload": {
+            "acknowledges": "alert-001",
+            "by": "duty_officer"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 5,
+          "provenance_ids": [
+            "ack-001"
+          ],
+          "quality": null,
+          "received_time_ns": 302567157904,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "duty_officer",
+          "unit": null
+        },
+        {
+          "event_time_ns": 300000000000,
+          "geometry": null,
+          "id": "ais-002",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.541,
+            "lon": 9.979,
+            "mmsi": 211000001
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 302567157904,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 600000000000,
+          "geometry": null,
+          "id": "ais-003",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.542,
+            "lon": 9.9781,
+            "mmsi": 211000001
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 602634988181,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 600000000000,
+          "geometry": null,
+          "id": "weather-001",
+          "kind": "weather",
+          "payload": {
+            "visibility_km": 4.0,
+            "wind_kt": 12
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 602926402759,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "met_office",
+          "unit": null
+        },
+        {
+          "event_time_ns": 900000000000,
+          "geometry": null,
+          "id": "ais-004",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.53,
+            "lon": 9.99,
+            "mmsi": 211000002
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 902193783795,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 900000000000,
+          "geometry": null,
+          "id": "crew-001",
+          "kind": "crew_manifest",
+          "payload": {
+            "crew": 14,
+            "vessel": "MV Nordlicht"
+          },
+          "policy_labels": [
+            "harbour_private"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 902193783795,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "harbour_admin",
+          "unit": null
+        },
+        {
+          "event_time_ns": 700000000000,
+          "geometry": null,
+          "id": "sighting-001",
+          "kind": "sighting",
+          "payload": {
+            "bearing_deg": 85,
+            "confidence": 0.3,
+            "note": "possible small craft, haze",
+            "vessel": "UNK-1"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1002214486535,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "lookout_east",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1000000000000,
+          "geometry": null,
+          "id": "sighting-002",
+          "kind": "sighting",
+          "payload": {
+            "bearing_deg": 92,
+            "confidence": 0.8,
+            "note": "visual, grey hull, no AIS",
+            "vessel": "UNK-1"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1002896596926,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "patrol_boat_a",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1200000000000,
+          "geometry": null,
+          "id": "ais-005",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.531,
+            "lon": 9.989,
+            "mmsi": 211000002
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1202657066279,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1200000000000,
+          "geometry": null,
+          "id": "sighting-003",
+          "kind": "sighting",
+          "payload": {
+            "bearing_deg": 140,
+            "confidence": 0.65,
+            "note": "radar contact, intermittent",
+            "vessel": "UNK-2"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1202657066279,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "radar_north",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1200000000000,
+          "geometry": null,
+          "id": "tide-002",
+          "kind": "tide",
+          "payload": {
+            "height_m": 2.3,
+            "trend": "rising"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1202657066279,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "tide_gauge",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1350000000000,
+          "geometry": null,
+          "id": "sighting-004",
+          "kind": "sighting",
+          "payload": {
+            "bearing_deg": 95,
+            "confidence": 0.4,
+            "note": "lost in rain",
+            "vessel": "UNK-1"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1352464612803,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "lookout_east",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1500000000000,
+          "geometry": null,
+          "id": "ais-006",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.5321,
+            "lon": 9.9881,
+            "mmsi": 211000002
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1502993653305,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1500000000000,
+          "geometry": null,
+          "id": "patrol-001",
+          "kind": "patrol_status",
+          "payload": {
+            "sector": "north",
+            "state": "on_station"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1502993653305,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "cg_cutter_7",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1700000000000,
+          "geometry": null,
+          "id": "radar-001",
+          "kind": "radar_contact",
+          "payload": {
+            "range_nm": 6.1,
+            "track": "T41"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1702111475738,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "radar_north",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1407000000000,
+          "geometry": null,
+          "id": "correction-001",
+          "kind": "correction",
+          "payload": {
+            "confidence": 0.15,
+            "corrects": "sighting-003",
+            "reason": "radar ghost, sea clutter confirmed by patrol_boat_a"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 5,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1709781717903,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "patrol_boat_a",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1800000000000,
+          "geometry": null,
+          "id": "ais-007",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.52,
+            "lon": 10.001,
+            "mmsi": 211000003
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1802253995246,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1800000000000,
+          "geometry": null,
+          "id": "shift-001",
+          "kind": "shift_change",
+          "payload": {
+            "incoming": "watch_b",
+            "outgoing": "watch_a"
+          },
+          "policy_labels": [
+            "harbour_private"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1802253995246,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "harbour_admin",
+          "unit": null
+        },
+        {
+          "event_time_ns": 1800000000000,
+          "geometry": null,
+          "id": "weather-002",
+          "kind": "weather",
+          "payload": {
+            "visibility_km": 2.5,
+            "wind_kt": 16
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 1802253995246,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "met_office",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2100000000000,
+          "geometry": null,
+          "id": "ais-008",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.5211,
+            "lon": 10.0001,
+            "mmsi": 211000003
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2102498431528,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2200000000000,
+          "geometry": null,
+          "id": "radar-005",
+          "kind": "radar_contact",
+          "payload": {
+            "range_nm": 4.1,
+            "track": "T41"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2202289346673,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "radar_north",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2400000000000,
+          "geometry": null,
+          "id": "ais-009",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.5222,
+            "lon": 9.9992,
+            "mmsi": 211000003
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2402681577475,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2400000000000,
+          "geometry": null,
+          "id": "tide-003",
+          "kind": "tide",
+          "payload": {
+            "height_m": 2.6,
+            "trend": "slack"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2402681577475,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "tide_gauge",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2600000000000,
+          "geometry": null,
+          "id": "sighting-005",
+          "kind": "sighting",
+          "payload": {
+            "bearing_deg": 101,
+            "confidence": 0.9,
+            "note": "fishing vessel, AIS switched off, identified",
+            "vessel": "UNK-1"
+          },
+          "policy_labels": [
+            "coast_shared"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2602906821371,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "patrol_boat_b",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2700000000000,
+          "geometry": null,
+          "id": "ais-010",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.543,
+            "lon": 9.977,
+            "mmsi": 211000001
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2702090992690,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 2700000000000,
+          "geometry": null,
+          "id": "berth-002",
+          "kind": "berth_schedule",
+          "payload": {
+            "berth": "B3",
+            "eta_s": 3300,
+            "vessel": "MV Aurora"
+          },
+          "policy_labels": [
+            "harbour_private"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 2702193210388,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "harbour_admin",
+          "unit": null
+        },
+        {
+          "event_time_ns": 3000000000000,
+          "geometry": null,
+          "id": "ais-011",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.544,
+            "lon": 9.976,
+            "mmsi": 211000001
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 3002876824505,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        },
+        {
+          "event_time_ns": 3000000000000,
+          "geometry": null,
+          "id": "weather-003",
+          "kind": "weather",
+          "payload": {
+            "visibility_km": 3.0,
+            "wind_kt": 14
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 3002876824505,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "met_office",
+          "unit": null
+        },
+        {
+          "event_time_ns": 3300000000000,
+          "geometry": null,
+          "id": "status-001",
+          "kind": "status",
+          "payload": {
+            "alert": "alert-001",
+            "state": "all_clear"
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 5,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 3302912134685,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "harbour_vts",
+          "unit": null
+        },
+        {
+          "event_time_ns": 3300000000000,
+          "geometry": null,
+          "id": "ais-012",
+          "kind": "ais_position",
+          "payload": {
+            "lat": 53.533,
+            "lon": 9.987,
+            "mmsi": 211000002
+          },
+          "policy_labels": [
+            "public"
+          ],
+          "priority": 0,
+          "provenance_ids": [],
+          "quality": null,
+          "received_time_ns": 3302912134685,
+          "scenario_id": "port_alert",
+          "schema_version": "event.v1",
+          "source_id": "ais_feed",
+          "unit": null
+        }
+      ]
+    }
+  }
+}

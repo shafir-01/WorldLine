@@ -1,0 +1,55 @@
+[
+  {
+    "derived_at_ns": 0,
+    "explanation": "no decision relied on an event matching {'corrupted': True}",
+    "invariant_id": "absence.no_corrupted_in_decision",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "PASS",
+    "trace_digest": "sha256:bf4880095ceb64a49f3e0a919849735b4b0d8a29b8880f4c9257f649d16375e8",
+    "witness": []
+  },
+  {
+    "derived_at_ns": 0,
+    "explanation": "decision decision:duty_officer:escalate_or_monitor (escalate_or_monitor) chose 'escalate' but truth as of 1500000000000 gives 'monitor'; actor had not received ['ais-006', 'patrol-001']",
+    "invariant_id": "decision.consistent_with_truth",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "FAIL",
+    "trace_digest": "sha256:bf4880095ceb64a49f3e0a919849735b4b0d8a29b8880f4c9257f649d16375e8",
+    "witness": [
+      "ais-006",
+      "patrol-001"
+    ]
+  },
+  {
+    "derived_at_ns": 0,
+    "explanation": "role 'coast_guard' never received an event labelled 'harbour_private'",
+    "invariant_id": "epistemic.label_isolation",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "PASS",
+    "trace_digest": "sha256:bf4880095ceb64a49f3e0a919849735b4b0d8a29b8880f4c9257f649d16375e8",
+    "witness": []
+  },
+  {
+    "derived_at_ns": 0,
+    "explanation": "no view or decision knows anything before it was received",
+    "invariant_id": "epistemic.no_future_knowledge",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "PASS",
+    "trace_digest": "sha256:bf4880095ceb64a49f3e0a919849735b4b0d8a29b8880f4c9257f649d16375e8",
+    "witness": []
+  },
+  {
+    "derived_at_ns": 0,
+    "explanation": "all 1 alert events acknowledged within 300000000000ns by harbour_ops",
+    "invariant_id": "response.alert_ack",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "PASS",
+    "trace_digest": "sha256:bf4880095ceb64a49f3e0a919849735b4b0d8a29b8880f4c9257f649d16375e8",
+    "witness": []
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "derived_at_ns": 0,
+    "explanation": "no decision relied on an event matching {'corrupted': True}",
+    "invariant_id": "absence.no_corrupted_in_decision",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "PASS",
+    "trace_digest": "sha256:9129ec8e596a261a551e1368aa27d6b7601b2f57da8b8307456a093219728c61",
+    "witness": []
+  },
+  {
+    "derived_at_ns": 0,
+    "explanation": "decision decision:watch_officer:reroute_or_continue (reroute_or_continue) chose 'reroute' but truth as of 1200000000000 gives 'continue'; actor had not received ['tele-001', 'tele-002', 'tele-003', 'tele-004', 'retract-001']",
+    "invariant_id": "decision.consistent_with_truth",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "FAIL",
+    "trace_digest": "sha256:9129ec8e596a261a551e1368aa27d6b7601b2f57da8b8307456a093219728c61",
+    "witness": [
+      "tele-001",
+      "tele-002",
+      "tele-003",
+      "tele-004",
+      "retract-001"
+    ]
+  },
+  {
+    "derived_at_ns": 0,
+    "explanation": "no view or decision knows anything before it was received",
+    "invariant_id": "epistemic.no_future_knowledge",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "PASS",
+    "trace_digest": "sha256:9129ec8e596a261a551e1368aa27d6b7601b2f57da8b8307456a093219728c61",
+    "witness": []
+  }
+]

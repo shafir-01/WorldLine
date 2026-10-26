@@ -1,132 +1,206 @@
 {
-  "synthetic": true,
-  "cases": {
-    "authorized": {
-      "synthetic": true,
-      "decision": "AUTHORIZED",
-      "artifact_digest": "sha256:25e101e7bc3fe11c5041b36d9bf3a00bf86285915fb8c7677e19a163c7e77a63",
-      "policy": {
-        "required": [
-          {
-            "claim_pattern": "invariant:*",
-            "min_kind": "EMPIRICALLY_VALIDATED"
-          },
-          {
-            "claim_pattern": "tests",
-            "min_kind": "ATTESTED"
-          },
-          {
-            "claim_pattern": "artifact-built-from-commit",
-            "min_kind": "ATTESTED"
-          }
-        ],
-        "forbid_producers_for_kinds": {
-          "ATTESTED": [
-            "agent:*"
-          ]
-        },
-        "max_age_s": 86400
-      },
-      "bundle_head": "sha256:89733dbf83c2e4b63946a53b262ec35fef66ddf1837c5353126331622d22eb93",
-      "evaluated_at": "2026-10-26T10:00:00Z",
-      "reasons": [
-        "all required claims satisfied at or above min_kind",
-        "bundle hash chain verified with CI public key",
-        "no agent-produced ATTESTED records"
+  "artifact_digest": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52",
+  "bundle_file": "experiments\\out\\bundle.json",
+  "decision": "AUTHORIZED",
+  "downgraded": [],
+  "evaluated_at": "2026-10-26T18:42:47.147920+00:00",
+  "missing": [],
+  "policy": "release",
+  "reasons": [
+    "all 5 requirement(s) met by 15 record(s)"
+  ],
+  "satisfied": [
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
       ],
-      "satisfied": [
-        {
-          "claim_pattern": "invariant:*",
-          "record_id": "sha256:d8561089675f0e6c618e180969e805c7a1734b1ef35ba4c65ddcfaefb467cb32",
-          "kind": "EMPIRICALLY_VALIDATED"
-        },
-        {
-          "claim_pattern": "tests",
-          "record_id": "sha256:f201cff238228853d0a9750aa35cd250aee6c83863b11e4a202351a18bbbe668",
-          "kind": "ATTESTED"
-        },
-        {
-          "claim_pattern": "artifact-built-from-commit",
-          "record_id": "sha256:89733dbf83c2e4b63946a53b262ec35fef66ddf1837c5353126331622d22eb93",
-          "kind": "ATTESTED"
-        }
-      ],
-      "missing": [],
-      "stale": [],
-      "downgraded": []
+      "claim": "tests:unit",
+      "claim_pattern": "tests:unit",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "producer": "agent:pipeline",
+      "record_id": "sha256:3c69073a668c469987709cb295cb8b0ac0dff789e9d9eae0ceda282f2d1763cb",
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
     },
-    "denied": {
-      "synthetic": true,
-      "decision": "DENIED",
-      "artifact_digest": "sha256:25e101e7bc3fe11c5041b36d9bf3a00bf86285915fb8c7677e19a163c7e77a63",
-      "policy": {
-        "required": [
-          {
-            "claim_pattern": "invariant:*",
-            "min_kind": "EMPIRICALLY_VALIDATED"
-          },
-          {
-            "claim_pattern": "tests",
-            "min_kind": "ATTESTED"
-          },
-          {
-            "claim_pattern": "artifact-built-from-commit",
-            "min_kind": "ATTESTED"
-          }
-        ],
-        "forbid_producers_for_kinds": {
-          "ATTESTED": [
-            "agent:*"
-          ]
-        },
-        "max_age_s": 86400
-      },
-      "bundle_head": "sha256:89733dbf83c2e4b63946a53b262ec35fef66ddf1837c5353126331622d22eb93",
-      "evaluated_at": "2026-10-28T11:30:00Z",
-      "reasons": [
-        "stale",
-        "agent_report_mismatch"
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
       ],
-      "reason_details": {
-        "stale": "record sha256:f201cff23822... (\"tests\") derived_at 2026-10-26T09:16:10Z is older than max_age_s=86400 at evaluation time",
-        "agent_report_mismatch": "agent:repairer reported \"fixes decision_matches_truth\" but kernel recomputation over trace sha256:d0e64d344da6... yields FAIL with witness e-0010"
-      },
-      "satisfied": [
-        {
-          "claim_pattern": "invariant:*",
-          "record_id": "sha256:d8561089675f0e6c618e180969e805c7a1734b1ef35ba4c65ddcfaefb467cb32",
-          "kind": "EMPIRICALLY_VALIDATED"
-        },
-        {
-          "claim_pattern": "artifact-built-from-commit",
-          "record_id": "sha256:89733dbf83c2e4b63946a53b262ec35fef66ddf1837c5353126331622d22eb93",
-          "kind": "ATTESTED"
-        }
+      "claim": "tests:unit",
+      "claim_pattern": "tests:unit",
+      "kind": "ATTESTED",
+      "producer": "kernel",
+      "record_id": "sha256:98f41b5e99bac0d60a527c81305e5ddd647eab2d2203f6b2f42f5b9e40ad85b6",
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
       ],
-      "missing": [
-        {
-          "claim_pattern": "tests",
-          "min_kind": "ATTESTED",
-          "note": "only stale record available"
-        }
+      "claim": "invariant:absence.no_corrupted_in_decision",
+      "claim_pattern": "invariant:*",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "producer": "agent:pipeline",
+      "record_id": "sha256:0b18532234bb0859c81fdf7cb5a1b5ae9867b4f34817d9d04a054d95e555bad0",
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
       ],
-      "stale": [
-        {
-          "record_id": "sha256:f201cff238228853d0a9750aa35cd250aee6c83863b11e4a202351a18bbbe668",
-          "claim": "tests",
-          "age_s": 180830,
-          "max_age_s": 86400
-        }
+      "claim": "invariant:decision.consistent_with_truth",
+      "claim_pattern": "invariant:*",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "producer": "agent:pipeline",
+      "record_id": "sha256:2e8754681016ed0872f7d2a4f28df90c12a69814601a95a62e73823dbf158604",
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
       ],
-      "downgraded": [
-        {
-          "record_id": "sha256:5174450813e71cbef29d3c97fd3adafd83927664341efdfa45ed6d70adadda7c",
-          "claim": "patch:repairer/mr-17 fixes decision_matches_truth on root/3412b87eda53",
-          "from": "EMPIRICALLY_VALIDATED (agent-reported)",
-          "to": "FAILED",
-          "reason": "kernel recomputation disagrees with agent report"
-        }
-      ]
+      "claim": "invariant:epistemic.label_isolation",
+      "claim_pattern": "invariant:*",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "producer": "agent:pipeline",
+      "record_id": "sha256:0331387a51b831259840f986f1e11d76bdcbac16994baaca6e2f5fbdf8a933ed",
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "invariant:epistemic.no_future_knowledge",
+      "claim_pattern": "invariant:*",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "producer": "agent:pipeline",
+      "record_id": "sha256:5ed53d4afe6d8032f394d471bf3bffe410c18d48bb1042736a179a6c9c9202aa",
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "invariant:response.alert_ack",
+      "claim_pattern": "invariant:*",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "producer": "agent:pipeline",
+      "record_id": "sha256:65b8fa1e7256755878ac04217080504ba46d376b0cc3ad3c39d2539ba727f7a8",
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "invariant:absence.no_corrupted_in_decision",
+      "claim_pattern": "invariant:*",
+      "kind": "ATTESTED",
+      "producer": "kernel",
+      "record_id": "sha256:1c61caee7b32c6d4b7bbf1ad6fa27a482c393d9fe73854a42dc498f7a2a86642",
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "invariant:decision.consistent_with_truth",
+      "claim_pattern": "invariant:*",
+      "kind": "ATTESTED",
+      "producer": "kernel",
+      "record_id": "sha256:513879ac34d16fb2060475e2282b377d343f55cb0dd189521a55a57c46d9aa8f",
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "invariant:epistemic.label_isolation",
+      "claim_pattern": "invariant:*",
+      "kind": "ATTESTED",
+      "producer": "kernel",
+      "record_id": "sha256:8b79c3b2ed953b8114fb4c6e374c90663b5ea5eebfebaf40085892593f4c79d6",
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "invariant:epistemic.no_future_knowledge",
+      "claim_pattern": "invariant:*",
+      "kind": "ATTESTED",
+      "producer": "kernel",
+      "record_id": "sha256:f4c8add5ade93fd92423d3f4fc93efb85b41266bfd4c1d627aaa836aa1ecee76",
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "invariant:response.alert_ack",
+      "claim_pattern": "invariant:*",
+      "kind": "ATTESTED",
+      "producer": "kernel",
+      "record_id": "sha256:288f02002d4cb82530c4e5b959f825d80eb388a11d4906a3aafc5f0e9a9d1802",
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [],
+      "claim": "artifact:digest",
+      "claim_pattern": "artifact:digest",
+      "kind": "ATTESTED",
+      "producer": "kernel",
+      "record_id": "sha256:a00be0def35021f2d4d2f85c2a8741bcef621c48be1c6c97a73eab0c2dde94a3",
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "genome:challenge",
+      "claim_pattern": "genome:challenge",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "producer": "agent:pipeline",
+      "record_id": "sha256:99b436c3c74f1ed68e525170a784fd245c816bac12afbc9a71ac9c311ee2841c",
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
+    },
+    {
+      "assumptions": [
+        "bounded horizon",
+        "declared delivery policies",
+        "synthetic scenario"
+      ],
+      "claim": "genome:challenge",
+      "claim_pattern": "genome:challenge",
+      "kind": "ATTESTED",
+      "producer": "kernel",
+      "record_id": "sha256:82bede4c04447a00819a0dbb466eb2503b57cd883821243b2e8ffc9ead465e53",
+      "subject": "f9cd9c8926530d76b139c3f85433c2ffc65e3d52"
     }
-  }
+  ],
+  "stale": []
 }

@@ -1,0 +1,67 @@
+[
+  {
+    "derived_at_ns": 0,
+    "explanation": "decision decision:duty_officer:escalate_or_monitor relied on alert-001 matching {'corrupted': True}",
+    "invariant_id": "absence.no_corrupted_in_decision",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "FAIL",
+    "trace_digest": "sha256:0803b2818a20d3e7188a0b903c30e6dc3cc5cab52845f418352573ee08595def",
+    "witness": [
+      "decision:duty_officer:escalate_or_monitor",
+      "alert-001"
+    ]
+  },
+  {
+    "derived_at_ns": 0,
+    "explanation": "decision decision:coast_watch:stand_down_if_acknowledged (stand_down_if_acknowledged) chose 'dispatch_patrol' but truth as of 2400000000000 gives 'stand_down'; actor had not received ['berth-001', 'crew-001', 'shift-001', 'radar-002', 'radar-003', 'radar-004', 'ais-009', 'tide-003']",
+    "invariant_id": "decision.consistent_with_truth",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "FAIL",
+    "trace_digest": "sha256:0803b2818a20d3e7188a0b903c30e6dc3cc5cab52845f418352573ee08595def",
+    "witness": [
+      "berth-001",
+      "crew-001",
+      "shift-001",
+      "radar-002",
+      "radar-003",
+      "radar-004",
+      "ais-009",
+      "tide-003"
+    ]
+  },
+  {
+    "derived_at_ns": 0,
+    "explanation": "role 'coast_guard' never received an event labelled 'harbour_private'",
+    "invariant_id": "epistemic.label_isolation",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "PASS",
+    "trace_digest": "sha256:0803b2818a20d3e7188a0b903c30e6dc3cc5cab52845f418352573ee08595def",
+    "witness": []
+  },
+  {
+    "derived_at_ns": 0,
+    "explanation": "no view or decision knows anything before it was received",
+    "invariant_id": "epistemic.no_future_knowledge",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "PASS",
+    "trace_digest": "sha256:0803b2818a20d3e7188a0b903c30e6dc3cc5cab52845f418352573ee08595def",
+    "witness": []
+  },
+  {
+    "derived_at_ns": 0,
+    "explanation": "alert alert-001#dup1 received by harbour_ops at 62573300551 had no ack by 362573300551",
+    "invariant_id": "response.alert_ack",
+    "invariant_version": "1.0",
+    "missing_data": [],
+    "result": "FAIL",
+    "trace_digest": "sha256:0803b2818a20d3e7188a0b903c30e6dc3cc5cab52845f418352573ee08595def",
+    "witness": [
+      "alert-001#dup1",
+      "ais-002"
+    ]
+  }
+]
