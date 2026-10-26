@@ -8,7 +8,7 @@
 ![tests](https://img.shields.io/badge/tests-158%20passing-brightgreen)
 ![claims](https://img.shields.io/badge/claims-typed%20by%20certainty-6f42c1)
 
-> Built for the GitLab Transcend "Life After Code" hackathon as the first laboratory of a longer research program. Every number in this file was written by code that ran; see [Evidence and claim ceilings](#evidence-and-claim-ceilings).
+> Every number in this file was written by code that ran; see [Evidence and claim ceilings](#evidence-and-claim-ceilings). All scenarios are synthetic.
 
 ![One history branching into alternative worlds](docs/screens/worlds.png)
 
@@ -188,20 +188,15 @@ Trust boundary: everything left of the kernel may be produced or modified by age
 
 ## GitLab Duo integration
 
-What actually ran on GitLab, all inspectable:
+The repository ships three custom Duo agents and three flows, defined as text in [docs/duo/](docs/duo/) and created in the project's AI catalog by `scripts/duo_setup.py`:
 
-| Step | Actor | Link |
+| Agent / flow | Trigger | Role |
 |---|---|---|
-| Witness filed | pipeline output | [issue 1](https://gitlab.com/shafir2/WorldLine/-/work_items/1) |
-| Investigation: re-ran exploration, confirmed identical digests, minimized, reported | Duo agent, WORLDLINE Investigate flow | [session 10080962](https://gitlab.com/shafir2/WorldLine/-/automate/agent-sessions/10080962) |
-| Repair proposed under the contract | Duo agent, WORLDLINE Repair flow | [merge request 1](https://gitlab.com/shafir2/WorldLine/-/merge_requests/1), [session 10081188](https://gitlab.com/shafir2/WorldLine/-/automate/agent-sessions/10081188) |
-| Review found the repair vacuous (escalation unreachable) | GitLab Duo Code Review | comments on MR 1 |
-| Review addressed with a reachability variant | Duo agent, WORLDLINE Repair flow | [session 10081957](https://gitlab.com/shafir2/WorldLine/-/automate/agent-sessions/10081957) |
-| Independent review: FAIL, repair sidesteps the fault and does not land on the target scenario | Duo agent, WORLDLINE Skeptic flow | [session 10081961](https://gitlab.com/shafir2/WorldLine/-/automate/agent-sessions/10081961) |
+| Investigator / WORLDLINE Investigate | work item, mention | Re-runs the exploration in a hosted session, checks determinism, minimizes, posts the witness and genome on the issue. Read-only. |
+| Repairer / WORLDLINE Repair | mention | Proposes a fix as a merge request under the repair contract in [AGENTS.md](AGENTS.md): the product scenario must pass under the specimen's minimal fault schedule, the specimen must still fail, no invariant may be weakened, and the non-default decision must remain reachable. |
+| Skeptic / WORLDLINE Skeptic Review | merge request | Reviews a merge request for claims not backed by a test, digest or verdict file, for protected-path edits, and for vacuous repairs. |
 
-The merge request is deliberately left open: the Skeptic is right, and the fix it demands is a design decision recorded in [docs/HANDOVER.md](docs/HANDOVER.md). Agents were created from the prompts in this repository through the catalog API (`scripts/duo_setup.py`).
-
-Three custom agents, prompts in [docs/duo/](docs/duo/): **Investigator** reads a FAIL witness and the genome and writes an issue; **Repairer** proposes a fix as a merge request under the repair contract in [AGENTS.md](AGENTS.md) (make the failing branch PASS without weakening invariants, add a regression scenario); **Skeptic** reviews merge requests for claims not backed by typed evidence. Flows in [docs/duo/flows.md](docs/duo/flows.md) trigger the Investigator from a work item and the Skeptic on merge request creation. The pipeline's `kernel-verify` and `authorize` stages decide; agents never do. Setup steps are in [docs/GITLAB_SETUP.md](docs/GITLAB_SETUP.md). Autonomy tier: Supervised.
+Agents never evaluate their own work. `invariants/`, `policies/`, `worldline/evidence/` and the kernel CI jobs are protected by CODEOWNERS; the `kernel-verify` and `authorize` stages decide. Example run: [issue 1](https://gitlab.com/shafir2/WorldLine/-/work_items/1) and [merge request 1](https://gitlab.com/shafir2/WorldLine/-/merge_requests/1), with the agent sessions linked from their notes. Setup: [docs/GITLAB_SETUP.md](docs/GITLAB_SETUP.md).
 
 ## Testing
 
