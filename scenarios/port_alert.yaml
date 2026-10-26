@@ -1,0 +1,127 @@
+# WORLDLINE scenario: synthetic port security alert (one hour).
+#
+# Three roles observe the same truth through different delivery policies.
+# Two actors make rule-based decisions from what their role *knows*, not from truth.
+#
+# Seeded latent defect (do not "fix" it here, a later module must discover it):
+#   duty_officer decides at 1500s whether to escalate. In this baseline the correction
+#   that downgrades sighting-003 reaches harbour_ops at ~1410s, so only one credible
+#   sighting remains and the decision is "monitor". If delivery of correction-001 is
+#   delayed by roughly 90s or more it arrives after the decision point and the same
+#   rule says "escalate" on stale information.
+id: port_alert
+seed: 20261026
+clock:
+  epoch_ns: 0
+  tick_ns: 1s
+  horizon_ns: 1h
+
+roles:
+  - id: harbour_ops
+    visibility: ["*"]
+    delivery: {base_latency_ns: 2s, jitter_ns: 1s, drop_probability: 0.0, ordering: fifo}
+  - id: coast_guard
+    visibility: [public, coast_shared]      # harbour_private is withheld
+    delivery: {base_latency_ns: 20s, jitter_ns: 15s, drop_probability: 0.0, ordering: network}
+  - id: evaluator
+    visibility: ["*"]
+    delivery: {base_latency_ns: 0, jitter_ns: 0, drop_probability: 0.0, ordering: fifo}
+
+actors:
+  - id: duty_officer
+    role: harbour_ops
+    decision_rules:
+      - id: escalate_or_monitor
+        at_ns: 1500s
+        window_ns: 600s
+        when: "count(kind='sighting', payload.confidence>=0.6, not_corrected) >= 2"
+        then: escalate
+        otherwise: monitor
+  - id: coast_watch
+    role: coast_guard
+    decision_rules:
+      - id: stand_down_if_acknowledged
+        at_ns: 2400s
+        window_ns: 2400s
+        when: "acknowledged(kind='alert', within_ns=600s)"
+        then: stand_down
+        otherwise: dispatch_patrol
+
+injects:
+  # --- routine background: AIS positions every 5 minutes (public) -------------
+  - {id: ais-001, at_ns: 0s,    source_id: ais_feed, kind: ais_position, payload: {mmsi: 211000001, lat: 53.5401, lon: 9.9800}, policy_labels: [public]}
+  - {id: ais-002, at_ns: 300s,  source_id: ais_feed, kind: ais_position, payload: {mmsi: 211000001, lat: 53.5410, lon: 9.9790}, policy_labels: [public]}
+  - {id: ais-003, at_ns: 600s,  source_id: ais_feed, kind: ais_position, payload: {mmsi: 211000001, lat: 53.5420, lon: 9.9781}, policy_labels: [public]}
+  - {id: ais-004, at_ns: 900s,  source_id: ais_feed, kind: ais_position, payload: {mmsi: 211000002, lat: 53.5300, lon: 9.9900}, policy_labels: [public]}
+  - {id: ais-005, at_ns: 1200s, source_id: ais_feed, kind: ais_position, payload: {mmsi: 211000002, lat: 53.5310, lon: 9.9890}, policy_labels: [public]}
+  - {id: ais-006, at_ns: 1500s, source_id: ais_feed, kind: ais_position, payload: {mmsi: 211000002, lat: 53.5321, lon: 9.9881}, policy_labels: [public]}
+  - {id: ais-007, at_ns: 1800s, source_id: ais_feed, kind: ais_position, payload: {mmsi: 211000003, lat: 53.5200, lon: 10.0010}, policy_labels: [public]}
+  - {id: ais-008, at_ns: 2100s, source_id: ais_feed, kind: ais_position, payload: {mmsi: 211000003, lat: 53.5211, lon: 10.0001}, policy_labels: [public]}
+  - {id: ais-009, at_ns: 2400s, source_id: ais_feed, kind: ais_position, payload: {mmsi: 211000003, lat: 53.5222, lon: 9.9992}, policy_labels: [public]}
+  - {id: ais-010, at_ns: 2700s, source_id: ais_feed, kind: ais_position, payload: {mmsi: 211000001, lat: 53.5430, lon: 9.9770}, policy_labels: [public]}
+  - {id: ais-011, at_ns: 3000s, source_id: ais_feed, kind: ais_position, payload: {mmsi: 211000001, lat: 53.5440, lon: 9.9760}, policy_labels: [public]}
+  - {id: ais-012, at_ns: 3300s, source_id: ais_feed, kind: ais_position, payload: {mmsi: 211000002, lat: 53.5330, lon: 9.9870}, policy_labels: [public]}
+
+  # --- environment ----------------------------------------------------------
+  - {id: tide-001,    at_ns: 0s,    source_id: tide_gauge, kind: tide,    payload: {height_m: 1.9, trend: rising},  policy_labels: [public]}
+  - {id: tide-002,    at_ns: 1200s, source_id: tide_gauge, kind: tide,    payload: {height_m: 2.3, trend: rising},  policy_labels: [public]}
+  - {id: tide-003,    at_ns: 2400s, source_id: tide_gauge, kind: tide,    payload: {height_m: 2.6, trend: slack},   policy_labels: [public]}
+  - {id: weather-001, at_ns: 600s,  source_id: met_office, kind: weather, payload: {visibility_km: 4.0, wind_kt: 12}, policy_labels: [public]}
+  - {id: weather-002, at_ns: 1800s, source_id: met_office, kind: weather, payload: {visibility_km: 2.5, wind_kt: 16}, policy_labels: [public]}
+  - {id: weather-003, at_ns: 3000s, source_id: met_office, kind: weather, payload: {visibility_km: 3.0, wind_kt: 14}, policy_labels: [public]}
+
+  # --- harbour-private administrative traffic (never visible to coast_guard) --
+  - {id: berth-001, at_ns: 120s,  source_id: harbour_admin, kind: berth_schedule, payload: {berth: B7, vessel: "MV Nordlicht", eta_s: 2400}, policy_labels: [harbour_private]}
+  - {id: crew-001,  at_ns: 900s,  source_id: harbour_admin, kind: crew_manifest,  payload: {vessel: "MV Nordlicht", crew: 14},           policy_labels: [harbour_private]}
+  - {id: shift-001, at_ns: 1800s, source_id: harbour_admin, kind: shift_change,   payload: {outgoing: watch_a, incoming: watch_b},        policy_labels: [harbour_private]}
+  - {id: berth-002, at_ns: 2700s, source_id: harbour_admin, kind: berth_schedule, payload: {berth: B3, vessel: "MV Aurora", eta_s: 3300}, policy_labels: [harbour_private]}
+
+  # --- the incident ------------------------------------------------------------
+  - id: alert-001
+    at_ns: 60s
+    source_id: harbour_vts
+    kind: alert
+    payload: {level: amber, text: "unidentified vessel approaching restricted zone", vessel: UNK-1}
+    policy_labels: [public]
+    priority: 10
+  - id: ack-001
+    at_ns: 300s
+    source_id: duty_officer
+    kind: ack
+    payload: {acknowledges: alert-001, by: duty_officer}
+    policy_labels: [public]
+    priority: 5
+
+  - {id: sighting-001, at_ns: 700s,  source_id: lookout_east,  kind: sighting, payload: {vessel: UNK-1, confidence: 0.30, bearing_deg: 85,  note: "possible small craft, haze"}, policy_labels: [coast_shared]}
+  - {id: sighting-002, at_ns: 1000s, source_id: patrol_boat_a, kind: sighting, payload: {vessel: UNK-1, confidence: 0.80, bearing_deg: 92,  note: "visual, grey hull, no AIS"},    policy_labels: [coast_shared]}
+  - {id: sighting-003, at_ns: 1200s, source_id: radar_north,   kind: sighting, payload: {vessel: UNK-2, confidence: 0.65, bearing_deg: 140, note: "radar contact, intermittent"}, policy_labels: [coast_shared]}
+  - {id: sighting-004, at_ns: 1350s, source_id: lookout_east,  kind: sighting, payload: {vessel: UNK-1, confidence: 0.40, bearing_deg: 95,  note: "lost in rain"},                policy_labels: [coast_shared]}
+  # The correction: radar_north's contact was a ghost. Downgrades sighting-003.
+  # Baseline arrival at harbour_ops ~1409-1410s, 90s before the decision point.
+  - id: correction-001
+    at_ns: 1407s
+    source_id: patrol_boat_a
+    kind: correction
+    payload: {corrects: sighting-003, confidence: 0.15, reason: "radar ghost, sea clutter confirmed by patrol_boat_a"}
+    policy_labels: [coast_shared]
+    priority: 5
+  - {id: patrol-001, at_ns: 1500s, source_id: cg_cutter_7, kind: patrol_status, payload: {state: on_station, sector: north}, policy_labels: [public]}
+  - {id: sighting-005, at_ns: 2600s, source_id: patrol_boat_b, kind: sighting, payload: {vessel: UNK-1, confidence: 0.90, bearing_deg: 101, note: "fishing vessel, AIS switched off, identified"}, policy_labels: [coast_shared]}
+  - {id: status-001, at_ns: 3300s, source_id: harbour_vts, kind: status, payload: {state: all_clear, alert: alert-001}, policy_labels: [public], priority: 5}
+
+  # --- radar_north contacts; those between 1800s and 2100s fall in the outage --
+  - {id: radar-001, at_ns: 1700s, source_id: radar_north, kind: radar_contact, payload: {track: T41, range_nm: 6.1}, policy_labels: [coast_shared]}
+  - {id: radar-002, at_ns: 1850s, source_id: radar_north, kind: radar_contact, payload: {track: T41, range_nm: 5.4}, policy_labels: [coast_shared]}
+  - {id: radar-003, at_ns: 1950s, source_id: radar_north, kind: radar_contact, payload: {track: T42, range_nm: 8.0}, policy_labels: [coast_shared]}
+  - {id: radar-004, at_ns: 2050s, source_id: radar_north, kind: radar_contact, payload: {track: T41, range_nm: 4.7}, policy_labels: [coast_shared]}
+  - {id: radar-005, at_ns: 2200s, source_id: radar_north, kind: radar_contact, payload: {track: T41, range_nm: 4.1}, policy_labels: [coast_shared]}
+
+transitions:
+  - {id: radar_outage, kind: outage, from_ns: 1800s, to_ns: 2100s, source_id: radar_north}
+
+invariants:
+  - epistemic.no_future_knowledge
+  - epistemic.label_isolation
+  - response.alert_ack
+  - absence.no_corrupted_in_decision
+  - decision.consistent_with_truth

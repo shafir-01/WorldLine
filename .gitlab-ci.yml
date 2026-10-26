@@ -1,0 +1,194 @@
+# WORLDLINE pipeline. See docs/ARCHITECTURE.md "GitLab integration" and docs/GITLAB_SETUP.md.
+#
+#   test -> explore -> kernel-verify -> authorize -> pages
+#
+# Kernel jobs (kernel-verify, authorize) are protected by CODEOWNERS and only run on
+# protected refs or merge requests; they are the only jobs that see WORLDLINE_KERNEL_KEY.
+# Duo agents may edit test/explore inputs (scenarios/, worldline/ except evidence/) but
+# never this file's kernel jobs, invariants/, policies/ or worldline/evidence/.
+
+stages:
+  - test
+  - explore
+  - kernel-verify
+  - authorize
+  - pages
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  UV_CACHE_DIR: "$CI_PROJECT_DIR/.cache/uv"
+  UV_LINK_MODE: copy
+  WORLDLINE_OUT: "experiments/out"
+  WORLDLINE_SCENARIO: "scenarios/port_alert.yaml"
+  WORLDLINE_CHALLENGE_SCENARIO: "scenarios/triage_board.yaml"
+  WORLDLINE_BUDGET: "200"
+  WORLDLINE_SEED: "42"
+
+default:
+  interruptible: true
+
+.python:
+  image: python:3.12
+  before_script:
+    - pip install --quiet uv
+    - uv sync --extra dev
+  cache:
+    key:
+      files:
+        - uv.lock
+      prefix: uv
+    paths:
+      - .cache/uv
+      - .cache/pip
+      - .venv
+
+# Branch, MR and tag pipelines; no duplicate branch+MR pipelines.
+.rules-default:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_TAG
+
+# Kernel jobs: protected refs (where the signing key is visible) and MRs targeting the default branch.
+.rules-kernel:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_REF_PROTECTED == "true"
+
+test:
+  extends: [.python, .rules-default]
+  stage: test
+  script:
+    - uv run pytest -q --junitxml=report.xml
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
+    expire_in: 2 weeks
+
+explore:
+  extends: [.python, .rules-default]
+  stage: explore
+  needs: [test]
+  script:
+    # CLI under construction, flags fixed by orchestrator. Every command prints the digests it produced.
+    - mkdir -p "$WORLDLINE_OUT"
+    - uv run worldline explore "$WORLDLINE_SCENARIO" --budget "$WORLDLINE_BUDGET" --seed "$WORLDLINE_SEED" --out "$WORLDLINE_OUT"
+    - uv run worldline minimize "$WORLDLINE_OUT/exploration.json" --out "$WORLDLINE_OUT"
+    - uv run worldline genome extract "$WORLDLINE_OUT/minimal_schedule.json" --out "$WORLDLINE_OUT/genome.json"
+    - uv run worldline genome challenge "$WORLDLINE_OUT/genome.json" "$WORLDLINE_CHALLENGE_SCENARIO" --seed "$WORLDLINE_SEED" --out "$WORLDLINE_OUT/challenge.json"
+    - uv run worldline report "$WORLDLINE_OUT" --code-commit "$CI_COMMIT_SHA"
+  artifacts:
+    paths:
+      - experiments/out/
+    expire_in: 2 weeks
+
+# ---------------------------------------------------------------------------------------
+# KERNEL JOBS. Protected by CODEOWNERS. Do not edit via agents.
+# ---------------------------------------------------------------------------------------
+
+kernel-verify:
+  extends: [.python, .rules-kernel]
+  stage: kernel-verify
+  needs: [explore]
+  resource_group: worldline-kernel
+  interruptible: false
+  variables:
+    GIT_STRATEGY: clone
+  script:
+    # Recomputes verdicts from the traces in experiments/out, seals the bundle with the CI-held key,
+    # and verifies the result against the committed public key. Fails on any verification finding.
+    - test -f policies/kernel_public.pem
+    - |
+      if [ -z "$WORLDLINE_KERNEL_KEY" ]; then
+        echo "WORLDLINE_KERNEL_KEY is not available on this ref; kernel-verify requires a protected ref." >&2
+        exit 1
+      fi
+    - uv run worldline verify "$WORLDLINE_OUT" --signing-key "$WORLDLINE_KERNEL_KEY" --public-key policies/kernel_public.pem --out "$WORLDLINE_OUT/bundle.json"
+  artifacts:
+    paths:
+      - experiments/out/bundle.json
+      - experiments/out/
+    expire_in: 2 weeks
+
+authorize:
+  extends: [.python, .rules-kernel]
+  stage: authorize
+  needs: [kernel-verify]
+  resource_group: worldline-kernel
+  interruptible: false
+  script:
+    # Gate. The kernel reads only the bundle, the policy and the public key. Exit code non-zero on DENIED.
+    - uv run worldline authorize "$WORLDLINE_OUT/bundle.json" --policy policies/release.yaml --public-key policies/kernel_public.pem --artifact-digest "$CI_COMMIT_SHA" --out "$WORLDLINE_OUT/authorization.json"
+    - |
+      python3 - <<'PY'
+      import json, sys
+      a = json.load(open("experiments/out/authorization.json"))
+      print(json.dumps(a, indent=2))
+      if a.get("decision") != "AUTHORIZED":
+          print("DENIED: release gate failed", file=sys.stderr)
+          sys.exit(1)
+      PY
+  artifacts:
+    when: always
+    paths:
+      - experiments/out/authorization.json
+    expire_in: 2 weeks
+
+# ---------------------------------------------------------------------------------------
+# Optional: start the WORLDLINE Repair flow from CI when the gate is DENIED.
+# Uses the GA Flows API (GitLab 19.5): POST /api/v4/ai/duo_workflows/workflows
+# https://docs.gitlab.com/api/duo_agent_platform_flows/
+# Needs CI variables WORLDLINE_DUO_TOKEN (project access token, scope api) and
+# WORLDLINE_REPAIR_FLOW_CONSUMER_ID (numeric AI Catalog consumer id of the enabled flow).
+# Manual by design (Supervised autonomy): a human decides to hand the failure to the Repairer.
+# If the group enforces composite identity for API-started flows this returns 403; then
+# trigger the flow by mentioning @ai-worldline-repair-<group> in the issue instead.
+# ---------------------------------------------------------------------------------------
+duo-repair:
+  stage: authorize
+  image: curlimages/curl:8.10.1
+  needs:
+    - job: authorize
+      artifacts: true
+  when: manual
+  allow_failure: true
+  rules:
+    - if: $CI_COMMIT_REF_PROTECTED == "true" && $WORLDLINE_DUO_TOKEN && $WORLDLINE_REPAIR_FLOW_CONSUMER_ID
+  script:
+    - |
+      GOAL="WORLDLINE release gate DENIED for commit $CI_COMMIT_SHA on $CI_COMMIT_REF_NAME. Read experiments/out/authorization.json in pipeline $CI_PIPELINE_URL, follow AGENTS.md repair contract, and open a merge request that makes the failing branch PASS and adds a regression scenario."
+      # GOAL contains no double quotes, so it can be embedded directly.
+      printf '{"project_id":"%s","goal":"%s","ai_catalog_item_consumer_id":%s,"source_branch":"%s","allow_agent_to_request_user":false,"start_workflow":true}' \
+        "$CI_PROJECT_ID" "$GOAL" "$WORLDLINE_REPAIR_FLOW_CONSUMER_ID" "$CI_COMMIT_REF_NAME" > duo_request.json
+      curl --fail-with-body --request POST \
+        --header "PRIVATE-TOKEN: $WORLDLINE_DUO_TOKEN" \
+        --header "Content-Type: application/json" \
+        --data @duo_request.json \
+        --url "$CI_API_V4_URL/ai/duo_workflows/workflows"
+
+pages:
+  stage: pages
+  image: node:20
+  needs:
+    - job: explore
+      artifacts: true
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  cache:
+    key:
+      files:
+        - ui/package-lock.json
+    paths:
+      - ui/node_modules
+  script:
+    - cd ui && npm ci && npm run build && cd ..
+    - rm -rf public && mkdir -p public/experiments
+    - cp -r ui/dist/. public/
+    - cp -r experiments/out public/experiments/out
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 week

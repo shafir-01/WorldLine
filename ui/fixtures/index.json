@@ -1,0 +1,25 @@
+{
+  "synthetic": true,
+  "generated_by": "ui/scripts/gen-fixtures.mjs",
+  "scenario_id": "port_alert",
+  "files": {
+    "exploration": "exploration.json",
+    "minimal": "minimal.json",
+    "genome": "genome.json",
+    "challenge": "challenge.json",
+    "bundle": "bundle.json",
+    "authorization": "authorization.json",
+    "traces": {
+      "root": "traces/root.json",
+      "root/3412b87eda53": "traces/root__3412b87eda53.json",
+      "root/09bb2fbf4405": "traces/root__09bb2fbf4405.json",
+      "root/5b999424d3d7": "traces/root__5b999424d3d7.json"
+    },
+    "verdicts": {
+      "root": "verdicts/root.json",
+      "root/3412b87eda53": "verdicts/root__3412b87eda53.json",
+      "root/09bb2fbf4405": "verdicts/root__09bb2fbf4405.json",
+      "root/5b999424d3d7": "verdicts/root__5b999424d3d7.json"
+    }
+  }
+}

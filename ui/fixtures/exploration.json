@@ -1,0 +1,1944 @@
+{
+  "synthetic": true,
+  "scenario_id": "port_alert",
+  "seed": 42,
+  "budget": 24,
+  "nodes": [
+    {
+      "branch_id": "root",
+      "schedule": [],
+      "parent": null,
+      "trace_digest": "sha256:1c7e65e1aa016a90ffb74de0cbc275494c38ff0a1b75e92148db2abbe0588ff2",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8313533,
+          "trace_digest": "sha256:1c7e65e1aa016a90ffb74de0cbc275494c38ff0a1b75e92148db2abbe0588ff2"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8313533,
+          "trace_digest": "sha256:1c7e65e1aa016a90ffb74de0cbc275494c38ff0a1b75e92148db2abbe0588ff2"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8313533,
+          "trace_digest": "sha256:1c7e65e1aa016a90ffb74de0cbc275494c38ff0a1b75e92148db2abbe0588ff2"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8313533,
+          "trace_digest": "sha256:1c7e65e1aa016a90ffb74de0cbc275494c38ff0a1b75e92148db2abbe0588ff2"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 8313533,
+          "trace_digest": "sha256:1c7e65e1aa016a90ffb74de0cbc275494c38ff0a1b75e92148db2abbe0588ff2"
+        }
+      ],
+      "cost_ns": 46092876
+    },
+    {
+      "branch_id": "root/1615d3ceba62",
+      "schedule": [
+        {
+          "op": "delay",
+          "target": {
+            "kind": "sighting",
+            "role": "coast_guard",
+            "nth": 2
+          },
+          "params": {
+            "by_ns": 120000000000
+          }
+        }
+      ],
+      "parent": "root",
+      "trace_digest": "sha256:b1ae8e5f6015a71b71f7e0276329dda6f88fb05ae2df40eeefb17c1d034d77e7",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7318598,
+          "trace_digest": "sha256:b1ae8e5f6015a71b71f7e0276329dda6f88fb05ae2df40eeefb17c1d034d77e7"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7318598,
+          "trace_digest": "sha256:b1ae8e5f6015a71b71f7e0276329dda6f88fb05ae2df40eeefb17c1d034d77e7"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7318598,
+          "trace_digest": "sha256:b1ae8e5f6015a71b71f7e0276329dda6f88fb05ae2df40eeefb17c1d034d77e7"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7318598,
+          "trace_digest": "sha256:b1ae8e5f6015a71b71f7e0276329dda6f88fb05ae2df40eeefb17c1d034d77e7"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 7318598,
+          "trace_digest": "sha256:b1ae8e5f6015a71b71f7e0276329dda6f88fb05ae2df40eeefb17c1d034d77e7"
+        }
+      ],
+      "cost_ns": 53216588
+    },
+    {
+      "branch_id": "root/14be3ae7a9cd",
+      "schedule": [
+        {
+          "op": "delay",
+          "target": {
+            "kind": "alert",
+            "role": "coast_guard",
+            "nth": 1
+          },
+          "params": {
+            "by_ns": 60000000000
+          }
+        }
+      ],
+      "parent": "root",
+      "trace_digest": "sha256:b661d9d0f33cf304386d4afb1826215f264a1046234973610fa0df49f084b54f",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7162575,
+          "trace_digest": "sha256:b661d9d0f33cf304386d4afb1826215f264a1046234973610fa0df49f084b54f"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7162575,
+          "trace_digest": "sha256:b661d9d0f33cf304386d4afb1826215f264a1046234973610fa0df49f084b54f"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7162575,
+          "trace_digest": "sha256:b661d9d0f33cf304386d4afb1826215f264a1046234973610fa0df49f084b54f"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7162575,
+          "trace_digest": "sha256:b661d9d0f33cf304386d4afb1826215f264a1046234973610fa0df49f084b54f"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 7162575,
+          "trace_digest": "sha256:b661d9d0f33cf304386d4afb1826215f264a1046234973610fa0df49f084b54f"
+        }
+      ],
+      "cost_ns": 47554120
+    },
+    {
+      "branch_id": "root/7aed3a679d61",
+      "schedule": [
+        {
+          "op": "drop",
+          "target": {
+            "kind": "weather",
+            "role": "harbour_ops",
+            "nth": 1
+          },
+          "params": {}
+        }
+      ],
+      "parent": "root",
+      "trace_digest": "sha256:5d9b8943f22b00dbb3b8b607d5c1cb13a4e979b078d485f0a44e435c987d2a61",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8832704,
+          "trace_digest": "sha256:5d9b8943f22b00dbb3b8b607d5c1cb13a4e979b078d485f0a44e435c987d2a61"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8832704,
+          "trace_digest": "sha256:5d9b8943f22b00dbb3b8b607d5c1cb13a4e979b078d485f0a44e435c987d2a61"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8832704,
+          "trace_digest": "sha256:5d9b8943f22b00dbb3b8b607d5c1cb13a4e979b078d485f0a44e435c987d2a61"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8832704,
+          "trace_digest": "sha256:5d9b8943f22b00dbb3b8b607d5c1cb13a4e979b078d485f0a44e435c987d2a61"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 8832704,
+          "trace_digest": "sha256:5d9b8943f22b00dbb3b8b607d5c1cb13a4e979b078d485f0a44e435c987d2a61"
+        }
+      ],
+      "cost_ns": 44740033
+    },
+    {
+      "branch_id": "root/557a52a09b20",
+      "schedule": [
+        {
+          "op": "duplicate",
+          "target": {
+            "kind": "sighting",
+            "role": "coast_guard",
+            "nth": 2
+          },
+          "params": {
+            "count": 2
+          }
+        }
+      ],
+      "parent": "root",
+      "trace_digest": "sha256:bae66631d6fdd81aadbdcaab0fc9653690e1acaed53b12a3169a18bfbce69855",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8299553,
+          "trace_digest": "sha256:bae66631d6fdd81aadbdcaab0fc9653690e1acaed53b12a3169a18bfbce69855"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8299553,
+          "trace_digest": "sha256:bae66631d6fdd81aadbdcaab0fc9653690e1acaed53b12a3169a18bfbce69855"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8299553,
+          "trace_digest": "sha256:bae66631d6fdd81aadbdcaab0fc9653690e1acaed53b12a3169a18bfbce69855"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8299553,
+          "trace_digest": "sha256:bae66631d6fdd81aadbdcaab0fc9653690e1acaed53b12a3169a18bfbce69855"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 8299553,
+          "trace_digest": "sha256:bae66631d6fdd81aadbdcaab0fc9653690e1acaed53b12a3169a18bfbce69855"
+        }
+      ],
+      "cost_ns": 47909707
+    },
+    {
+      "branch_id": "root/0e138e1114ba",
+      "schedule": [
+        {
+          "op": "reorder",
+          "target": {
+            "kind": "sighting",
+            "role": "coast_guard",
+            "nth": 3
+          },
+          "params": {}
+        }
+      ],
+      "parent": "root",
+      "trace_digest": "sha256:f3b13617dc5576a40060e717fff5f8ec75e726ab08cdf2489d933ee21960d932",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8777707,
+          "trace_digest": "sha256:f3b13617dc5576a40060e717fff5f8ec75e726ab08cdf2489d933ee21960d932"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8777707,
+          "trace_digest": "sha256:f3b13617dc5576a40060e717fff5f8ec75e726ab08cdf2489d933ee21960d932"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8777707,
+          "trace_digest": "sha256:f3b13617dc5576a40060e717fff5f8ec75e726ab08cdf2489d933ee21960d932"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8777707,
+          "trace_digest": "sha256:f3b13617dc5576a40060e717fff5f8ec75e726ab08cdf2489d933ee21960d932"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 8777707,
+          "trace_digest": "sha256:f3b13617dc5576a40060e717fff5f8ec75e726ab08cdf2489d933ee21960d932"
+        }
+      ],
+      "cost_ns": 38060569
+    },
+    {
+      "branch_id": "root/04d5d991fdec",
+      "schedule": [
+        {
+          "op": "corrupt",
+          "target": {
+            "kind": "sighting",
+            "role": "harbour_ops",
+            "nth": 1
+          },
+          "params": {
+            "field": "confidence",
+            "value": 0.65
+          }
+        }
+      ],
+      "parent": "root",
+      "trace_digest": "sha256:8a5852b27ac31749267b164ffe1ac0906731501d3b11cd5242a6d5f9bbb19f50",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8934897,
+          "trace_digest": "sha256:8a5852b27ac31749267b164ffe1ac0906731501d3b11cd5242a6d5f9bbb19f50"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8934897,
+          "trace_digest": "sha256:8a5852b27ac31749267b164ffe1ac0906731501d3b11cd5242a6d5f9bbb19f50"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8934897,
+          "trace_digest": "sha256:8a5852b27ac31749267b164ffe1ac0906731501d3b11cd5242a6d5f9bbb19f50"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8934897,
+          "trace_digest": "sha256:8a5852b27ac31749267b164ffe1ac0906731501d3b11cd5242a6d5f9bbb19f50"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 8934897,
+          "trace_digest": "sha256:8a5852b27ac31749267b164ffe1ac0906731501d3b11cd5242a6d5f9bbb19f50"
+        }
+      ],
+      "cost_ns": 58522288
+    },
+    {
+      "branch_id": "root/85ecb13954b9",
+      "schedule": [
+        {
+          "op": "clock_skew",
+          "target": {
+            "event_id": "e-0011"
+          },
+          "params": {
+            "source_id": "weather.svc",
+            "offset_ns": 45000000000
+          }
+        }
+      ],
+      "parent": "root",
+      "trace_digest": "sha256:4e8b682fc920b1cc96c8c3afde90a8196f76dc660e4107f5ebea6e765273d5ff",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7444675,
+          "trace_digest": "sha256:4e8b682fc920b1cc96c8c3afde90a8196f76dc660e4107f5ebea6e765273d5ff"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7444675,
+          "trace_digest": "sha256:4e8b682fc920b1cc96c8c3afde90a8196f76dc660e4107f5ebea6e765273d5ff"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7444675,
+          "trace_digest": "sha256:4e8b682fc920b1cc96c8c3afde90a8196f76dc660e4107f5ebea6e765273d5ff"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7444675,
+          "trace_digest": "sha256:4e8b682fc920b1cc96c8c3afde90a8196f76dc660e4107f5ebea6e765273d5ff"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 7444675,
+          "trace_digest": "sha256:4e8b682fc920b1cc96c8c3afde90a8196f76dc660e4107f5ebea6e765273d5ff"
+        }
+      ],
+      "cost_ns": 62358988
+    },
+    {
+      "branch_id": "root/3412b87eda53",
+      "schedule": [
+        {
+          "op": "delay",
+          "target": {
+            "kind": "correction",
+            "role": "coast_guard",
+            "nth": 1
+          },
+          "params": {
+            "by_ns": 400000000000
+          }
+        }
+      ],
+      "parent": "root",
+      "trace_digest": "sha256:d0e64d344da6362d69bea4efb35b8de6f809702f4eec49f0823f9f0a0ebfaebd",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7382461,
+          "trace_digest": "sha256:d0e64d344da6362d69bea4efb35b8de6f809702f4eec49f0823f9f0a0ebfaebd"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7382461,
+          "trace_digest": "sha256:d0e64d344da6362d69bea4efb35b8de6f809702f4eec49f0823f9f0a0ebfaebd"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7382461,
+          "trace_digest": "sha256:d0e64d344da6362d69bea4efb35b8de6f809702f4eec49f0823f9f0a0ebfaebd"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "FAIL",
+          "witness": [
+            "e-0010"
+          ],
+          "explanation": "dispatch_cutter: chose 'dispatch_cutter', truth-as-of-at_ns yields 'hold'; missing e-0010",
+          "missing_data": [],
+          "derived_at_ns": 7382461,
+          "trace_digest": "sha256:d0e64d344da6362d69bea4efb35b8de6f809702f4eec49f0823f9f0a0ebfaebd"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 7382461,
+          "trace_digest": "sha256:d0e64d344da6362d69bea4efb35b8de6f809702f4eec49f0823f9f0a0ebfaebd"
+        }
+      ],
+      "cost_ns": 62901289
+    },
+    {
+      "branch_id": "root/9fc08267d106",
+      "schedule": [
+        {
+          "op": "revoke",
+          "target": {
+            "role": "coast_guard"
+          },
+          "params": {
+            "role": "coast_guard",
+            "from_ns": 500000000000
+          }
+        }
+      ],
+      "parent": "root",
+      "trace_digest": "sha256:3ecbd0b2b535dddcf37c5775dfb4cde96773a9f5ae5f73010d6368537b3893fe",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "UNKNOWN",
+          "witness": [],
+          "explanation": "coast_guard view contains no 'alert' events; response invariant has nothing to evaluate",
+          "missing_data": [
+            "alert"
+          ],
+          "derived_at_ns": 8607315,
+          "trace_digest": "sha256:3ecbd0b2b535dddcf37c5775dfb4cde96773a9f5ae5f73010d6368537b3893fe"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8607315,
+          "trace_digest": "sha256:3ecbd0b2b535dddcf37c5775dfb4cde96773a9f5ae5f73010d6368537b3893fe"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8607315,
+          "trace_digest": "sha256:3ecbd0b2b535dddcf37c5775dfb4cde96773a9f5ae5f73010d6368537b3893fe"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8607315,
+          "trace_digest": "sha256:3ecbd0b2b535dddcf37c5775dfb4cde96773a9f5ae5f73010d6368537b3893fe"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 8607315,
+          "trace_digest": "sha256:3ecbd0b2b535dddcf37c5775dfb4cde96773a9f5ae5f73010d6368537b3893fe"
+        }
+      ],
+      "cost_ns": 43639055
+    },
+    {
+      "branch_id": "root/88a645acf554",
+      "schedule": [
+        {
+          "op": "delay",
+          "target": {
+            "kind": "acknowledged",
+            "role": "harbour_ops",
+            "nth": 1
+          },
+          "params": {
+            "by_ns": 90000000000
+          }
+        }
+      ],
+      "parent": "root",
+      "trace_digest": "sha256:0b1c4e90b9c33bc285ad592dd0fef7a085a391680b9a7b2f1b4a6716e00659b1",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8527095,
+          "trace_digest": "sha256:0b1c4e90b9c33bc285ad592dd0fef7a085a391680b9a7b2f1b4a6716e00659b1"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8527095,
+          "trace_digest": "sha256:0b1c4e90b9c33bc285ad592dd0fef7a085a391680b9a7b2f1b4a6716e00659b1"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8527095,
+          "trace_digest": "sha256:0b1c4e90b9c33bc285ad592dd0fef7a085a391680b9a7b2f1b4a6716e00659b1"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8527095,
+          "trace_digest": "sha256:0b1c4e90b9c33bc285ad592dd0fef7a085a391680b9a7b2f1b4a6716e00659b1"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 8527095,
+          "trace_digest": "sha256:0b1c4e90b9c33bc285ad592dd0fef7a085a391680b9a7b2f1b4a6716e00659b1"
+        }
+      ],
+      "cost_ns": 43931843
+    },
+    {
+      "branch_id": "root/9b55d91b4712",
+      "schedule": [
+        {
+          "op": "delay",
+          "target": {
+            "kind": "correction",
+            "role": "coast_guard",
+            "nth": 1
+          },
+          "params": {
+            "by_ns": 120000000000
+          }
+        }
+      ],
+      "parent": "root",
+      "trace_digest": "sha256:d5b3cee1092f280671a31070d843c0a0d0b745f22262aef0e68a29a1acb8e16f",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7467469,
+          "trace_digest": "sha256:d5b3cee1092f280671a31070d843c0a0d0b745f22262aef0e68a29a1acb8e16f"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7467469,
+          "trace_digest": "sha256:d5b3cee1092f280671a31070d843c0a0d0b745f22262aef0e68a29a1acb8e16f"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7467469,
+          "trace_digest": "sha256:d5b3cee1092f280671a31070d843c0a0d0b745f22262aef0e68a29a1acb8e16f"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7467469,
+          "trace_digest": "sha256:d5b3cee1092f280671a31070d843c0a0d0b745f22262aef0e68a29a1acb8e16f"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 7467469,
+          "trace_digest": "sha256:d5b3cee1092f280671a31070d843c0a0d0b745f22262aef0e68a29a1acb8e16f"
+        }
+      ],
+      "cost_ns": 45016141
+    },
+    {
+      "branch_id": "root/428fa2d21a3a",
+      "schedule": [
+        {
+          "op": "duplicate",
+          "target": {
+            "kind": "alert",
+            "role": "coast_guard",
+            "nth": 1
+          },
+          "params": {
+            "count": 1
+          }
+        }
+      ],
+      "parent": "root",
+      "trace_digest": "sha256:96d68fdf2c750fc892217e4fbbc0dd03c7bd3ad4cfdae48e68d676d84f941cc8",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "3 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7937538,
+          "trace_digest": "sha256:96d68fdf2c750fc892217e4fbbc0dd03c7bd3ad4cfdae48e68d676d84f941cc8"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7937538,
+          "trace_digest": "sha256:96d68fdf2c750fc892217e4fbbc0dd03c7bd3ad4cfdae48e68d676d84f941cc8"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7937538,
+          "trace_digest": "sha256:96d68fdf2c750fc892217e4fbbc0dd03c7bd3ad4cfdae48e68d676d84f941cc8"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7937538,
+          "trace_digest": "sha256:96d68fdf2c750fc892217e4fbbc0dd03c7bd3ad4cfdae48e68d676d84f941cc8"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 7937538,
+          "trace_digest": "sha256:96d68fdf2c750fc892217e4fbbc0dd03c7bd3ad4cfdae48e68d676d84f941cc8"
+        }
+      ],
+      "cost_ns": 46935111
+    },
+    {
+      "branch_id": "root/db80c4d66f47",
+      "schedule": [
+        {
+          "op": "delay",
+          "target": {
+            "kind": "sighting",
+            "role": "coast_guard",
+            "nth": 2
+          },
+          "params": {
+            "by_ns": 120000000000
+          }
+        },
+        {
+          "op": "duplicate",
+          "target": {
+            "kind": "alert",
+            "role": "coast_guard",
+            "nth": 1
+          },
+          "params": {
+            "count": 1
+          }
+        }
+      ],
+      "parent": "root/1615d3ceba62",
+      "trace_digest": "sha256:87f912973ff017cfd10d4017387fff6b1ff5f631dc37f4156a89d4b8f1470467",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "3 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8828449,
+          "trace_digest": "sha256:87f912973ff017cfd10d4017387fff6b1ff5f631dc37f4156a89d4b8f1470467"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8828449,
+          "trace_digest": "sha256:87f912973ff017cfd10d4017387fff6b1ff5f631dc37f4156a89d4b8f1470467"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8828449,
+          "trace_digest": "sha256:87f912973ff017cfd10d4017387fff6b1ff5f631dc37f4156a89d4b8f1470467"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8828449,
+          "trace_digest": "sha256:87f912973ff017cfd10d4017387fff6b1ff5f631dc37f4156a89d4b8f1470467"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 8828449,
+          "trace_digest": "sha256:87f912973ff017cfd10d4017387fff6b1ff5f631dc37f4156a89d4b8f1470467"
+        }
+      ],
+      "cost_ns": 41854616
+    },
+    {
+      "branch_id": "root/2f2a960c48a7",
+      "schedule": [
+        {
+          "op": "delay",
+          "target": {
+            "kind": "sighting",
+            "role": "coast_guard",
+            "nth": 2
+          },
+          "params": {
+            "by_ns": 120000000000
+          }
+        },
+        {
+          "op": "delay",
+          "target": {
+            "kind": "acknowledged",
+            "role": "coast_guard",
+            "nth": 1
+          },
+          "params": {
+            "by_ns": 30000000000
+          }
+        }
+      ],
+      "parent": "root/1615d3ceba62",
+      "trace_digest": "sha256:f198f3922e7ed79c9c3d942db41ff6dfe81336bcbfa7fe1696b01663361a10c7",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8663559,
+          "trace_digest": "sha256:f198f3922e7ed79c9c3d942db41ff6dfe81336bcbfa7fe1696b01663361a10c7"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8663559,
+          "trace_digest": "sha256:f198f3922e7ed79c9c3d942db41ff6dfe81336bcbfa7fe1696b01663361a10c7"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8663559,
+          "trace_digest": "sha256:f198f3922e7ed79c9c3d942db41ff6dfe81336bcbfa7fe1696b01663361a10c7"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8663559,
+          "trace_digest": "sha256:f198f3922e7ed79c9c3d942db41ff6dfe81336bcbfa7fe1696b01663361a10c7"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 8663559,
+          "trace_digest": "sha256:f198f3922e7ed79c9c3d942db41ff6dfe81336bcbfa7fe1696b01663361a10c7"
+        }
+      ],
+      "cost_ns": 59424587
+    },
+    {
+      "branch_id": "root/add1fd55567f",
+      "schedule": [
+        {
+          "op": "delay",
+          "target": {
+            "kind": "alert",
+            "role": "coast_guard",
+            "nth": 1
+          },
+          "params": {
+            "by_ns": 60000000000
+          }
+        },
+        {
+          "op": "drop",
+          "target": {
+            "kind": "weather",
+            "role": "coast_guard",
+            "nth": 1
+          },
+          "params": {}
+        }
+      ],
+      "parent": "root/14be3ae7a9cd",
+      "trace_digest": "sha256:48a06e95edff144ef5369dc901fe6edcbaab545238a4a32bdcb2fe25d9d9d09b",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8031278,
+          "trace_digest": "sha256:48a06e95edff144ef5369dc901fe6edcbaab545238a4a32bdcb2fe25d9d9d09b"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8031278,
+          "trace_digest": "sha256:48a06e95edff144ef5369dc901fe6edcbaab545238a4a32bdcb2fe25d9d9d09b"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8031278,
+          "trace_digest": "sha256:48a06e95edff144ef5369dc901fe6edcbaab545238a4a32bdcb2fe25d9d9d09b"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8031278,
+          "trace_digest": "sha256:48a06e95edff144ef5369dc901fe6edcbaab545238a4a32bdcb2fe25d9d9d09b"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 8031278,
+          "trace_digest": "sha256:48a06e95edff144ef5369dc901fe6edcbaab545238a4a32bdcb2fe25d9d9d09b"
+        }
+      ],
+      "cost_ns": 51793756
+    },
+    {
+      "branch_id": "root/09bb2fbf4405",
+      "schedule": [
+        {
+          "op": "drop",
+          "target": {
+            "kind": "correction",
+            "role": "coast_guard",
+            "nth": 1
+          },
+          "params": {}
+        }
+      ],
+      "parent": "root",
+      "trace_digest": "sha256:93dd09ee45550f1baf6cb45ae89384049b306d1c78b67b5965b1e49b9d0ca967",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7112191,
+          "trace_digest": "sha256:93dd09ee45550f1baf6cb45ae89384049b306d1c78b67b5965b1e49b9d0ca967"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7112191,
+          "trace_digest": "sha256:93dd09ee45550f1baf6cb45ae89384049b306d1c78b67b5965b1e49b9d0ca967"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7112191,
+          "trace_digest": "sha256:93dd09ee45550f1baf6cb45ae89384049b306d1c78b67b5965b1e49b9d0ca967"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "FAIL",
+          "witness": [
+            "e-0010"
+          ],
+          "explanation": "dispatch_cutter: chose 'dispatch_cutter', truth-as-of-at_ns yields 'hold'; missing e-0010",
+          "missing_data": [],
+          "derived_at_ns": 7112191,
+          "trace_digest": "sha256:93dd09ee45550f1baf6cb45ae89384049b306d1c78b67b5965b1e49b9d0ca967"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 7112191,
+          "trace_digest": "sha256:93dd09ee45550f1baf6cb45ae89384049b306d1c78b67b5965b1e49b9d0ca967"
+        }
+      ],
+      "cost_ns": 60667313
+    },
+    {
+      "branch_id": "root/bf438cf704b1",
+      "schedule": [
+        {
+          "op": "duplicate",
+          "target": {
+            "kind": "sighting",
+            "role": "coast_guard",
+            "nth": 2
+          },
+          "params": {
+            "count": 2
+          }
+        },
+        {
+          "op": "corrupt",
+          "target": {
+            "kind": "sighting",
+            "role": "harbour_ops",
+            "nth": 1
+          },
+          "params": {
+            "field": "confidence",
+            "value": 0.65
+          }
+        }
+      ],
+      "parent": "root/557a52a09b20",
+      "trace_digest": "sha256:b63bd977453b9ff6a7e2338d28940c35e3bf25d811207cfe171d3fd339162e6e",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7656671,
+          "trace_digest": "sha256:b63bd977453b9ff6a7e2338d28940c35e3bf25d811207cfe171d3fd339162e6e"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7656671,
+          "trace_digest": "sha256:b63bd977453b9ff6a7e2338d28940c35e3bf25d811207cfe171d3fd339162e6e"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7656671,
+          "trace_digest": "sha256:b63bd977453b9ff6a7e2338d28940c35e3bf25d811207cfe171d3fd339162e6e"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7656671,
+          "trace_digest": "sha256:b63bd977453b9ff6a7e2338d28940c35e3bf25d811207cfe171d3fd339162e6e"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 7656671,
+          "trace_digest": "sha256:b63bd977453b9ff6a7e2338d28940c35e3bf25d811207cfe171d3fd339162e6e"
+        }
+      ],
+      "cost_ns": 48164393
+    },
+    {
+      "branch_id": "root/2ecc7120aa9a",
+      "schedule": [
+        {
+          "op": "delay",
+          "target": {
+            "kind": "correction",
+            "role": "coast_guard",
+            "nth": 1
+          },
+          "params": {
+            "by_ns": 120000000000
+          }
+        },
+        {
+          "op": "delay",
+          "target": {
+            "kind": "alert",
+            "role": "coast_guard",
+            "nth": 1
+          },
+          "params": {
+            "by_ns": 60000000000
+          }
+        }
+      ],
+      "parent": "root/9b55d91b4712",
+      "trace_digest": "sha256:b7497b627ca92f8bd031daadf091473b45aa133cdfb6a573d5c17747f2fb1af9",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8719483,
+          "trace_digest": "sha256:b7497b627ca92f8bd031daadf091473b45aa133cdfb6a573d5c17747f2fb1af9"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8719483,
+          "trace_digest": "sha256:b7497b627ca92f8bd031daadf091473b45aa133cdfb6a573d5c17747f2fb1af9"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8719483,
+          "trace_digest": "sha256:b7497b627ca92f8bd031daadf091473b45aa133cdfb6a573d5c17747f2fb1af9"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8719483,
+          "trace_digest": "sha256:b7497b627ca92f8bd031daadf091473b45aa133cdfb6a573d5c17747f2fb1af9"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 8719483,
+          "trace_digest": "sha256:b7497b627ca92f8bd031daadf091473b45aa133cdfb6a573d5c17747f2fb1af9"
+        }
+      ],
+      "cost_ns": 47432458
+    },
+    {
+      "branch_id": "root/02493b287fd4",
+      "schedule": [
+        {
+          "op": "reorder",
+          "target": {
+            "kind": "sighting",
+            "role": "coast_guard",
+            "nth": 3
+          },
+          "params": {}
+        },
+        {
+          "op": "clock_skew",
+          "target": {
+            "event_id": "e-0011"
+          },
+          "params": {
+            "source_id": "weather.svc",
+            "offset_ns": 45000000000
+          }
+        }
+      ],
+      "parent": "root/0e138e1114ba",
+      "trace_digest": "sha256:84b625b3dcbd1c9f31eedbb15545f71e79a060011962a18eb9219f79de7ab5a3",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8127443,
+          "trace_digest": "sha256:84b625b3dcbd1c9f31eedbb15545f71e79a060011962a18eb9219f79de7ab5a3"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8127443,
+          "trace_digest": "sha256:84b625b3dcbd1c9f31eedbb15545f71e79a060011962a18eb9219f79de7ab5a3"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8127443,
+          "trace_digest": "sha256:84b625b3dcbd1c9f31eedbb15545f71e79a060011962a18eb9219f79de7ab5a3"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8127443,
+          "trace_digest": "sha256:84b625b3dcbd1c9f31eedbb15545f71e79a060011962a18eb9219f79de7ab5a3"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 8127443,
+          "trace_digest": "sha256:84b625b3dcbd1c9f31eedbb15545f71e79a060011962a18eb9219f79de7ab5a3"
+        }
+      ],
+      "cost_ns": 48072325
+    },
+    {
+      "branch_id": "root/5b999424d3d7",
+      "schedule": [
+        {
+          "op": "delay",
+          "target": {
+            "kind": "sighting",
+            "role": "coast_guard",
+            "nth": 2
+          },
+          "params": {
+            "by_ns": 120000000000
+          }
+        },
+        {
+          "op": "duplicate",
+          "target": {
+            "kind": "sighting",
+            "role": "coast_guard",
+            "nth": 2
+          },
+          "params": {
+            "count": 2
+          }
+        },
+        {
+          "op": "delay",
+          "target": {
+            "kind": "correction",
+            "role": "coast_guard",
+            "nth": 1
+          },
+          "params": {
+            "by_ns": 400000000000
+          }
+        }
+      ],
+      "parent": "root/1615d3ceba62",
+      "trace_digest": "sha256:01eb7324cbe3ede8498c6a44e706ca3fcc6352085df13cefd1a256e086ded26d",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7874828,
+          "trace_digest": "sha256:01eb7324cbe3ede8498c6a44e706ca3fcc6352085df13cefd1a256e086ded26d"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7874828,
+          "trace_digest": "sha256:01eb7324cbe3ede8498c6a44e706ca3fcc6352085df13cefd1a256e086ded26d"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7874828,
+          "trace_digest": "sha256:01eb7324cbe3ede8498c6a44e706ca3fcc6352085df13cefd1a256e086ded26d"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "FAIL",
+          "witness": [
+            "e-0010"
+          ],
+          "explanation": "dispatch_cutter: chose 'dispatch_cutter', truth-as-of-at_ns yields 'hold'; missing e-0010",
+          "missing_data": [],
+          "derived_at_ns": 7874828,
+          "trace_digest": "sha256:01eb7324cbe3ede8498c6a44e706ca3fcc6352085df13cefd1a256e086ded26d"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 7874828,
+          "trace_digest": "sha256:01eb7324cbe3ede8498c6a44e706ca3fcc6352085df13cefd1a256e086ded26d"
+        }
+      ],
+      "cost_ns": 49617466
+    },
+    {
+      "branch_id": "root/f5e527eb65de",
+      "schedule": [
+        {
+          "op": "revoke",
+          "target": {
+            "kind": "status",
+            "role": "coast_guard"
+          },
+          "params": {
+            "role": "coast_guard",
+            "from_ns": 3000000000000
+          }
+        },
+        {
+          "op": "delay",
+          "target": {
+            "kind": "weather",
+            "role": "coast_guard",
+            "nth": 1
+          },
+          "params": {
+            "by_ns": 200000000000
+          }
+        }
+      ],
+      "parent": "root",
+      "trace_digest": "sha256:f1936b8d0f0a9bfdf2bfe281feac2965433741c848d4f2e631089bcfa986d694",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7328391,
+          "trace_digest": "sha256:f1936b8d0f0a9bfdf2bfe281feac2965433741c848d4f2e631089bcfa986d694"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7328391,
+          "trace_digest": "sha256:f1936b8d0f0a9bfdf2bfe281feac2965433741c848d4f2e631089bcfa986d694"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7328391,
+          "trace_digest": "sha256:f1936b8d0f0a9bfdf2bfe281feac2965433741c848d4f2e631089bcfa986d694"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7328391,
+          "trace_digest": "sha256:f1936b8d0f0a9bfdf2bfe281feac2965433741c848d4f2e631089bcfa986d694"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 7328391,
+          "trace_digest": "sha256:f1936b8d0f0a9bfdf2bfe281feac2965433741c848d4f2e631089bcfa986d694"
+        }
+      ],
+      "cost_ns": 58898905
+    },
+    {
+      "branch_id": "root/7e0f8ac27998",
+      "schedule": [
+        {
+          "op": "delay",
+          "target": {
+            "kind": "acknowledged",
+            "role": "harbour_ops",
+            "nth": 1
+          },
+          "params": {
+            "by_ns": 90000000000
+          }
+        },
+        {
+          "op": "duplicate",
+          "target": {
+            "kind": "capacity",
+            "role": "harbour_ops",
+            "nth": 2
+          },
+          "params": {
+            "count": 1
+          }
+        }
+      ],
+      "parent": "root/88a645acf554",
+      "trace_digest": "sha256:f0f8e72be58ba00d1faa417e3d4547fa81457c2896ec91a7be51c5f7b1155aa7",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7747870,
+          "trace_digest": "sha256:f0f8e72be58ba00d1faa417e3d4547fa81457c2896ec91a7be51c5f7b1155aa7"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7747870,
+          "trace_digest": "sha256:f0f8e72be58ba00d1faa417e3d4547fa81457c2896ec91a7be51c5f7b1155aa7"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7747870,
+          "trace_digest": "sha256:f0f8e72be58ba00d1faa417e3d4547fa81457c2896ec91a7be51c5f7b1155aa7"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7747870,
+          "trace_digest": "sha256:f0f8e72be58ba00d1faa417e3d4547fa81457c2896ec91a7be51c5f7b1155aa7"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 7747870,
+          "trace_digest": "sha256:f0f8e72be58ba00d1faa417e3d4547fa81457c2896ec91a7be51c5f7b1155aa7"
+        }
+      ],
+      "cost_ns": 53096925
+    },
+    {
+      "branch_id": "root/59e640393c2f",
+      "schedule": [
+        {
+          "op": "corrupt",
+          "target": {
+            "kind": "sighting",
+            "role": "harbour_ops",
+            "nth": 1
+          },
+          "params": {
+            "field": "confidence",
+            "value": 0.65
+          }
+        },
+        {
+          "op": "delay",
+          "target": {
+            "kind": "sighting",
+            "role": "harbour_ops",
+            "nth": 1
+          },
+          "params": {
+            "by_ns": 30000000000
+          }
+        }
+      ],
+      "parent": "root/04d5d991fdec",
+      "trace_digest": "sha256:84f7bb6b54e2bc5b9e1f96dd1eeb9d9d65d9258db27c44b398080c7ae16f3da4",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7531147,
+          "trace_digest": "sha256:84f7bb6b54e2bc5b9e1f96dd1eeb9d9d65d9258db27c44b398080c7ae16f3da4"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 7531147,
+          "trace_digest": "sha256:84f7bb6b54e2bc5b9e1f96dd1eeb9d9d65d9258db27c44b398080c7ae16f3da4"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7531147,
+          "trace_digest": "sha256:84f7bb6b54e2bc5b9e1f96dd1eeb9d9d65d9258db27c44b398080c7ae16f3da4"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 7531147,
+          "trace_digest": "sha256:84f7bb6b54e2bc5b9e1f96dd1eeb9d9d65d9258db27c44b398080c7ae16f3da4"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 7531147,
+          "trace_digest": "sha256:84f7bb6b54e2bc5b9e1f96dd1eeb9d9d65d9258db27c44b398080c7ae16f3da4"
+        }
+      ],
+      "cost_ns": 39200854
+    },
+    {
+      "branch_id": "root/02ddfcfcc7a0",
+      "schedule": [
+        {
+          "op": "duplicate",
+          "target": {
+            "kind": "alert",
+            "role": "coast_guard",
+            "nth": 1
+          },
+          "params": {
+            "count": 1
+          }
+        },
+        {
+          "op": "delay",
+          "target": {
+            "kind": "sighting",
+            "role": "coast_guard",
+            "nth": 2
+          },
+          "params": {
+            "by_ns": 200000000000
+          }
+        }
+      ],
+      "parent": "root/428fa2d21a3a",
+      "trace_digest": "sha256:ba604ba85e2ae1f446e656cdfc7c6cabebb68a54acc86348cc30f62e9626b223",
+      "verdicts": [
+        {
+          "invariant_id": "alert_acknowledged_within_300s",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "3 alert(s) acknowledged within 300s in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8657460,
+          "trace_digest": "sha256:ba604ba85e2ae1f446e656cdfc7c6cabebb68a54acc86348cc30f62e9626b223"
+        },
+        {
+          "invariant_id": "coast_guard_never_sees_harbour_private",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "no harbour_private event in coast_guard view",
+          "missing_data": [],
+          "derived_at_ns": 8657460,
+          "trace_digest": "sha256:ba604ba85e2ae1f446e656cdfc7c6cabebb68a54acc86348cc30f62e9626b223"
+        },
+        {
+          "invariant_id": "information_state_separation",
+          "invariant_version": "1.2",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "every decision cites only events received by its role at at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8657460,
+          "trace_digest": "sha256:ba604ba85e2ae1f446e656cdfc7c6cabebb68a54acc86348cc30f62e9626b223"
+        },
+        {
+          "invariant_id": "decision_matches_truth",
+          "invariant_version": "1.1",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+          "missing_data": [],
+          "derived_at_ns": 8657460,
+          "trace_digest": "sha256:ba604ba85e2ae1f446e656cdfc7c6cabebb68a54acc86348cc30f62e9626b223"
+        },
+        {
+          "invariant_id": "berth_capacity_non_negative",
+          "invariant_version": "1.0",
+          "result": "PASS",
+          "witness": [],
+          "explanation": "all capacity readings >= 0",
+          "missing_data": [],
+          "derived_at_ns": 8657460,
+          "trace_digest": "sha256:ba604ba85e2ae1f446e656cdfc7c6cabebb68a54acc86348cc30f62e9626b223"
+        }
+      ],
+      "cost_ns": 44577865
+    }
+  ],
+  "failing": [
+    "root/3412b87eda53",
+    "root/09bb2fbf4405",
+    "root/5b999424d3d7"
+  ],
+  "strategy": "guided",
+  "invariants": [
+    {
+      "id": "alert_acknowledged_within_300s",
+      "version": "1.0",
+      "kind": "response",
+      "description": "every amber/green alert in the coast_guard view is acknowledged within 300s"
+    },
+    {
+      "id": "coast_guard_never_sees_harbour_private",
+      "version": "1.0",
+      "kind": "absence",
+      "description": "role coast_guard never receives an event labelled harbour_private"
+    },
+    {
+      "id": "information_state_separation",
+      "version": "1.2",
+      "kind": "epistemic",
+      "description": "no decision cites an event its role had not received at at_ns"
+    },
+    {
+      "id": "decision_matches_truth",
+      "version": "1.1",
+      "kind": "decision",
+      "description": "each decision equals the option its rule yields over truth as of at_ns"
+    },
+    {
+      "id": "berth_capacity_non_negative",
+      "version": "1.0",
+      "kind": "always",
+      "description": "no capacity reading is negative"
+    }
+  ],
+  "roles": [
+    "harbour_ops",
+    "coast_guard",
+    "evaluator"
+  ]
+}

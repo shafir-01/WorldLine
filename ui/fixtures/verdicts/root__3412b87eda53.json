@@ -1,0 +1,59 @@
+{
+  "synthetic": true,
+  "branch_id": "root/3412b87eda53",
+  "trace_digest": "sha256:d0e64d344da6362d69bea4efb35b8de6f809702f4eec49f0823f9f0a0ebfaebd",
+  "verdicts": [
+    {
+      "invariant_id": "alert_acknowledged_within_300s",
+      "invariant_version": "1.0",
+      "result": "PASS",
+      "witness": [],
+      "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+      "missing_data": [],
+      "derived_at_ns": 7382461,
+      "trace_digest": "sha256:d0e64d344da6362d69bea4efb35b8de6f809702f4eec49f0823f9f0a0ebfaebd"
+    },
+    {
+      "invariant_id": "coast_guard_never_sees_harbour_private",
+      "invariant_version": "1.0",
+      "result": "PASS",
+      "witness": [],
+      "explanation": "no harbour_private event in coast_guard view",
+      "missing_data": [],
+      "derived_at_ns": 7382461,
+      "trace_digest": "sha256:d0e64d344da6362d69bea4efb35b8de6f809702f4eec49f0823f9f0a0ebfaebd"
+    },
+    {
+      "invariant_id": "information_state_separation",
+      "invariant_version": "1.2",
+      "result": "PASS",
+      "witness": [],
+      "explanation": "every decision cites only events received by its role at at_ns",
+      "missing_data": [],
+      "derived_at_ns": 7382461,
+      "trace_digest": "sha256:d0e64d344da6362d69bea4efb35b8de6f809702f4eec49f0823f9f0a0ebfaebd"
+    },
+    {
+      "invariant_id": "decision_matches_truth",
+      "invariant_version": "1.1",
+      "result": "FAIL",
+      "witness": [
+        "e-0010"
+      ],
+      "explanation": "dispatch_cutter: chose 'dispatch_cutter', truth-as-of-at_ns yields 'hold'; missing e-0010",
+      "missing_data": [],
+      "derived_at_ns": 7382461,
+      "trace_digest": "sha256:d0e64d344da6362d69bea4efb35b8de6f809702f4eec49f0823f9f0a0ebfaebd"
+    },
+    {
+      "invariant_id": "berth_capacity_non_negative",
+      "invariant_version": "1.0",
+      "result": "PASS",
+      "witness": [],
+      "explanation": "all capacity readings >= 0",
+      "missing_data": [],
+      "derived_at_ns": 7382461,
+      "trace_digest": "sha256:d0e64d344da6362d69bea4efb35b8de6f809702f4eec49f0823f9f0a0ebfaebd"
+    }
+  ]
+}

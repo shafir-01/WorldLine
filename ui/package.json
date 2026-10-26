@@ -1,0 +1,29 @@
+{
+  "name": "worldline-ui",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Static viewer for WORLDLINE counterfactual exploration output (branch tree, role timelines, mechanism, evidence chain).",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run copy-data && tsc -p tsconfig.json --noEmit && vite build",
+    "preview": "vite preview",
+    "copy-data": "node scripts/copy-data.mjs",
+    "gen-fixtures": "node scripts/gen-fixtures.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.23",
+    "@types/react-dom": "18.3.7",
+    "@vitejs/plugin-react": "4.5.2",
+    "typescript": "5.8.3",
+    "vite": "6.3.5"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

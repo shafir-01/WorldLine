@@ -1,0 +1,77 @@
+# Core WORLDLINE invariants. Loaded by worldline.invariants.load_invariants("invariants/").
+# Every FAIL carries a witness of event ids; every UNKNOWN names the missing signal.
+# Protected path: only the kernel/maintainers edit this file (see CODEOWNERS).
+invariants:
+  - id: epistemic.no_future_knowledge
+    version: "1.0"
+    kind: epistemic
+    description: >
+      Information-state separation. No role view holds an event received before its event_time_ns,
+      and no decision cites a known_event_id that its actor's role had not received by at_ns.
+      FAIL witness: offending view event ids, then each offending decision id followed by the ids it
+      cited prematurely.
+    params:
+      rule: no_future_knowledge
+    required_signals: []
+
+  - id: epistemic.label_isolation
+    version: "1.0"
+    kind: epistemic
+    description: >
+      Role `coast_guard` never receives an event carrying policy label `harbour_private`.
+      FAIL witness: the labelled event ids present in that role's view.
+    params:
+      rule: label_isolation
+      role: coast_guard
+      label: harbour_private
+    required_signals: []
+
+  - id: response.alert_ack
+    version: "1.0"
+    kind: response
+    description: >
+      G(alert -> F<=within_ns acknowledged) inside the harbour_ops view: every received `alert` is
+      followed, within within_ns of its receipt, by an `ack` whose payload.acks is the
+      alert id. FAIL witness: [alert id, latest event the role received before the deadline].
+    params:
+      role: harbour_ops
+      trigger_kind: alert
+      response_kind: ack
+      within_ns: 300000000000
+      link_field: acknowledges
+    required_signals: [alert]
+
+  - id: absence.no_corrupted_in_decision
+    version: "1.0"
+    kind: absence
+    description: >
+      No decision's known_event_ids includes a corrupted event (quality == 0.0 or provenance that
+      cites the event itself, the marker set by interventions.corrupt).
+      FAIL witness: [decision id, corrupted event id].
+    params:
+      scope: decisions
+      match:
+        corrupted: true
+    required_signals: [decision]
+
+  - id: decision.consistent_with_truth
+    version: "1.0"
+    kind: decision
+    description: >
+      Each recorded decision equals the option its rule yields when evaluated over truth as of at_ns.
+      A mismatch means stale or missing information caused a wrong decision. FAIL witness: truth
+      events at or before at_ns that the actor's role had not received at at_ns, in canonical order.
+      UNKNOWN (decision_rule_evaluator) when no scenario or evaluate_rule callable is supplied.
+    params: {}
+    required_signals: [decision]
+
+  - id: always.non_negative_capacity
+    version: "1.0"
+    kind: always
+    description: >
+      State predicate over truth: no truth event reports payload.capacity below zero. UNKNOWN when
+      no truth event carries payload.capacity. FAIL witness: the first offending truth event.
+    params:
+      field: payload.capacity
+      min: 0
+    required_signals: []

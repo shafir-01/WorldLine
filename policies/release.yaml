@@ -1,0 +1,42 @@
+# WORLDLINE release policy. Read by worldline.evidence.load_policy and the
+# `worldline authorize` kernel CLI. Certainty ordering for min_kind:
+#   UNKNOWN < FAILED < EMPIRICALLY_VALIDATED < ATTESTED < PROVED_WITHIN_MODEL
+# FAILED and UNKNOWN never satisfy a requirement.
+name: release
+
+required:
+  # Unit tests must have run and passed on this artifact.
+  - claim_pattern: "tests:unit"
+    min_kind: EMPIRICALLY_VALIDATED
+    bind_subject: true
+
+  # Every invariant verdict in the bundle must be at least empirically
+  # validated, and no invariant may have a FAILED record.
+  - claim_pattern: "invariant:*"
+    min_kind: EMPIRICALLY_VALIDATED
+    zero_failed: true
+
+  # The artifact digest must be attested by the kernel itself, about this artifact.
+  - claim_pattern: "artifact:digest"
+    min_kind: ATTESTED
+    producer: kernel
+    bind_subject: true
+
+  # Genome challenge results are welcome but not required.
+  - claim_pattern: "genome:challenge"
+    min_kind: EMPIRICALLY_VALIDATED
+    optional: true
+
+  # Any agent-report mismatch found by the kernel denies the release.
+  - claim_pattern: "integrity:*"
+    min_kind: ATTESTED
+    optional: true
+    zero_failed: true
+
+# Evidence older than this (derived_at vs. authorization time) is stale.
+max_age_s: 86400
+
+# Only the kernel may author attestations or proofs.
+forbid_producers_for_kinds:
+  ATTESTED: ["agent:*"]
+  PROVED_WITHIN_MODEL: ["agent:*"]

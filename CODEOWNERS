@@ -1,0 +1,19 @@
+# WORLDLINE code owners. Requires "Require approval from code owners" on the protected branch.
+# Syntax: https://docs.gitlab.com/user/project/codeowners/
+# Everything not listed here may be changed by Duo agents in an ordinary MR.
+
+[Kernel] @shafir-01
+/invariants/
+/policies/
+/worldline/evidence/
+/.gitlab-ci.yml
+
+[Agent configuration] @shafir-01
+/.gitlab/duo/
+/AGENTS.md
+/CODEOWNERS
+/docs/duo/
+
+[Licence and governance] @shafir-01
+/LICENSE
+/docs/HACKATHON_REQUIREMENTS.md

@@ -1,0 +1,339 @@
+{
+  "synthetic": true,
+  "genome_id": "sha256:85fb965597f4fd634d0f83c2f5c7774b7c10f608ad75606e93cbc67cd8a32fbb",
+  "scenario_id": "convoy_lostlink",
+  "seed": 7,
+  "preconditions_met": true,
+  "preconditions_checked": [
+    {
+      "precondition": "has_decision_rule_depending_on(kind=correction)",
+      "met": true
+    },
+    {
+      "precondition": "exists_truth_event(kind=correction) before decision_at_ns",
+      "met": true
+    },
+    {
+      "precondition": "role_latency(decider_role) + delay > decision_at_ns - correction_event_time_ns",
+      "met": true
+    },
+    {
+      "precondition": "decision_rule.otherwise != decision_rule.then",
+      "met": true
+    }
+  ],
+  "instantiated_schedule": [
+    {
+      "op": "delay",
+      "target": {
+        "kind": "correction",
+        "role": "convoy_lead",
+        "nth": 1
+      },
+      "params": {
+        "by_ns": 500000000000
+      }
+    }
+  ],
+  "verdicts": [
+    {
+      "invariant_id": "decision_matches_truth",
+      "invariant_version": "1.1",
+      "result": "FAIL",
+      "witness": [
+        "c-0004"
+      ],
+      "explanation": "reroute_convoy: chose 'reroute', truth-as-of-at_ns yields 'continue'; missing c-0004",
+      "missing_data": [],
+      "derived_at_ns": 8120000,
+      "trace_digest": "sha256:385a24934df76f08567c781c1de49dc79f98f67d19f7bad04ca8c6ca5ad3b9c1"
+    },
+    {
+      "invariant_id": "alert_acknowledged_within_300s",
+      "invariant_version": "1.0",
+      "result": "UNKNOWN",
+      "witness": [],
+      "explanation": "scenario emits no 'acknowledged' events",
+      "missing_data": [
+        "acknowledged"
+      ],
+      "derived_at_ns": 8120000,
+      "trace_digest": "sha256:385a24934df76f08567c781c1de49dc79f98f67d19f7bad04ca8c6ca5ad3b9c1"
+    },
+    {
+      "invariant_id": "information_state_separation",
+      "invariant_version": "1.2",
+      "result": "PASS",
+      "witness": [],
+      "explanation": "every decision cites only events received by its role at at_ns",
+      "missing_data": [],
+      "derived_at_ns": 8120000,
+      "trace_digest": "sha256:385a24934df76f08567c781c1de49dc79f98f67d19f7bad04ca8c6ca5ad3b9c1"
+    }
+  ],
+  "reproduced": true,
+  "counterexample": {
+    "synthetic": true,
+    "scenario_id": "convoy_lostlink",
+    "seed": 7,
+    "branch_id": "root/689f90cb67a1",
+    "fault_schedule": [
+      {
+        "op": "delay",
+        "target": {
+          "kind": "correction",
+          "role": "convoy_lead",
+          "nth": 1
+        },
+        "params": {
+          "by_ns": 500000000000
+        }
+      }
+    ],
+    "fault_schedule_hash": "689f90cb67a1",
+    "truth": {
+      "events": [
+        {
+          "id": "c-0001",
+          "scenario_id": "convoy_lostlink",
+          "source_id": "truck.2.telemetry",
+          "event_time_ns": 60000000000,
+          "kind": "heartbeat",
+          "payload": {
+            "truck": 2,
+            "link": "ok"
+          },
+          "received_time_ns": null,
+          "geometry": null,
+          "unit": null,
+          "quality": null,
+          "policy_labels": [
+            "public"
+          ],
+          "provenance_ids": [],
+          "schema_version": "event.v1",
+          "priority": 0
+        },
+        {
+          "id": "c-0002",
+          "scenario_id": "convoy_lostlink",
+          "source_id": "truck.2.telemetry",
+          "event_time_ns": 240000000000,
+          "kind": "lostlink",
+          "payload": {
+            "truck": 2,
+            "last_fix": "A12"
+          },
+          "received_time_ns": null,
+          "geometry": null,
+          "unit": null,
+          "quality": null,
+          "policy_labels": [
+            "public"
+          ],
+          "provenance_ids": [],
+          "schema_version": "event.v1",
+          "priority": 5
+        },
+        {
+          "id": "c-0003",
+          "scenario_id": "convoy_lostlink",
+          "source_id": "convoy.lead",
+          "event_time_ns": 420000000000,
+          "kind": "alert",
+          "payload": {
+            "level": "amber",
+            "reason": "truck_2_lostlink"
+          },
+          "received_time_ns": null,
+          "geometry": null,
+          "unit": null,
+          "quality": null,
+          "policy_labels": [
+            "public"
+          ],
+          "provenance_ids": [],
+          "schema_version": "event.v1",
+          "priority": 5
+        }
+      ],
+      "digest": "sha256:dd945b0e3a9dfca6263379c010a737c81303c385295131b9086ac106abeaee4b"
+    },
+    "views": {
+      "convoy_lead": {
+        "events": [
+          {
+            "id": "c-0001",
+            "scenario_id": "convoy_lostlink",
+            "source_id": "truck.2.telemetry",
+            "event_time_ns": 60000000000,
+            "kind": "heartbeat",
+            "payload": {
+              "truck": 2,
+              "link": "ok"
+            },
+            "received_time_ns": 90000000000,
+            "geometry": null,
+            "unit": null,
+            "quality": null,
+            "policy_labels": [
+              "public"
+            ],
+            "provenance_ids": [],
+            "schema_version": "event.v1",
+            "priority": 0
+          },
+          {
+            "id": "c-0002",
+            "scenario_id": "convoy_lostlink",
+            "source_id": "truck.2.telemetry",
+            "event_time_ns": 240000000000,
+            "kind": "lostlink",
+            "payload": {
+              "truck": 2,
+              "last_fix": "A12"
+            },
+            "received_time_ns": 270000000000,
+            "geometry": null,
+            "unit": null,
+            "quality": null,
+            "policy_labels": [
+              "public"
+            ],
+            "provenance_ids": [],
+            "schema_version": "event.v1",
+            "priority": 5
+          },
+          {
+            "id": "c-0003",
+            "scenario_id": "convoy_lostlink",
+            "source_id": "convoy.lead",
+            "event_time_ns": 420000000000,
+            "kind": "alert",
+            "payload": {
+              "level": "amber",
+              "reason": "truck_2_lostlink"
+            },
+            "received_time_ns": 450000000000,
+            "geometry": null,
+            "unit": null,
+            "quality": null,
+            "policy_labels": [
+              "public"
+            ],
+            "provenance_ids": [],
+            "schema_version": "event.v1",
+            "priority": 5
+          }
+        ],
+        "digest": "sha256:d23e4d514af99f2423802dc148ba57c4ee8b5041ff498a5c4fb4738fb8b49dbe"
+      },
+      "dispatcher": {
+        "events": [
+          {
+            "id": "c-0001",
+            "scenario_id": "convoy_lostlink",
+            "source_id": "truck.2.telemetry",
+            "event_time_ns": 60000000000,
+            "kind": "heartbeat",
+            "payload": {
+              "truck": 2,
+              "link": "ok"
+            },
+            "received_time_ns": 150000000000,
+            "geometry": null,
+            "unit": null,
+            "quality": null,
+            "policy_labels": [
+              "public"
+            ],
+            "provenance_ids": [],
+            "schema_version": "event.v1",
+            "priority": 0
+          },
+          {
+            "id": "c-0002",
+            "scenario_id": "convoy_lostlink",
+            "source_id": "truck.2.telemetry",
+            "event_time_ns": 240000000000,
+            "kind": "lostlink",
+            "payload": {
+              "truck": 2,
+              "last_fix": "A12"
+            },
+            "received_time_ns": 330000000000,
+            "geometry": null,
+            "unit": null,
+            "quality": null,
+            "policy_labels": [
+              "public"
+            ],
+            "provenance_ids": [],
+            "schema_version": "event.v1",
+            "priority": 5
+          },
+          {
+            "id": "c-0003",
+            "scenario_id": "convoy_lostlink",
+            "source_id": "convoy.lead",
+            "event_time_ns": 420000000000,
+            "kind": "alert",
+            "payload": {
+              "level": "amber",
+              "reason": "truck_2_lostlink"
+            },
+            "received_time_ns": 510000000000,
+            "geometry": null,
+            "unit": null,
+            "quality": null,
+            "policy_labels": [
+              "public"
+            ],
+            "provenance_ids": [],
+            "schema_version": "event.v1",
+            "priority": 5
+          }
+        ],
+        "digest": "sha256:2fac38e35509f41994f5530320ed54b1d83976f99b4ae5021b4d23904511b821"
+      }
+    },
+    "decisions": [
+      {
+        "id": "c-0005",
+        "scenario_id": "convoy_lostlink",
+        "source_id": "convoy.lead",
+        "event_time_ns": 900000000000,
+        "kind": "decision",
+        "payload": {
+          "actor": "convoy.lead",
+          "rule_id": "reroute_convoy",
+          "option": "reroute",
+          "known_event_ids": [
+            "c-0001",
+            "c-0002",
+            "c-0003"
+          ],
+          "at_ns": 900000000000
+        },
+        "received_time_ns": 900000000000,
+        "geometry": null,
+        "unit": null,
+        "quality": null,
+        "policy_labels": [
+          "public"
+        ],
+        "provenance_ids": [],
+        "schema_version": "event.v1",
+        "priority": 0
+      }
+    ],
+    "clock_end": {
+      "epoch_ns": 0,
+      "tick_ns": 1000000000,
+      "now_ns": 1800000000000,
+      "horizon_ns": 1800000000000
+    },
+    "digest": "sha256:385a24934df76f08567c781c1de49dc79f98f67d19f7bad04ca8c6ca5ad3b9c1"
+  },
+  "claim_ceiling": "Transfer is within the shared Event v1 substrate (different domain, actors and rules), not across heterogeneous codebases."
+}

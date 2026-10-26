@@ -1,0 +1,43 @@
+# GitLab Duo Agent Platform: execution environment for flows that run in CI/CD.
+# Schema reference: https://docs.gitlab.com/user/duo_agent_platform/flows/execution/agent-config-yaml/
+# Supported keys (19.x): image, setup_script, network_policy{allowed_domains, denied_domains,
+# include_recommended_allowed, allow_all_unix_sockets}, cache{key{files,prefix}|string, paths}.
+# id_tokens is documented on https://docs.gitlab.com/user/duo_agent_platform/flows/execution/ (19.2+).
+#
+# This file is read ONLY from the default branch. setup_script runs before the sandbox with the
+# triggering user's token in the environment, so this path is CODEOWNERS-protected (@shafir-01).
+
+# Python 3.12 base; Node 20 is installed in setup_script because flows may build ui/.
+image: python:3.12
+
+setup_script:
+  - apt-get update -qq && apt-get install -y -qq --no-install-recommends curl ca-certificates git
+  - curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y -qq nodejs
+  - pip install --quiet uv
+  - uv sync --extra dev
+  - uv run worldline --help || echo "worldline CLI not yet wired; see AGENTS.md"
+  - echo "WORLDLINE flow environment ready: $(python --version), node $(node --version), uv $(uv --version)"
+
+cache:
+  key:
+    files:
+      - uv.lock
+      - ui/package-lock.json
+    prefix: worldline-deps
+  paths:
+    - .venv/
+    - .cache/uv/
+    - ui/node_modules/
+
+network_policy:
+  include_recommended_allowed: true
+  allowed_domains:
+    - pypi.org
+    - files.pythonhosted.org
+    - astral.sh
+    - github.com
+    - deb.nodesource.com
+    - deb.debian.org
+    - security.debian.org
+    - registry.npmjs.org
+    - gitlab.com

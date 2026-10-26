@@ -1,0 +1,175 @@
+{
+  "synthetic": true,
+  "version": "bundle.v1",
+  "records": [
+    {
+      "id": "sha256:2dcb0d7450a396479e3d65aa6cea3f2cd5939df1e12c343aa066bcc593422caa",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "claim": "invariant:decision_matches_truth@1.1 FAIL reproduced on root/3412b87eda53",
+      "subject": "sha256:d0e64d344da6362d69bea4efb35b8de6f809702f4eec49f0823f9f0a0ebfaebd",
+      "procedure": "invariants.check@1.1",
+      "result": {
+        "verdict": "FAIL",
+        "witness": [
+          "e-0010"
+        ]
+      },
+      "assumptions": [
+        "bounded horizon 3600s",
+        "delivery jitter <= 30s"
+      ],
+      "producer": "kernel",
+      "derived_at": "2026-10-26T09:14:02Z",
+      "inputs_hash": "sha256:82012bad170d1dd52e3ac156fcbfcbc9a7d27e402817446517ba5fc108d50e01",
+      "prev": "sha256:genesis"
+    },
+    {
+      "id": "sha256:d8561089675f0e6c618e180969e805c7a1734b1ef35ba4c65ddcfaefb467cb32",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "claim": "invariant:* PASS on root",
+      "subject": "sha256:1c7e65e1aa016a90ffb74de0cbc275494c38ff0a1b75e92148db2abbe0588ff2",
+      "procedure": "invariants.check@1.1",
+      "result": {
+        "pass": 5,
+        "fail": 0,
+        "unknown": 0
+      },
+      "assumptions": [
+        "bounded horizon 3600s"
+      ],
+      "producer": "kernel",
+      "derived_at": "2026-10-26T09:14:03Z",
+      "inputs_hash": "sha256:7d77aa6892ad4a9782d3a61abf6e775366067ba6f108fd74466c669fbd5f44b6",
+      "prev": "sha256:2dcb0d7450a396479e3d65aa6cea3f2cd5939df1e12c343aa066bcc593422caa"
+    },
+    {
+      "id": "sha256:6c7ff2cef098215dd748a2590f041043c166776100efe0c08f92ae9bb0326441",
+      "kind": "PROVED_WITHIN_MODEL",
+      "claim": "minimal schedule is 1-minimal for decision_matches_truth@1.1",
+      "subject": "sha256:d0e64d344da6362d69bea4efb35b8de6f809702f4eec49f0823f9f0a0ebfaebd",
+      "procedure": "explorer.ddmin",
+      "result": {
+        "original_size": 3,
+        "minimal_size": 1,
+        "tests_run": 3
+      },
+      "assumptions": [
+        "determinism of worlds.run given (scenario, seed, schedule)",
+        "interventions are independent at delivery time"
+      ],
+      "producer": "kernel",
+      "derived_at": "2026-10-26T09:14:05Z",
+      "inputs_hash": "sha256:9a9011a47013a2e427c85d7f745c1d87325adaa57c20b28f86d8e8801a63092e",
+      "prev": "sha256:d8561089675f0e6c618e180969e805c7a1734b1ef35ba4c65ddcfaefb467cb32"
+    },
+    {
+      "id": "sha256:2aa1fb91ec6a1e12f0f4ac31c183f4079933c327b5b28dc5e53f8e660a7cf69d",
+      "kind": "EMPIRICALLY_VALIDATED",
+      "claim": "genome sha256:85fb965597f4 reproduced on convoy_lostlink",
+      "subject": "sha256:385a24934df76f08567c781c1de49dc79f98f67d19f7bad04ca8c6ca5ad3b9c1",
+      "procedure": "genome.challenge",
+      "result": {
+        "reproduced": true,
+        "preconditions_met": true
+      },
+      "assumptions": [
+        "shared Event v1 substrate",
+        "role latency convoy_lead = 30s"
+      ],
+      "producer": "agent:investigator",
+      "derived_at": "2026-10-26T09:15:40Z",
+      "inputs_hash": "sha256:e9f5e81e6fb0d939a10fa4ee0d67198ccf61cfbfc00fe71815507cbc35853feb",
+      "prev": "sha256:6c7ff2cef098215dd748a2590f041043c166776100efe0c08f92ae9bb0326441"
+    },
+    {
+      "id": "sha256:f201cff238228853d0a9750aa35cd250aee6c83863b11e4a202351a18bbbe668",
+      "kind": "ATTESTED",
+      "claim": "tests",
+      "subject": "sha256:25e101e7bc3fe11c5041b36d9bf3a00bf86285915fb8c7677e19a163c7e77a63",
+      "procedure": "pytest",
+      "result": {
+        "passed": 212,
+        "failed": 0,
+        "skipped": 3
+      },
+      "assumptions": [
+        "CI runner image python:3.12"
+      ],
+      "producer": "kernel",
+      "derived_at": "2026-10-26T09:16:10Z",
+      "inputs_hash": "sha256:37154d749b3df5f28b09981198fb3aad2f43337363f5523f7e64328df089ca6b",
+      "prev": "sha256:2aa1fb91ec6a1e12f0f4ac31c183f4079933c327b5b28dc5e53f8e660a7cf69d"
+    },
+    {
+      "id": "sha256:5174450813e71cbef29d3c97fd3adafd83927664341efdfa45ed6d70adadda7c",
+      "kind": "FAILED",
+      "claim": "patch:repairer/mr-17 fixes decision_matches_truth on root/3412b87eda53",
+      "subject": "sha256:51033aa519e8b058e168c0588c8552f8aee559381fdd64d67d518c1f272d5930",
+      "procedure": "invariants.check@1.1",
+      "result": {
+        "verdict": "FAIL",
+        "witness": [
+          "e-0010"
+        ],
+        "note": "patch widened window_ns but correction still arrives after at_ns"
+      },
+      "assumptions": [
+        "bounded horizon 3600s"
+      ],
+      "producer": "agent:repairer",
+      "derived_at": "2026-10-26T09:31:00Z",
+      "inputs_hash": "sha256:bca21ad63576021ff8809321be0be6ae44f360df30dca8dc33a22a013b4b6288",
+      "prev": "sha256:f201cff238228853d0a9750aa35cd250aee6c83863b11e4a202351a18bbbe668"
+    },
+    {
+      "id": "sha256:8f3479b59256ffd3e3ff5b83169e9fdfb4bedf79e67f88224bdc99219c8deec8",
+      "kind": "UNKNOWN",
+      "claim": "invariant:berth_capacity_non_negative@1.0 on convoy_lostlink",
+      "subject": "sha256:385a24934df76f08567c781c1de49dc79f98f67d19f7bad04ca8c6ca5ad3b9c1",
+      "procedure": "invariants.check@1.1",
+      "result": {
+        "verdict": "UNKNOWN",
+        "missing_data": [
+          "capacity"
+        ]
+      },
+      "assumptions": [],
+      "producer": "kernel",
+      "derived_at": "2026-10-26T09:31:12Z",
+      "inputs_hash": "sha256:2e1166f88860883d0e30d5063acfb632312f1d375b39ec7d3418fd251bb1fea3",
+      "prev": "sha256:5174450813e71cbef29d3c97fd3adafd83927664341efdfa45ed6d70adadda7c"
+    },
+    {
+      "id": "sha256:89733dbf83c2e4b63946a53b262ec35fef66ddf1837c5353126331622d22eb93",
+      "kind": "ATTESTED",
+      "claim": "artifact-built-from-commit",
+      "subject": "sha256:25e101e7bc3fe11c5041b36d9bf3a00bf86285915fb8c7677e19a163c7e77a63",
+      "procedure": "ci.build@gitlab",
+      "result": {
+        "commit": "synthetic-fixture",
+        "pipeline": 1042
+      },
+      "assumptions": [
+        "CI-held signing key"
+      ],
+      "producer": "kernel",
+      "derived_at": "2026-10-26T09:32:00Z",
+      "inputs_hash": "sha256:3abbc34001e0bccb383b854dc3ecfb183eb53f0b6f39a4158f7ce0f3d2561c92",
+      "prev": "sha256:8f3479b59256ffd3e3ff5b83169e9fdfb4bedf79e67f88224bdc99219c8deec8"
+    }
+  ],
+  "checkpoint": {
+    "head": "sha256:89733dbf83c2e4b63946a53b262ec35fef66ddf1837c5353126331622d22eb93",
+    "count": 8,
+    "sealed_at": "2026-10-26T09:33:00Z",
+    "signer": "ci-kernel-key-01",
+    "algorithm": "Ed25519",
+    "signature": "base64:01n+jED+lVX+HCrc9wyZyIYwX/J5i/sfa4v/We2Zdwc=",
+    "public_key": "base64:q+vv2bwbmAyTwSzQMqs/mhy/8/+Y6aAVX9wP2ckih28="
+  },
+  "verification": {
+    "ok": true,
+    "findings": [],
+    "checked_at": "2026-10-26T09:33:01Z"
+  }
+}

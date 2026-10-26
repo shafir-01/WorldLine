@@ -1,0 +1,119 @@
+# WORLDLINE scenario: synthetic logistics convoy with an uncrewed scout (45 minutes).
+#
+# A different domain from port_alert: different roles, actors, event kinds, rules and
+# timings. Built WITHOUT any reference to the port_alert minimal schedule. It exists to
+# answer one question: does the failure mechanism extracted from port_alert
+# ("delay the correcting report for a decision that depends on a correctable
+# observation past the decision window") have an analogue here?
+#
+# Nothing here is a real route, unit or threat. All synthetic.
+id: convoy_lostlink_immune
+seed: 7
+# IMMUNE VARIANT (negative control): identical to convoy_lostlink except the reroute rule
+# requires TWO uncorrected credible threat reports. With one credible report, delaying the
+# retraction cannot flip the decision. The genome must report "instantiated, not reproduced".
+
+clock:
+  epoch_ns: 0
+  tick_ns: 1s
+  horizon_ns: 45m
+
+roles:
+  - id: convoy_lead
+    visibility: ["*"]
+    delivery: {base_latency_ns: 1s, jitter_ns: 1s, drop_probability: 0.0, ordering: fifo}
+  - id: ops_center
+    visibility: [shared, ops_only]
+    delivery: {base_latency_ns: 45s, jitter_ns: 20s, drop_probability: 0.0, ordering: network}
+  - id: evaluator
+    visibility: ["*"]
+    delivery: {base_latency_ns: 0, jitter_ns: 0, drop_probability: 0.0, ordering: fifo}
+
+actors:
+  - id: watch_officer
+    role: ops_center
+    decision_rules:
+      - id: reroute_or_continue
+        at_ns: 1200s
+        window_ns: 900s
+        when: "count(kind='threat_report', payload.confidence>=0.5, not_corrected) >= 2"
+        then: reroute
+        otherwise: continue
+  - id: scout_operator
+    role: convoy_lead
+    decision_rules:
+      - id: hold_if_link_lost
+        at_ns: 1800s
+        window_ns: 600s
+        when: "exists(kind='lost_link')"
+        then: hold_convoy
+        otherwise: proceed
+
+injects:
+  # --- routine: convoy position every 3 minutes ----------------------------------
+  - {id: pos-001, at_ns: 0s,    source_id: convoy_gps, kind: convoy_position, payload: {km: 0.0,  speed_kmh: 40}, policy_labels: [shared]}
+  - {id: pos-002, at_ns: 180s,  source_id: convoy_gps, kind: convoy_position, payload: {km: 2.0,  speed_kmh: 40}, policy_labels: [shared]}
+  - {id: pos-003, at_ns: 360s,  source_id: convoy_gps, kind: convoy_position, payload: {km: 4.0,  speed_kmh: 40}, policy_labels: [shared]}
+  - {id: pos-004, at_ns: 540s,  source_id: convoy_gps, kind: convoy_position, payload: {km: 6.0,  speed_kmh: 40}, policy_labels: [shared]}
+  - {id: pos-005, at_ns: 720s,  source_id: convoy_gps, kind: convoy_position, payload: {km: 8.0,  speed_kmh: 40}, policy_labels: [shared]}
+  - {id: pos-006, at_ns: 900s,  source_id: convoy_gps, kind: convoy_position, payload: {km: 10.0, speed_kmh: 40}, policy_labels: [shared]}
+  - {id: pos-007, at_ns: 1080s, source_id: convoy_gps, kind: convoy_position, payload: {km: 12.0, speed_kmh: 40}, policy_labels: [shared]}
+  - {id: pos-008, at_ns: 1260s, source_id: convoy_gps, kind: convoy_position, payload: {km: 14.0, speed_kmh: 40}, policy_labels: [shared]}
+  - {id: pos-009, at_ns: 1440s, source_id: convoy_gps, kind: convoy_position, payload: {km: 16.0, speed_kmh: 40}, policy_labels: [shared]}
+  - {id: pos-010, at_ns: 1620s, source_id: convoy_gps, kind: convoy_position, payload: {km: 18.0, speed_kmh: 40}, policy_labels: [shared]}
+  - {id: pos-011, at_ns: 1800s, source_id: convoy_gps, kind: convoy_position, payload: {km: 20.0, speed_kmh: 40}, policy_labels: [shared]}
+  - {id: pos-012, at_ns: 1980s, source_id: convoy_gps, kind: convoy_position, payload: {km: 22.0, speed_kmh: 40}, policy_labels: [shared]}
+  - {id: pos-013, at_ns: 2160s, source_id: convoy_gps, kind: convoy_position, payload: {km: 24.0, speed_kmh: 40}, policy_labels: [shared]}
+  - {id: pos-014, at_ns: 2340s, source_id: convoy_gps, kind: convoy_position, payload: {km: 26.0, speed_kmh: 40}, policy_labels: [shared]}
+  - {id: pos-015, at_ns: 2520s, source_id: convoy_gps, kind: convoy_position, payload: {km: 28.0, speed_kmh: 40}, policy_labels: [shared]}
+
+  # --- scout telemetry (convoy-internal, ops_center never sees raw telemetry) -------
+  - {id: tele-001, at_ns: 60s,   source_id: scout_uas, kind: scout_telemetry, payload: {alt_m: 120, battery_pct: 96, link_db: -62}, policy_labels: [convoy_internal]}
+  - {id: tele-002, at_ns: 360s,  source_id: scout_uas, kind: scout_telemetry, payload: {alt_m: 120, battery_pct: 90, link_db: -66}, policy_labels: [convoy_internal]}
+  - {id: tele-003, at_ns: 660s,  source_id: scout_uas, kind: scout_telemetry, payload: {alt_m: 120, battery_pct: 84, link_db: -71}, policy_labels: [convoy_internal]}
+  - {id: tele-004, at_ns: 960s,  source_id: scout_uas, kind: scout_telemetry, payload: {alt_m: 120, battery_pct: 78, link_db: -78}, policy_labels: [convoy_internal]}
+  - {id: tele-005, at_ns: 1260s, source_id: scout_uas, kind: scout_telemetry, payload: {alt_m: 120, battery_pct: 72, link_db: -84}, policy_labels: [convoy_internal]}
+  - {id: tele-006, at_ns: 2100s, source_id: scout_uas, kind: scout_telemetry, payload: {alt_m: 120, battery_pct: 60, link_db: -70}, policy_labels: [convoy_internal]}
+
+  # --- the incident: a threat report that is later retracted ---------------------
+  - id: threat-001
+    at_ns: 700s
+    source_id: scout_uas
+    kind: threat_report
+    payload: {confidence: 0.70, type: obstruction, km_ahead: 6.5, note: "possible roadblock, low sun"}
+    policy_labels: [shared]
+    priority: 10
+  - id: threat-002
+    at_ns: 820s
+    source_id: route_recon
+    kind: threat_report
+    payload: {confidence: 0.35, type: vehicle, km_ahead: 9.0, note: "stationary civilian truck"}
+    policy_labels: [shared]
+  # Retraction: the scout's second pass shows farm machinery, not a roadblock.
+  # Baseline arrival at ops_center is around 1105-1125s; the watch officer decides at 1200s.
+  - id: retract-001
+    at_ns: 1040s
+    source_id: scout_uas
+    kind: correction
+    payload: {corrects: threat-001, confidence: 0.10, reason: "second pass: agricultural machinery on verge"}
+    policy_labels: [shared]
+    priority: 5
+  - {id: recon-001, at_ns: 1300s, source_id: route_recon, kind: route_status, payload: {segment: S4, state: clear}, policy_labels: [shared]}
+
+  # --- lost link episode (convoy-internal), resolved before the hold decision -------
+  - {id: link-001, at_ns: 1500s, source_id: scout_uas,   kind: lost_link,  payload: {last_fix_km: 17.2}, policy_labels: [convoy_internal], priority: 10}
+  - {id: link-002, at_ns: 1590s, source_id: scout_uas,   kind: link_reacquired, payload: {acks: link-001, outage_s: 90}, policy_labels: [convoy_internal], priority: 10}
+  - {id: order-001, at_ns: 1850s, source_id: convoy_cmd, kind: order,       payload: {text: "resume planned speed"}, policy_labels: [shared]}
+
+  # --- ops-only administrative traffic ---------------------------------------------
+  - {id: fuel-001, at_ns: 300s,  source_id: ops_logistics, kind: fuel_state, payload: {litres: 1800}, policy_labels: [ops_only]}
+  - {id: fuel-002, at_ns: 1500s, source_id: ops_logistics, kind: fuel_state, payload: {litres: 1500}, policy_labels: [ops_only]}
+  - {id: roster-001, at_ns: 600s, source_id: ops_logistics, kind: roster, payload: {shift: B}, policy_labels: [ops_only]}
+
+transitions:
+  - {id: relay_outage, kind: outage, from_ns: 2000s, to_ns: 2200s, source_id: convoy_gps}
+
+invariants:
+  - epistemic.no_future_knowledge
+  - decision.consistent_with_truth
+  - absence.no_corrupted_in_decision

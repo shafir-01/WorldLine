@@ -1,0 +1,57 @@
+{
+  "synthetic": true,
+  "branch_id": "root",
+  "trace_digest": "sha256:1c7e65e1aa016a90ffb74de0cbc275494c38ff0a1b75e92148db2abbe0588ff2",
+  "verdicts": [
+    {
+      "invariant_id": "alert_acknowledged_within_300s",
+      "invariant_version": "1.0",
+      "result": "PASS",
+      "witness": [],
+      "explanation": "2 alert(s) acknowledged within 300s in coast_guard view",
+      "missing_data": [],
+      "derived_at_ns": 8313533,
+      "trace_digest": "sha256:1c7e65e1aa016a90ffb74de0cbc275494c38ff0a1b75e92148db2abbe0588ff2"
+    },
+    {
+      "invariant_id": "coast_guard_never_sees_harbour_private",
+      "invariant_version": "1.0",
+      "result": "PASS",
+      "witness": [],
+      "explanation": "no harbour_private event in coast_guard view",
+      "missing_data": [],
+      "derived_at_ns": 8313533,
+      "trace_digest": "sha256:1c7e65e1aa016a90ffb74de0cbc275494c38ff0a1b75e92148db2abbe0588ff2"
+    },
+    {
+      "invariant_id": "information_state_separation",
+      "invariant_version": "1.2",
+      "result": "PASS",
+      "witness": [],
+      "explanation": "every decision cites only events received by its role at at_ns",
+      "missing_data": [],
+      "derived_at_ns": 8313533,
+      "trace_digest": "sha256:1c7e65e1aa016a90ffb74de0cbc275494c38ff0a1b75e92148db2abbe0588ff2"
+    },
+    {
+      "invariant_id": "decision_matches_truth",
+      "invariant_version": "1.1",
+      "result": "PASS",
+      "witness": [],
+      "explanation": "all 3 decisions equal the option computed over truth as of at_ns",
+      "missing_data": [],
+      "derived_at_ns": 8313533,
+      "trace_digest": "sha256:1c7e65e1aa016a90ffb74de0cbc275494c38ff0a1b75e92148db2abbe0588ff2"
+    },
+    {
+      "invariant_id": "berth_capacity_non_negative",
+      "invariant_version": "1.0",
+      "result": "PASS",
+      "witness": [],
+      "explanation": "all capacity readings >= 0",
+      "missing_data": [],
+      "derived_at_ns": 8313533,
+      "trace_digest": "sha256:1c7e65e1aa016a90ffb74de0cbc275494c38ff0a1b75e92148db2abbe0588ff2"
+    }
+  ]
+}

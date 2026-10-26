@@ -1,0 +1,50 @@
+{
+  "synthetic": true,
+  "id": "sha256:85fb965597f4fd634d0f83c2f5c7774b7c10f608ad75606e93cbc67cd8a32fbb",
+  "violated_invariant": "decision_matches_truth@1.1",
+  "mechanism": [
+    {
+      "op": "delay",
+      "target": {
+        "kind": "correction",
+        "role": "<decider_role>",
+        "nth": 1,
+        "relative_to": "decision_point",
+        "relation": "received_after"
+      },
+      "params": {
+        "by_ns": "> decision_at_ns - correction_event_time_ns - role_latency_ns"
+      }
+    }
+  ],
+  "preconditions": [
+    "has_decision_rule_depending_on(kind=correction)",
+    "exists_truth_event(kind=correction) before decision_at_ns",
+    "role_latency(decider_role) + delay > decision_at_ns - correction_event_time_ns",
+    "decision_rule.otherwise != decision_rule.then"
+  ],
+  "witness_shape": {
+    "missing_from_view": [
+      {
+        "kind": "correction",
+        "nth": 1
+      }
+    ],
+    "decision": {
+      "rule_kind": "exists(...) and not exists(kind='correction')",
+      "chosen": "then",
+      "truth_option": "otherwise"
+    },
+    "lag_class": "information_lag_over_decision_point"
+  },
+  "origin": {
+    "scenario_id": "port_alert",
+    "seed": 42,
+    "branch_id": "root/3412b87eda53",
+    "trace_digest": "sha256:d0e64d344da6362d69bea4efb35b8de6f809702f4eec49f0823f9f0a0ebfaebd",
+    "minimal_schedule_hash": "3412b87eda53",
+    "code_commit": "synthetic-fixture"
+  },
+  "evidence_kind": "EMPIRICALLY_VALIDATED",
+  "claim_ceiling": "Transfer is within the shared Event v1 substrate, not across heterogeneous codebases."
+}
