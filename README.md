@@ -163,7 +163,7 @@ policies/          release.yaml, kernel_public.pem
 experiments/       benchmark.py; out/ is generated and ignored
 ui/                Vite + React viewer
 tests/             158 tests
-docs/              ARCHITECTURE, THESIS (prior art), REPORT (measurements), ROADMAP, HANDOVER, GitLab setup, Duo agent prompts
+docs/              ARCHITECTURE, THESIS (prior art), REPORT (measurements), ROADMAP, GitLab setup, Duo agent prompts
 .gitlab-ci.yml     test -> explore -> kernel-verify -> authorize -> pages
 AGENTS.md, CODEOWNERS, .gitlab/duo/   agent guidance and protected paths
 ```
