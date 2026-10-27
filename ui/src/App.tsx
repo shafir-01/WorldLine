@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useData, useTraceRegistry } from "./data";
 import type { LoadedData } from "./types";
-import { FOOTER_TEXT, STORY_BEATS, VERIFIER_DOCS_URL } from "./config";
+import { FOOTER_TEXT, STORY_BEATS, VERIFIER_DOCS_URL, REPO_URL } from "./config";
 import Story from "./views/Story";
 import { StorySkeleton, jumpToBeat } from "./views/Landing";
 import Worlds from "./views/Worlds";
@@ -104,6 +104,10 @@ export default function App() {
           </nav>
           <div className="topbar-right">
             {simulated && <SimulatedBadge data={ready} />}
+            <a className="api-link" href={REPO_URL} target="_blank" rel="noreferrer">
+              GitLab
+              <ExtIcon />
+            </a>
             <a className="api-link" href={VERIFIER_DOCS_URL} target="_blank" rel="noreferrer">
               Open verifier API
               <ExtIcon />

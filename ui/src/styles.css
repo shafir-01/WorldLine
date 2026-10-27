@@ -819,3 +819,6 @@ ul.plain { list-style: none; padding: 0; margin: 4px 0; display: flex; flex-dire
   .ps-fill { background: Highlight; }
   .banner, .tile, .tool { border: 1px solid CanvasText; }
 }
+
+.beat-next { margin-top: var(--space-5); color: var(--muted); font-size: var(--text-sm); max-width: 68ch; }
+.beat-next .ext { color: var(--accent); font-weight: 600; }

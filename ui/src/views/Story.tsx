@@ -4,7 +4,7 @@ import { dataUrl, useTrace, challengeKey, type TraceEntry } from "../data";
 import { eventWord, humanDuration, humanName, interventionSentence, interventionText, mmss, nodeStatus, parseDecisionExplanation, preconditionText, NS } from "../format";
 import { KIND_HELP, KIND_LABEL, KindGlyph, VerdictGlyph } from "../components/Badges";
 import { ShortId } from "../components/ShortId";
-import { AUTHORIZE_ENDPOINT, DEFAULT_POLICY, HEALTH_ENDPOINT, MAX_BUNDLE_BYTES, RELEASE_TAG, RELEASE_URL, STORY_BEATS, VERIFIER_DOCS_URL, VERIFIER_URL, VERIFY_ENDPOINT } from "../config";
+import { AUTHORIZE_ENDPOINT, DEFAULT_POLICY, HEALTH_ENDPOINT, MAX_BUNDLE_BYTES, RELEASE_TAG, RELEASE_URL, STORY_BEATS, VERIFIER_DOCS_URL, VERIFIER_URL, VERIFY_ENDPOINT, MERGE_REQUEST_URL } from "../config";
 import Landing from "./Landing";
 
 type InspectView = "worlds" | "timeline" | "mechanism" | "evidence";
@@ -680,6 +680,12 @@ function BeatChallenge({ data, registry, onInspect }: Props) {
           <ChallengeCard key={r.scenario_id} r={r} kind="control" />
         ))}
       </div>
+      <p className="beat-next">
+        What happens next lives in GitLab: an agent investigated this failure, another proposed a repair, and two reviewers judged it.{" "}
+        <a className="ext" href={MERGE_REQUEST_URL} target="_blank" rel="noreferrer">
+          Open the repair merge request
+        </a>
+      </p>
     </Beat>
   );
 }

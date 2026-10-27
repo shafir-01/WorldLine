@@ -4,8 +4,10 @@ export const VERIFY_ENDPOINT = `${VERIFIER_URL}/api/verify`;
 export const AUTHORIZE_ENDPOINT = `${VERIFIER_URL}/api/authorize`;
 export const HEALTH_ENDPOINT = `${VERIFIER_URL}/api/healthz`;
 export const VERIFIER_DOCS_URL = `${VERIFIER_URL}/api/docs`;
-export const RELEASE_URL = "https://gitlab.com/shafir2/WorldLine/-/releases/v0.1.3-transcend";
-export const RELEASE_TAG = "v0.1.3-transcend";
+export const RELEASE_URL = "https://gitlab.com/shafir2/WorldLine/-/releases/v0.2.0";
+export const REPO_URL = "https://gitlab.com/shafir2/WorldLine";
+export const MERGE_REQUEST_URL = "https://gitlab.com/shafir2/WorldLine/-/merge_requests/1";
+export const RELEASE_TAG = "v0.2.0";
 export const DEFAULT_POLICY = "release";
 /** The verifier refuses bodies above this size (service/app.py MAX_BODY_BYTES). */
 export const MAX_BUNDLE_BYTES = 5 * 1024 * 1024;
