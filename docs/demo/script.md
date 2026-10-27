@@ -1,49 +1,49 @@
 # WORLDLINE demo script
 
-Spoken, first person, about 400 words. Tabs open in order. Every number appears on screen as it is said.
+Spoken over a screen recording. Two tabs: the live site (https://worldline-verifier-301330323690.europe-north1.run.app) and merge request 1 on GitLab. The site already serves the pipeline's own output, so nothing needs to be loaded.
 
 ---
 
-**[Tab, Story landing]**
+**[Site. Land on the top of the Story page, cursor still]**
 
-I want to show you a class of bug that has never had a test, because your pipeline is green and your agent wrote a convincing explanation, and the system still makes the wrong call when the one message that mattered shows up ninety seconds late. Nobody tests for that, so we built the thing that does.
+WorldLine is an autonomous engineering platform that stress tests futures your software hasn't lived, discovers why it breaks, transfers that knowledge to other systems, and refuses to ship unproven fixes. Conventional tests check what you expected. They miss what happens when the right information arrives at the wrong time. WorldLine makes those invisible failures executable.
 
-**[Tab, Story step 1]**
+**[Click "See it work". You land on the fan of worlds. Hover one red diamond while speaking]**
 
-Here is one hour of a harbour alert replayed 133 times with the world slightly different each time, and forty three of those worlds break a safety rule the original run never touched, while our guided search hits a wrong decision by the sixth world and random search never finds it at all.
+Watch a harbour emergency become 133 alternative realities. WorldLine changes which messages arrive, when they arrive, and what each participant knows. In 43 worlds, a safety rule breaks. Our guided explorer finds the critical failure by world six. Random search misses it within the same budget.
 
-**[Tab, Story step 2]**
+**[Scroll to the timeline. Press play on the scrubber so it runs to the decision marker, or click "At the decision"]**
 
-Look at this one, where the top lane is what really happened and the middle lane is what the duty officer actually knew, and watch the correction slide past the moment he decides. He escalates on a radar contact that had already been retracted, so his logic was perfect while his information was late, and that is the bug living in every operational system you run.
+Here, the top timeline shows reality; the next shows what the officer knew. A radar contact was retracted, but the correction never reached him in time. He escalates a threat that no longer exists. The decision rule works. The information arrives too late.
 
-**[Tab, Story step 3]**
+**[Scroll to "One cause". Let the three cards show, two struck through, one kept, with the 90.2 s threshold]**
 
-Three changes produced that world, and delta debugging keeps the one that matters while proving nothing smaller still breaks it, then solves the exact threshold at ninety point two seconds so you know precisely where safe ends.
+WorldLine doesn't just flag the failure. It performs causal minimization, stripping away disturbances until one delayed message remains. It identifies the timing boundary at 90.2 seconds. We now have the reproducible explanation of what failed, and why.
 
-**[Tab, Story step 4]**
+**[Scroll to the mechanism card with the correction → decider → decision diagram and the precondition chips]**
 
-Then we strip the names out and keep the mechanism, the last correction a decider receives held past the decision, with no port and no officer in it, so the failure becomes something you can carry to a system that has never seen it.
+This is the leap: we remove the harbour, the radar, and the officer, retaining the cause as an executable Failure Genome. It is no longer a test tied to one application. It is a transferable attack on the underlying weakness.
 
-**[Tab, Story step 5]**
+**[Scroll to "Elsewhere". The convoy card reads Reproduced, the immune twin reads Not reproduced]**
 
-So we carried it, and a logistics convoy reproduced it, a hospital triage board reproduced it, the real USGS record of the Kamchatka magnitude eight point eight with its real revisions reproduced it, a live HTTP service driven request by request reproduced it, while the twin we built to be immune did not, exactly as it should.
+We unleash that genome across logistics, hospital triage, a replay using USGS earthquake revisions, and a live HTTP service. The same causal weakness reappears in different settings. But the resistant twin survives. WorldLine doesn't just make software fail; it learns which systems are vulnerable to that failure, and which aren't.
 
-**[Tab, GitLab merge request 1]**
+**[Switch to the GitLab tab, merge request 1. Scroll slowly through the description, then the review comments]**
 
-Inside GitLab the agents do the work and nobody lets them grade it, so the Investigator reproduced the failure, the Repairer opened this merge request, Code Review caught that the fix was hollow, and our Skeptic still rejected the retry because it was right to, which is why this merge request stays open on purpose.
+Now GitLab Duo moves from discovery to repair. Investigator reproduces the bug. Repairer opens a merge request. Code Review catches a hollow fix that avoids the decision instead of correcting it, and Skeptic rejects the retry. We leave that request open. Autonomous engineering must withstand criticism, not just generate passing tests.
 
-**[Tab, Story step 6]**
+**[Back to the site. Scroll to "Evidence". Click the "Edited copy" toggle so the DENIED banner appears and record 1 lights up]**
 
-Every claim is typed as validated, attested, failed or unknown, and these thirty one signed records were each recomputed by the kernel before it attested anything, so when I change a single record the release is denied and it names the one that broke.
+Our verification kernel recomputes critical claims and seals 31 evidence records cryptographically. Change a record and verification fails. Agents cannot approve their own unsupported claims.
 
-**[Tab, Story step 7]**
+**[Scroll to "Verify". Click "Verify bundle" and wait for Intact. Click "Check release" and wait for Authorized. Then click "Use the edited copy" and "Verify bundle" again for Tampered]**
 
-You do not have to believe me, because you can drop the bundle in and see it come back intact, then check the release against its commit and watch it come back authorized, with nothing but a public key between you and the answer.
+The Google Cloud verifier puts that control in your hands. Genuine bundle: verified. Correct release commit: authorized. Tampered record or wrong commit: denied.
 
-**[Tab, Story landing]**
+**[Click the WORLDLINE wordmark to return to the landing. Hold still]**
 
-Late information is the oldest failure in operations, and WORLDLINE is the first pipeline stage that hunts it, proves it, carries it to the next system, and refuses to ship until the evidence clears. This is WORLDLINE.
+WorldLine discovers failures before another system repeats them, converts those discoveries into reusable engineering intelligence, and makes independent evidence the condition for release. This is what comes after code.
 
 ---
 
-Delivery. Breathe at the commas, never stop mid sentence. Keep the four "reproduced" clauses at one even pace. Stop talking the instant "Denied" appears. Finish still on the landing page.
+The two verifier clicks hit the live service and return in under a second; start the line as you click so the result lands mid-sentence.
