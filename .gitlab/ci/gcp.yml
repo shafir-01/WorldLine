@@ -8,7 +8,7 @@
 #   GCP_SERVICE   optional, default worldline-verifier
 
 deploy-gcp:
-  stage: authorize
+  stage: pages
   image: google/cloud-sdk:slim
   when: manual
   allow_failure: true
@@ -17,8 +17,6 @@ deploy-gcp:
   needs:
     - job: authorize
       artifacts: true
-    - job: pages
-      artifacts: false
   rules:
     - if: $CI_COMMIT_REF_PROTECTED == "true" && $GCP_PROJECT && $GCP_SA_KEY
   variables:
