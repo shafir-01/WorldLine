@@ -15,6 +15,10 @@ deploy-gcp:
   interruptible: false
   resource_group: worldline-gcp
   needs:
+    - job: explore
+      artifacts: true
+    - job: kernel-verify
+      artifacts: true
     - job: authorize
       artifacts: true
   rules:
@@ -30,7 +34,7 @@ deploy-gcp:
     # Never ship the signing key, even if a runner happens to have it on disk.
     - rm -f policies/kernel_private.pem
     # The image bakes the authorized evidence from this pipeline (artifacts of `authorize`).
-    - test -f experiments/out/bundle.json && test -f experiments/out/authorization.json
+    - test -f experiments/out/index.json && test -f experiments/out/bundle.json && test -f experiments/out/authorization.json
     - |
       gcloud run deploy "$GCP_SERVICE" \
         --source . \

@@ -11,7 +11,7 @@ const fixtures = join(ui, "fixtures");
 const dest = join(ui, "public", "data");
 
 const hasJson = (dir) => existsSync(dir) && statSync(dir).isDirectory() && readdirSync(dir).some((f) => f.endsWith(".json"));
-const src = hasJson(real) ? real : fixtures;
+const src = hasJson(real) && existsSync(join(real, "index.json")) ? real : fixtures;
 
 rmSync(dest, { recursive: true, force: true });
 mkdirSync(dest, { recursive: true });
