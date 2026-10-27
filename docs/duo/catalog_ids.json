@@ -40,23 +40,28 @@
       "id": "gid://gitlab/Ai::Catalog::Item/1019933",
       "name": "WORLDLINE Investigate",
       "latestVersion": {
-        "id": "gid://gitlab/Ai::Catalog::ItemVersion/1038373"
+        "id": "gid://gitlab/Ai::Catalog::ItemVersion/1038417",
+        "versionName": "1.0.1"
       },
       "webPath": "/explore/ai-catalog/flows/1019933"
     },
     "WORLDLINE Repair": {
       "id": "gid://gitlab/Ai::Catalog::Item/1019934",
       "name": "WORLDLINE Repair",
+      "itemType": "FLOW",
       "latestVersion": {
         "id": "gid://gitlab/Ai::Catalog::ItemVersion/1038374"
       },
-      "webPath": "/explore/ai-catalog/flows/1019934"
+      "project": {
+        "fullPath": "shafir2/WorldLine"
+      }
     },
     "WORLDLINE Skeptic Review": {
       "id": "gid://gitlab/Ai::Catalog::Item/1019935",
       "name": "WORLDLINE Skeptic Review",
       "latestVersion": {
-        "id": "gid://gitlab/Ai::Catalog::ItemVersion/1038375"
+        "id": "gid://gitlab/Ai::Catalog::ItemVersion/1038418",
+        "versionName": "1.0.1"
       },
       "webPath": "/explore/ai-catalog/flows/1019935"
     }
@@ -65,27 +70,28 @@
     "WORLDLINE Investigator": {
       "id": "gid://gitlab/Ai::Catalog::ItemConsumer/13282370",
       "enabled": true,
+      "webPath": "/shafir2/WorldLine/-/automate/agents/1019929",
       "serviceAccount": null,
-      "flowTriggers": [],
-      "webPath": "/shafir2/WorldLine/-/automate/agents/1019929"
+      "flowTriggers": []
     },
     "WORLDLINE Repairer": {
       "id": "gid://gitlab/Ai::Catalog::ItemConsumer/13282378",
       "enabled": true,
+      "webPath": "/shafir2/WorldLine/-/automate/agents/1019930",
       "serviceAccount": null,
-      "flowTriggers": [],
-      "webPath": "/shafir2/WorldLine/-/automate/agents/1019930"
+      "flowTriggers": []
     },
     "WORLDLINE Skeptic": {
       "id": "gid://gitlab/Ai::Catalog::ItemConsumer/13282380",
       "enabled": true,
+      "webPath": "/shafir2/WorldLine/-/automate/agents/1019931",
       "serviceAccount": null,
-      "flowTriggers": [],
-      "webPath": "/shafir2/WorldLine/-/automate/agents/1019931"
+      "flowTriggers": []
     },
     "WORLDLINE Investigate": {
       "id": "gid://gitlab/Ai::Catalog::ItemConsumer/13282383",
       "enabled": true,
+      "webPath": "/shafir2/WorldLine/-/automate/flows/1019933",
       "serviceAccount": null,
       "flowTriggers": [
         {
@@ -95,14 +101,19 @@
             7
           ],
           "active": true,
-          "description": "Auto-created triggers for WORLDLINE Investigate"
+          "description": "Auto-created triggers for WORLDLINE Investigate",
+          "goals": {},
+          "eventTypeNames": [
+            "mention",
+            "work_item"
+          ]
         }
-      ],
-      "webPath": "/shafir2/WorldLine/-/automate/flows/1019933"
+      ]
     },
     "WORLDLINE Repair": {
       "id": "gid://gitlab/Ai::Catalog::ItemConsumer/13282386",
       "enabled": true,
+      "webPath": "/shafir2/WorldLine/-/automate/flows/1019934",
       "serviceAccount": null,
       "flowTriggers": [
         {
@@ -111,14 +122,18 @@
             0
           ],
           "active": true,
-          "description": "Auto-created triggers for WORLDLINE Repair"
+          "description": "Auto-created triggers for WORLDLINE Repair",
+          "goals": {},
+          "eventTypeNames": [
+            "mention"
+          ]
         }
-      ],
-      "webPath": "/shafir2/WorldLine/-/automate/flows/1019934"
+      ]
     },
     "WORLDLINE Skeptic Review": {
       "id": "gid://gitlab/Ai::Catalog::ItemConsumer/13282388",
       "enabled": true,
+      "webPath": "/shafir2/WorldLine/-/automate/flows/1019935",
       "serviceAccount": null,
       "flowTriggers": [
         {
@@ -127,10 +142,13 @@
             6
           ],
           "active": true,
-          "description": "Auto-created triggers for WORLDLINE Skeptic Review"
+          "description": "Auto-created triggers for WORLDLINE Skeptic Review",
+          "goals": {},
+          "eventTypeNames": [
+            "merge_request"
+          ]
         }
-      ],
-      "webPath": "/shafir2/WorldLine/-/automate/flows/1019935"
+      ]
     }
   }
 }

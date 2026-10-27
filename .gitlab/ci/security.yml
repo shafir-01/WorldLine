@@ -1,0 +1,26 @@
+# Security scanning for WORLDLINE. Included from .gitlab-ci.yml.
+#
+# GitLab 19.x managed templates (Jobs/ prefix; the older Security/ paths are the legacy
+# spelling of the same templates). All jobs run in the `test` stage, which .gitlab-ci.yml
+# declares, and none of them declares `needs:`, so the DAG of the WORLDLINE jobs is untouched.
+#
+#   SAST                 Jobs/SAST.gitlab-ci.yml                     (semgrep for Python/TS)
+#   Secret detection     Jobs/Secret-Detection.gitlab-ci.yml
+#   Dependency scanning  Jobs/Dependency-Scanning.v2.gitlab-ci.yml  (SBOM-based analyzer;
+#                        reads uv.lock and ui/package-lock.json; the Gemnasium analyzer in
+#                        Jobs/Dependency-Scanning.gitlab-ci.yml is deprecated since 17.9 and
+#                        is therefore not included)
+#
+# Findings appear under Secure > Vulnerability report and in the MR security widget (Ultimate).
+
+include:
+  - template: Jobs/SAST.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+  - template: Jobs/Dependency-Scanning.v2.gitlab-ci.yml
+
+variables:
+  # Keep the template defaults (spec, test, tests, tmp) and add generated or vendored trees.
+  SAST_EXCLUDED_PATHS: "spec, test, tests, tmp, ui/node_modules, .venv, experiments/out"
+  SECRET_DETECTION_EXCLUDED_PATHS: "ui/node_modules, .venv, experiments/out"
+  # Stable templates run only in branch pipelines by default; this also runs them in MR pipelines.
+  AST_ENABLE_MR_PIPELINES: "true"

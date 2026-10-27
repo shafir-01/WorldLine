@@ -1,17 +1,34 @@
 # WORLDLINE pipeline. See docs/ARCHITECTURE.md "GitLab integration" and docs/GITLAB_SETUP.md.
 #
-#   test -> explore -> kernel-verify -> authorize -> pages
+#   test -> explore -> kernel-verify -> authorize -> release (tags) / pages (default branch)
 #
 # Kernel jobs (kernel-verify, authorize) are protected by CODEOWNERS and only run on
-# protected refs or merge requests; they are the only jobs that see WORLDLINE_KERNEL_KEY.
-# Duo agents may edit test/explore inputs (scenarios/, worldline/ except evidence/) but
-# never this file's kernel jobs, invariants/, policies/ or worldline/evidence/.
+# protected refs (branches and tags) or merge requests; they are the only jobs that see
+# WORLDLINE_KERNEL_KEY. Duo agents may edit test/explore inputs (scenarios/, worldline/
+# except evidence/) but never this file's kernel jobs, invariants/, policies/ or
+# worldline/evidence/.
+#
+# Tag pipelines additionally run `release-assets` and `release`: the signed evidence bundle
+# and the kernel's authorization are uploaded to the generic package registry and attached
+# to the GitLab release, so every release carries its own proof (docs/RELEASES.md).
+# Tags must match the protected-tag rule `v*` for the kernel key to be visible.
+#
+# Security scanning (SAST, secret detection, dependency scanning) lives in
+# .gitlab/ci/security.yml; the optional Cloud Run deployment in .gitlab/ci/gcp.yml.
+
+include:
+  - local: .gitlab/ci/security.yml
+  - local: .gitlab/ci/gcp.yml
+    rules:
+      - exists:
+          - .gitlab/ci/gcp.yml
 
 stages:
   - test
   - explore
   - kernel-verify
   - authorize
+  - release
   - pages
 
 variables:
@@ -51,11 +68,14 @@ default:
     - if: $CI_COMMIT_BRANCH
     - if: $CI_COMMIT_TAG
 
-# Kernel jobs: protected refs (where the signing key is visible) and MRs targeting the default branch.
+# Kernel jobs: protected refs (where the signing key is visible), MRs targeting the default
+# branch, and tags. On an unprotected tag the key is absent and kernel-verify fails loudly,
+# which is intended: only protected tags (`v*`) can become releases.
 .rules-kernel:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH
     - if: $CI_COMMIT_REF_PROTECTED == "true"
+    - if: $CI_COMMIT_TAG
 
 test:
   extends: [.python, .rules-default]
@@ -65,7 +85,7 @@ test:
   artifacts:
     when: always
     paths:
-      - report.xml        # downstream jobs need the file itself; `reports:` alone is not passed on
+      - report.xml        # the kernel reads the file itself; `reports:` alone is not passed downstream
     reports:
       junit: report.xml
     expire_in: 2 weeks
@@ -75,7 +95,7 @@ explore:
   stage: explore
   needs: [test]
   script:
-    # CLI under construction, flags fixed by orchestrator. Every command prints the digests it produced.
+    # Explore, minimise, extract the genome, challenge it on a second scenario, write the report.
     - mkdir -p "$WORLDLINE_OUT"
     - uv run worldline explore "$WORLDLINE_SCENARIO" --budget "$WORLDLINE_BUDGET" --seed "$WORLDLINE_SEED" --out "$WORLDLINE_OUT"
     - uv run worldline minimize "$WORLDLINE_OUT/exploration.json" --out "$WORLDLINE_OUT"
@@ -170,6 +190,129 @@ duo-repair:
         --header "Content-Type: application/json" \
         --data @duo_request.json \
         --url "$CI_API_V4_URL/ai/duo_workflows/workflows"
+
+# ---------------------------------------------------------------------------------------
+# PROOF-CARRYING RELEASES (tag pipelines only).
+# release-assets: uploads the evidence files to the generic package registry under
+#   worldline-evidence/<tag>/ and writes release_notes.md (quoting the authorization decision
+#   and the bundle root) plus assets.json (release asset links). Refuses to continue unless
+#   the kernel decision is AUTHORIZED.
+# release: creates the GitLab release for the tag with those notes and links, using glab
+#   (release-cli is deprecated since GitLab 18.0; the `release:` keyword itself runs glab).
+# ---------------------------------------------------------------------------------------
+
+release-assets:
+  stage: release
+  image: python:3.12
+  rules:
+    - if: $CI_COMMIT_TAG
+  needs:
+    - job: kernel-verify
+      artifacts: true
+    - job: authorize
+      artifacts: true
+  variables:
+    GIT_STRATEGY: none
+    EVIDENCE_PACKAGE: worldline-evidence
+  script:
+    - |
+      set -eu
+      test -f "$WORLDLINE_OUT/bundle.json"
+      test -f "$WORLDLINE_OUT/authorization.json"
+      BASE="$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/$EVIDENCE_PACKAGE/$CI_COMMIT_TAG"
+      UPLOADED=""
+      for f in bundle.json authorization.json genome.json minimal_schedule.json challenge.json benchmark.json index.json; do
+        if [ -f "$WORLDLINE_OUT/$f" ]; then
+          echo "uploading $f"
+          curl --fail --silent --show-error --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "$WORLDLINE_OUT/$f" "$BASE/$f"
+          echo
+          UPLOADED="$UPLOADED $f"
+        else
+          echo "skipping $f (not produced by this pipeline)"
+        fi
+      done
+      echo "$UPLOADED" > uploaded.txt
+    - |
+      python3 - <<'PY'
+      import hashlib, json, os
+      out = os.environ["WORLDLINE_OUT"]
+      tag = os.environ["CI_COMMIT_TAG"]
+      sha = os.environ["CI_COMMIT_SHA"]
+      path = os.environ["CI_PROJECT_PATH"]
+      base = "%s/projects/%s/packages/generic/%s/%s" % (os.environ["CI_API_V4_URL"], os.environ["CI_PROJECT_ID"], os.environ["EVIDENCE_PACKAGE"], tag)
+      uploaded = open("uploaded.txt").read().split()
+      auth = json.load(open(out + "/authorization.json"))
+      bundle = json.load(open(out + "/bundle.json"))
+      cp = bundle.get("checkpoint") or {}
+      root = cp.get("root", "see bundle.json")
+      def sha256(p):
+          h = hashlib.sha256()
+          with open(p, "rb") as fh:
+              for chunk in iter(lambda: fh.read(1 << 16), b""):
+                  h.update(chunk)
+          return h.hexdigest()
+      decision = auth.get("decision", "UNKNOWN")
+      satisfied = auth.get("satisfied") or []
+      missing = auth.get("missing") or []
+      met, total = len(satisfied), len(satisfied) + len(missing)
+      lines = [
+          "## WORLDLINE release " + tag,
+          "",
+          "- Commit: `%s`" % sha,
+          "- Kernel decision: **%s** (%d of %d policy requirements met)" % (decision, met, total),
+          "- Artifact digest checked by the kernel: `%s`" % auth.get("artifact_digest", sha),
+          "- Evidence bundle root: `%s` (signer %s, sealed %s)" % (root, cp.get("signer_key_id", "?"), cp.get("sealed_at", "?")),
+          "- Records in bundle: %d" % len(bundle.get("records", [])),
+          "- Pipeline: " + os.environ["CI_PIPELINE_URL"],
+          "",
+          "### Evidence assets (generic package registry)",
+          "",
+          "| File | SHA-256 |",
+          "|---|---|",
+      ]
+      links = []
+      for f in uploaded:
+          lines.append("| [%s](%s/%s) | `%s` |" % (f, base, f, sha256(out + "/" + f)))
+          links.append({"name": f, "url": base + "/" + f, "link_type": "other"})
+      lines += [
+          "",
+          "### Verify offline",
+          "",
+          "```",
+          "curl -LO %s/bundle.json" % base,
+          "curl -LO https://gitlab.com/%s/-/raw/%s/policies/kernel_public.pem" % (path, tag),
+          "curl -LO https://gitlab.com/%s/-/raw/%s/policies/release.yaml" % (path, tag),
+          "uv run worldline authorize bundle.json --policy release.yaml --public-key kernel_public.pem --artifact-digest " + sha,
+          "```",
+          "",
+          "The kernel recomputes the decision from the bundle, the policy and the public key alone; see docs/RELEASES.md.",
+          "Claim ceiling of this release: whatever the authorization says, nothing more. Agents never attest; the kernel does.",
+      ]
+      open("release_notes.md", "w", encoding="utf-8").write("\n".join(lines) + "\n")
+      json.dump(links, open("assets.json", "w"))
+      print("\n".join(lines))
+      if decision != "AUTHORIZED":
+          raise SystemExit("release gate: kernel decision is not AUTHORIZED; no release is created")
+      PY
+  artifacts:
+    paths:
+      - release_notes.md
+      - assets.json
+    expire_in: 1 year
+
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/cli:latest
+  rules:
+    - if: $CI_COMMIT_TAG
+  needs:
+    - job: release-assets
+      artifacts: true
+  variables:
+    GIT_STRATEGY: none
+    GLAB_ENABLE_CI_AUTOLOGIN: "true"
+  script:
+    - glab release create "$CI_COMMIT_TAG" --name "WORLDLINE $CI_COMMIT_TAG" --ref "$CI_COMMIT_SHA" --notes-file release_notes.md --assets-links "$(cat assets.json)"
 
 pages:
   stage: pages

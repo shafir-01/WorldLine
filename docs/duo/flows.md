@@ -1,6 +1,6 @@
 # WORLDLINE custom flows
 
-Custom flows are YAML pasted into **AI > Flows > New flow > Configuration > Flow** (GA 19.2). Docs:
+Custom flows are flow registry v1 YAML (GA 19.2). The blocks in this file are published to the AI Catalog by `scripts/duo_setup.py` (see "Publishing the definitions" at the end); the UI editor at **AI > Flows** shows the same text. Docs:
 
 - Custom flows: https://docs.gitlab.com/user/duo_agent_platform/flows/custom/
 - Schema notes: https://docs.gitlab.com/user/duo_agent_platform/flows/custom_flows_schema/
@@ -12,7 +12,8 @@ Facts that shaped these definitions (CONFIRMED from the docs above):
 
 - A custom flow cannot reference a custom agent from the catalog; it declares its own `AgentComponent`s with inline `prompts`. The agent prompts below are therefore copies of `investigator.md`, `repairer.md`, `skeptic.md`, trimmed to fit.
 - `version: v1` and `environment: ambient` (no human in the loop) are required. `name`, `description`, `product_group` are not allowed in custom flows; the UI form carries name and description.
-- Inputs default to `["context:goal"]`. The goal is the trigger's text: for Mention events the comment text plus `Context: {issue IID: n}`; for Work item / Merge request events the resource type, URL and action; plus any trigger Instructions.
+- Inputs default to `["context:goal"]`. `context:goal` is the only trigger-supplied input the v1 registry exposes to components; there is no `context:merge_request_iid` or similar. What the goal contains depends on the trigger (CONFIRMED from the job log of trigger-started session 10081751, `$DUO_WORKFLOW_GOAL`): for Mention events the comment text; for **Merge request / Work item events the bare IID of the resource** (`1`), because the "resource type and URL instead of the IID" format and the per-event trigger Instructions (`goals`) are both behind feature flags that are off on gitlab.com (`aiFlowTriggerUpdate` with `goals` answers `Goals are not available`). The runtime also attaches an `agent_platform_resource_context` block (resource type, id, web URL, pipeline, source branch) to the agent's additional context. **Any flow that is started by an event trigger must therefore treat a numeric goal as the IID of the triggering resource**; the flows below do.
+- Session 10081751 (Skeptic, trigger Merge request > Created) ended `no_output`: the Duo Workflow Service closed the stream 250 ms after `startRequest` with the goal `1` and the original prompt, without a single checkpoint; the same definition started over REST with a sentence-long goal ran to completion (session 10081961). The fix is in the prompts: the user turn now carries the resolution rule and the project id, so the model always has a concrete task.
 - Tool names come from `duo_workflow_service/components/tools_registry.py`; the ones used here are listed in the spec: `read_file`, `list_dir`, `find_files`, `get_repository_file`, `list_repository_tree`, `get_issue`, `create_issue_note`, `get_merge_request`, `create_merge_request_note`, `create_file_with_contents`, `edit_file`, `run_command`, `create_merge_request`. UNVERIFIED: exact names for git commit/push (`run_git_command` is in the registry per the spec's examples; the editor will reject unknown names, fix and record here).
 - There is no label trigger. Trigger events: Mention, Assign, Assign reviewer, Pipeline events (experiment), Merge request (Approved / Created / Marked ready / Merge conflict), Work item (Created / Status changed with type/status filters). Labels are a human convention here; the firing event is a status change or a mention.
 - Flows run in CI on the `gitlab--duo` hosted runners, inside the image from `.gitlab/duo/agent-config.yml` (python:3.12 + Node 20 + uv) with `setup_script` already executed.
@@ -68,8 +69,11 @@ prompts:
         You are the WORLDLINE Investigator, a read-only analysis agent for the WORLDLINE repository
         (deterministic counterfactual-execution substrate; read AGENTS.md and docs/ARCHITECTURE.md first).
         You never edit files, never open merge requests, never run `worldline verify` or `worldline authorize`.
-        Procedure: (1) parse the goal for scenario path (default scenarios/port_alert.yaml), seed (42), budget (200),
-        issue IID and target invariant. (2) run_command: `uv sync --extra dev`; then
+        Procedure: (1) resolve the goal. If the goal is only a number, it is the IID of the work item (issue) in the
+        current project that fired the trigger: call get_issue with that IID and treat its title and description as
+        the request. If the goal is a URL, it is that work item. Otherwise it is free text. Then parse scenario path
+        (default scenarios/port_alert.yaml), seed (42), budget (200), issue IID and target invariant.
+        (2) run_command: `uv sync --extra dev`; then
         `uv run worldline explore <scenario> --budget <b> --seed <s> --out experiments/out`;
         `uv run worldline minimize experiments/out/exploration.json --out experiments/out`;
         `uv run worldline genome extract experiments/out/minimal_schedule.json --out experiments/out/genome.json`.
@@ -89,6 +93,9 @@ prompts:
       user: |
         Project id: {{project_id}}
         Goal: {{goal}}
+        If the goal above is only a number, it is the IID of the work item in project {{project_id}} that
+        started this run: read it with get_issue first, then investigate what it describes. If it is a URL,
+        it is that work item. Otherwise it is the full request.
     params:
       timeout: 1800
 
@@ -244,7 +251,10 @@ prompts:
       system: |
         You are the WORLDLINE Skeptic, an adversarial reviewer. Default position: disbelief. You never approve, never
         merge, never edit files, and never call anything an agent produced ATTESTED (only the kernel attests).
-        Read AGENTS.md and docs/ARCHITECTURE.md. For the merge request in the goal:
+        Read AGENTS.md and docs/ARCHITECTURE.md. First resolve the merge request: if the goal is only a number, it is
+        the IID of the merge request in the current project that fired the trigger (call get_merge_request with it);
+        if it is a URL, it is that merge request; otherwise the goal names it in prose. Never ask for clarification;
+        the IID is enough. Then, for that merge request:
         (1) Boundary check: any change under invariants/, policies/, worldline/evidence/, .gitlab/duo/, docs/duo/,
         AGENTS.md, CODEOWNERS, or to the kernel-verify / authorize / duo-repair jobs in .gitlab-ci.yml -> FAIL.
         (2) Weakening check: wider windows, removed required_signals, lower thresholds, removed conditions, FAIL turned
@@ -267,6 +277,9 @@ prompts:
       user: |
         Project id: {{project_id}}
         Goal: {{goal}}
+        If the goal above is only a number, it is the IID of the merge request in project {{project_id}} that
+        started this run: fetch it with get_merge_request and review it. If it is a URL, review that merge
+        request. Otherwise follow the goal as written. Post exactly one review note on the merge request.
     params:
       timeout: 1800
 
@@ -280,16 +293,37 @@ flow:
 
 ---
 
-## After pasting
+## Publishing the definitions
 
-1. The editor validates against the registry schema; anything it rejects, fix and record here (especially tool names and the `DeterministicStepComponent` literal input).
-2. Enable each flow in the project and add the triggers above. Note the created service accounts: `ai-worldline-investigate-<group>`, `ai-worldline-repair-<group>`, `ai-worldline-skeptic-review-<group>`.
-3. For the CI `duo-repair` job, fetch the Repair flow's consumer id:
+The YAML blocks above are the source of truth; nothing is pasted by hand.
 
-```graphql
-query { project(fullPath: "<group>/<project>") { aiCatalogConfiguredItems { nodes { id item { name } } } } }
+```powershell
+uv run python scripts/duo_setup.py --project-id 88121109            # create what is missing, skip what exists
+uv run python scripts/duo_setup.py --project-id 88121109 --update   # also push these YAML blocks as a new released PATCH version of each existing flow
+uv run python scripts/duo_setup.py --project-id 88121109 --update --goals   # additionally try to set per-event trigger Instructions (see below)
 ```
 
-Use the numeric suffix of the Repair item's `id` as `WORLDLINE_REPAIR_FLOW_CONSUMER_ID`.
+The script uses `aiCatalogFlowCreate` / `aiCatalogFlowUpdate` (`definition`, `versionBump: PATCH`, `release: true`) through `glab api graphql --input <file>`, records every id in `docs/duo/catalog_ids.json` (items, versions, consumers, flow triggers with their event types) and never touches the kernel.
 
-4. Smoke test from Chat in the project: `/flow:worldline-investigate scenarios/port_alert.yaml`, then watch **AI > Sessions**.
+### Trigger goals (Instructions)
+
+Trigger event types are integers: `mention 0, assign 1, assign_reviewer 2, pipeline_hooks 3, merge_request_ready 4, merge_request_code_conflict 5, merge_request 6, work_item 7, commit_to_default_branch 8, scheduled 9`. A trigger's `goals` is a JSON object keyed by the event type **name**, value a string of at most 4096 characters, which the runtime prepends to the event's own goal:
+
+```graphql
+mutation($in: AiFlowTriggerUpdateInput!) { aiFlowTriggerUpdate(input: $in) { errors aiFlowTrigger { id eventTypes goals } } }
+# variables: {"in": {"id": "gid://gitlab/Ai::FlowTrigger/3183983", "eventTypes": [6], "goals": {"merge_request": "Review this merge request as the WORLDLINE Skeptic ..."}}}
+```
+
+On gitlab.com the server currently answers `Goals are not available` (feature flag `ai_flow_trigger_goals`, GitLab 19.5, off by default). `duo_setup.py --goals` attempts it and reports the error without failing; until the flag is on, the prompts carry the rule "a numeric goal is the IID of the triggering resource" themselves, which is what makes a trigger-started run work today.
+
+### Consumer id for the CI `duo-repair` job
+
+```graphql
+query { project(fullPath: "shafir2/WorldLine") { aiCatalogConfiguredItems { nodes { id item { name } } } } }
+```
+
+Use the numeric suffix of the Repair item's consumer `id` as `WORLDLINE_REPAIR_FLOW_CONSUMER_ID` (currently `13282386`).
+
+### Smoke test
+
+Open a small merge request against `main`; the Skeptic flow fires on **Merge request > Created** (event type 6), posts "WORLDLINE Skeptic Review has started" and, a few minutes later, exactly one `## Skeptic review: PASS|FAIL` note. Watch **AI > Sessions** or `duoWorkflowWorkflows(projectPath: "shafir2/WorldLine")`. From Chat: `/flow:worldline-investigate scenarios/port_alert.yaml`.
