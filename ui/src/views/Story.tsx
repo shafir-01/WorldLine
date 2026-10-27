@@ -1035,7 +1035,11 @@ function useHealth(): "checking" | "online" | "offline" {
     const ctl = new AbortController();
     const t = setTimeout(() => ctl.abort(), 8000);
     fetch(HEALTH_ENDPOINT, { signal: ctl.signal, cache: "no-store" })
-      .then((r) => setS(r.ok ? "online" : "offline"))
+      // Read the body so the browser closes the request; an unread body keeps it in flight.
+      .then(async (r) => {
+        await r.text().catch(() => undefined);
+        setS(r.ok ? "online" : "offline");
+      })
       .catch(() => setS("offline"))
       .finally(() => clearTimeout(t));
     return () => {
