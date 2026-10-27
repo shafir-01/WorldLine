@@ -1,57 +1,53 @@
 # WORLDLINE demo script
 
-About 400 words, roughly 2 minutes 45 seconds at a calm pace. Tabs to have open, in order: the Story page, GitLab merge request 1, the release page, a terminal. Every number is on screen when you say it.
+Spoken, first person, about 400 words. Tabs open in order. Every number appears on screen as it is said.
 
 ---
 
-**[Tab: Story, landing]**
+**[Tab, Story landing]**
 
-Every green pipeline tells you the same lie: the tests passed in one world. The world where the message arrived on time. Real systems fail in the other worlds, where a correction lands ninety seconds late and someone decides without it. WORLDLINE finds those worlds before they ship.
+I want to show you a class of bug that has never had a test. Your pipeline is green. Your agent wrote a nice explanation. And the system still makes the wrong call, because a message that would have changed everything showed up ninety seconds late. Nobody tests for that. We built the thing that does.
 
-**[Tab: Story, step 1 "Replay"]**
+**[Tab, Story step 1]**
 
-One hour of a harbour alert, replayed 133 times. Each replay nudges when messages arrive. Red worlds broke a safety rule: 43 of them. Guided search found a wrong decision in the sixth world. Random search never did.
+Here is one hour of a harbour alert, and here it is again 133 times, each time with the world slightly different. Messages delayed, dropped, duplicated. Forty three of those worlds break a safety rule. Our guided search hits a wrong decision by the sixth world. Random search runs out of budget and never finds it.
 
-**[Tab: Story, step 2 "The break"]**
+**[Tab, Story step 2]**
 
-This is the world that broke. Three lanes: what happened, what the duty officer knew, what the coast guard knew. Watch the correction. It arrives after the officer decides. He escalates on a radar ghost that had already been retracted. Not a bug in his code. A bug in what he knew.
+Look at this one. Top lane is what really happened. Middle lane is what the duty officer actually knew. Watch the correction. It slides past the moment he decides. He escalates on a radar contact that had already been retracted. His logic was perfect. His information was late. That is the bug, and it is everywhere.
 
-**[Tab: Story, step 3 "One cause"]**
+**[Tab, Story step 3]**
 
-Three changes produced that world. Delta debugging strips it to one and proves nothing smaller works: hold back a single correction. The exact threshold is computed, not guessed: 90.2 seconds.
+We do not hand you a pile of failing runs. We shrink it. Three changes produced that world, delta debugging keeps the one that matters, and the system proves nothing smaller still breaks it. It even solves the exact threshold. Ninety point two seconds.
 
-**[Tab: Story, step 4 "Pattern"]**
+**[Tab, Story step 4]**
 
-Now the part no test suite does. The cause is abstracted into a mechanism with no names in it: the last correction a decider receives before deciding, delayed past the decision.
+Then we do something I have not seen anywhere else. We strip the names out and keep the mechanism. The last correction a decider receives, held past the decision. No port, no officer, no event ids. A failure you can carry.
 
-**[Tab: Story, step 5 "Elsewhere"]**
+**[Tab, Story step 5]**
 
-That mechanism is fired at systems it has never seen. A logistics convoy: reproduced. A hospital triage board: reproduced. The real USGS record of the Kamchatka magnitude 8.8, with its real magnitude revisions: reproduced. A live HTTP service, driven request by request: reproduced. The immune twin, built to resist it: correctly not reproduced.
+So we carried it. A logistics convoy it had never seen. Reproduced. A hospital triage board. Reproduced. The real USGS record of the Kamchatka magnitude eight point eight, real timestamps, real magnitude revisions. Reproduced. A live HTTP service, driven request by request. Reproduced. And the twin we built to be immune. Not reproduced. Exactly as it should be.
 
-**[Tab: GitLab, merge request 1]**
+**[Tab, GitLab merge request 1]**
 
-Inside GitLab, agents do the work and never grade it. The Investigator reproduced the failure in a hosted session. The Repairer opened this merge request. Code Review caught that the fix was vacuous. The Repairer fixed that. Our Skeptic still failed it, correctly. The merge request stays open, and that is the point.
+Inside GitLab the agents do the work and nobody lets them grade it. The Investigator reproduced the failure in a hosted session. The Repairer opened this merge request. Code Review caught that the fix was hollow. The Repairer fixed that. Our Skeptic still rejected it, and it was right. This merge request is open on purpose. That is what honest automation looks like.
 
-**[Tab: Story, step 6 "Evidence"]**
+**[Tab, Story step 6]**
 
-Everything the pipeline claims is typed: validated, attested, failed, unknown. Thirty-one records, signed. The kernel recomputes every claim before attesting it. Flip to the edited copy: one record changed, the release is denied, and the broken record is named.
+Every claim the pipeline makes is typed. Validated, attested, failed, unknown. Thirty one signed records. The kernel recomputes each one before it attests anything. Now I change a single record. Denied. And it tells you which one.
 
-**[Tab: Story, step 7 "Verify"]**
+**[Tab, Story step 7]**
 
-Anyone can check it. Drop a bundle, press verify. Intact. Check the release gate against the commit. Authorized. No account, no trust in us, only a public key.
+And you do not have to believe me. Drop the bundle in. Intact. Check the release against its commit. Authorized. Public key only. No account, no trust required.
 
-**[Tab: Release page]**
+**[Tab, Release page]**
 
-Every release ships its evidence as assets, publishes an installable tool, and can be verified offline from a plain download.
+Every release ships with its evidence attached, installs as a tool, and verifies offline from a plain download.
 
-**[Tab: Terminal]**
+**[Tab, Story landing]**
 
-`uv tool install worldline`. `worldline demo`. Authorized. Then the tampered bundle: denied.
-
-**[Tab: Story, landing]**
-
-WORLDLINE. Catch decisions made on late information, before they ship.
+Late information is the oldest failure in operations. WORLDLINE is the first pipeline stage that hunts it, proves it, carries it to the next system, and refuses to ship until the evidence clears. This is WORLDLINE.
 
 ---
 
-Delivery notes: pause one beat after "A bug in what he knew." and after "and that is the point." Keep the cursor still while speaking; move it only between sentences. If a live call is slow, keep talking; the result lands before the next tab.
+Delivery. Slow down on "His information was late." Land "Reproduced" four times with the same weight. Stop talking the moment "Denied" appears. Finish standing still on the landing page.
