@@ -6,7 +6,7 @@ same chain as every push (`test -> explore -> kernel-verify -> authorize`), then
 | Job | Image | What it does |
 |---|---|---|
 | `release-assets` | `python:3.12` | Uploads `bundle.json`, `authorization.json`, `genome.json`, `minimal_schedule.json`, `challenge.json`, `benchmark.json` (when produced) and `index.json` from `experiments/out/` to the project's **generic package registry** under `worldline-evidence/<tag>/`; writes `release_notes.md` (kernel decision, requirements met, artifact digest, bundle root, signer key id, SHA-256 of every asset, the offline verification commands) and `assets.json` (release asset links). Exits non-zero unless the decision is `AUTHORIZED`, so a DENIED tag never becomes a release. |
-| `release` | `registry.gitlab.com/gitlab-org/cli:latest` | `glab release create <tag> --notes-file release_notes.md --assets-links <assets.json>`; the release page shows the notes and links to each evidence file. |
+| `release` | `python:3.12` | Calls the Releases API with the job token: name, tag, `release_notes.md` as description and the `assets.json` links; the release page shows the notes and links to each evidence file. |
 
 Both run only on tags (`rules: if: $CI_COMMIT_TAG`). The kernel jobs run on tags too (`.rules-kernel`),
 but the signing key `WORLDLINE_KERNEL_KEY` is a **protected** variable, so the tag must match a
