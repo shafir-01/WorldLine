@@ -5,7 +5,9 @@
 [![pipeline](https://gitlab.com/shafir2/WorldLine/badges/main/pipeline.svg)](https://gitlab.com/shafir2/WorldLine/-/pipelines)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![python 3.12](https://img.shields.io/badge/python-3.12-3776ab)
-![tests](https://img.shields.io/badge/tests-158%20passing-brightgreen)
+![tests](https://img.shields.io/badge/tests-342%20passing-brightgreen)
+[![docs](https://img.shields.io/badge/docs-site-0b7285)](https://worldline-3e380d.gitlab.io/docs/)
+[![verifier](https://img.shields.io/badge/verifier-live-2f9e44)](https://worldline-verifier-301330323690.europe-north1.run.app)
 ![claims](https://img.shields.io/badge/claims-typed%20by%20certainty-6f42c1)
 
 > Every number in this file was written by code that ran; see [Evidence and claim ceilings](#evidence-and-claim-ceilings). All scenarios are synthetic.
@@ -34,7 +36,8 @@ WORLDLINE asks: **what would this system do if the world were different, and whi
 4. **Minimizes** any failing world with delta debugging to a 1-minimal set of interventions and independently re-checks minimality.
 5. **Extracts a FailureGenome**: the mechanism abstracted to structural selectors ("the last correcting report a deciding role received before its decision") and preconditions, with no event ids.
 6. **Challenges a second scenario** with the genome. Different domain, roles, rules. Reports reproduced, not reproduced, or preconditions unmet. A deliberately immune variant acts as the negative control.
-7. **Types every claim** as PROVED_WITHIN_MODEL, EMPIRICALLY_VALIDATED, ATTESTED, FAILED or UNKNOWN, chains and Ed25519-seals the evidence, and **authorizes a release** only when a policy over those kinds is met for the exact artifact digest. Agents can never emit ATTESTED; the kernel recomputes what they report, and a mismatch becomes a FAILED integrity record that denies the release.
+7. **Runs the same analysis on real inputs.** A scenario can take its truth stream from recorded public data with provenance (the included one is the USGS record of the 2025 Kamchatka M8.8 sequence, whose magnitude revisions are real corrections), and the checker, minimizer and genome can drive an actual HTTP service instead of a model. Delivery timing, roles and decision rules remain declared models and are labelled as such.
+8. **Types every claim** as PROVED_WITHIN_MODEL, EMPIRICALLY_VALIDATED, ATTESTED, FAILED or UNKNOWN, chains and Ed25519-seals the evidence, and **authorizes a release** only when a policy over those kinds is met for the exact artifact digest. Agents can never emit ATTESTED; the kernel recomputes what they report, and a mismatch becomes a FAILED integrity record that denies the release.
 
 ## The headline result
 
@@ -67,7 +70,17 @@ Benchmark across seeds 1 to 5, budget 150 (`experiments/out/benchmark.json`):
 
 Minimization over five failing schedules of size 3 to 4: every one reduced to a single intervention, mean 3.4 oracle calls, 1-minimality verified in all five. The five minimal mechanisms were not all the same: drop the correction, corrupt the correction's `corrects` field, revoke the deciding role's feed from 1350 s, and corrupt the alert acknowledgement. Random exploration also found a mechanism the guided strategy did not prioritise: duplicating a sighting flips the decision, because the rule has no de-duplication.
 
-Claim ceiling: EMPIRICALLY_VALIDATED on two synthetic scenarios on one machine. Transfer is across scenarios sharing the Event v1 substrate, not across heterogeneous codebases.
+Where the port-alert genome has been tested since, with the same mechanism instantiated by structure, never by id:
+
+| Target | Domain | Truth stream | Outcome |
+|---|---|---|---|
+| `convoy_lostlink` | logistics convoy | simulated | reproduced |
+| `convoy_lostlink_immune` | same, two-report rule | simulated | preconditions met, not reproduced |
+| `triage_board` | hospital emergency department | simulated | reproduced |
+| `real/usgs_…` | earthquake advisories | recorded USGS events and revisions | reproduced; the real-data genome also reproduces back on `port_alert` |
+| `examples/service_demo` | approvals HTTP service | simulated, driven over HTTP | reproduced against real request handling |
+
+Claim ceiling: EMPIRICALLY_VALIDATED on the scenarios listed, on one machine. Transfer is across scenarios and one example service sharing the Event v1 substrate; it has not been shown across arbitrary third-party codebases.
 
 ## Features
 
@@ -79,11 +92,17 @@ Claim ceiling: EMPIRICALLY_VALIDATED on two synthetic scenarios on one machine. 
 - Seven intervention operators and mutators; schedules that violate the time rule are recorded as rejected, never hidden.
 - Three-valued invariant checker with minimal witnesses; UNKNOWN names the missing signal.
 - Guided versus random exploration on one budget; the guided strategy reads only the scenario, never runtime truth.
-- Delta debugging with an independent 1-minimality witness.
+- Delta debugging with an independent 1-minimality witness, and an analytic flip threshold for single-delay causes.
+- Equivalence reduction that skips worlds the checker cannot tell apart, a decision-window strategy that finds decision failures at the first branch, and optional parallel runs; all deterministic.
+- Twelve declared invariants: temporal response, label isolation, no future knowledge, decision consistency with truth, fault-attributed witnesses, latency bounds, causal ordering, duplicate suppression, independent-source quorum, permitted-only knowledge.
+- Scenario JSON Schema with `worldline validate` (path and line, did-you-mean suggestions) and `worldline init` scaffolds; authoring tutorial in docs/AUTHORING.md.
+- Real-data adapter (USGS) with pinned snapshots and provenance; HTTP adapter that drives a real ASGI service.
 - FailureGenome extraction, preconditions, and cross-scenario challenge with negative control.
 - Typed evidence records, Ed25519-sealed bundles with distinct tamper findings (edited, dropped, reordered, wrong key, truncated), policy-based authorization, assumption revocation.
 - A kernel that recomputes agent claims before attesting them.
-- Static viewer: branch tree, per-role timelines with information-lag lines, scrubber, causal diff, mechanism cards, evidence chain.
+- Viewer: a seven-step Story in plain language with a working release verifier, and Inspect views that each answer one question (which worlds broke, what each role knew when, the single cause, why the release was allowed).
+- Public verifier service on Cloud Run with structured logging, security headers, rate limits, readiness probe, and a release-verify endpoint; runbook in docs/OPERATIONS.md.
+- Documentation site built from the repository and published under /docs; Playwright end-to-end and axe accessibility tests with a performance budget.
 - GitLab CI pipeline: test, explore, kernel-verify, authorize, release, pages; kernel jobs isolated by protected refs and CODEOWNERS.
 - Proof-carrying releases: every tag ships the signed evidence bundle and the kernel's authorization as release assets.
 - SAST, secret detection and dependency scanning from GitLab's managed templates.
@@ -95,6 +114,16 @@ Python 3.12, PyYAML, Typer, Rich, cryptography (Ed25519); pytest and Hypothesis.
 ## Getting started
 
 Prerequisites: Python 3.12 or newer and [uv](https://docs.astral.sh/uv/). Node 20 or newer only for the viewer.
+
+Install as a tool (releases publish to the project's package registry; see [docs/INSTALL.md](docs/INSTALL.md)):
+
+```bash
+uv tool install --index https://gitlab.com/api/v4/projects/88121109/packages/pypi/simple worldline
+worldline --version
+worldline resources        # where the bundled scenarios, invariants and policy live
+```
+
+Or from source:
 
 ```bash
 git clone https://gitlab.com/shafir2/WorldLine.git
@@ -177,7 +206,7 @@ invariants/        core.yaml
 policies/          release.yaml, kernel_public.pem
 experiments/       benchmark.py; out/ is generated and ignored
 ui/                Vite + React viewer
-tests/             158 tests
+tests/             342 tests
 docs/              ARCHITECTURE, THESIS (prior art), REPORT (measurements), ROADMAP, GitLab setup, Duo agent prompts
 .gitlab-ci.yml     test -> explore -> kernel-verify -> authorize -> release -> pages
 .gitlab/ci/        security.yml (SAST, secret detection, dependency scanning), gcp.yml (deploy-gcp)
@@ -217,7 +246,7 @@ Agents never evaluate their own work. `invariants/`, `policies/`, `worldline/evi
 ## Testing
 
 ```bash
-uv run pytest -q                 # 158 tests: unit, property, integration, CLI
+uv run pytest -q                 # 342 tests: unit, property, integration, CLI, service, adapters
 uv run pytest -q tests/test_evidence.py   # tamper findings, agent cannot self-attest, revocation
 cd ui && npm run build           # type-checks with strict TypeScript
 ```
@@ -263,7 +292,7 @@ Nothing here is PROVED_WITHIN_MODEL yet. All scenarios are synthetic and labelle
 
 ## Roadmap and limitations
 
-Limitations now: two scenarios, one invariant family drives the headline; transfer is substrate-internal; no partial-order reduction, so exploration is budget-bound; delay values are swept, not solved; the Duo flow definitions were only partly verifiable against official documentation at build time. The roadmap, with the experiment that would settle each item, is in [docs/ROADMAP.md](docs/ROADMAP.md). A first run against real request-handling code (an example service, with WORLDLINE still driving delivery timing) is described in [docs/REAL_SERVICE.md](docs/REAL_SERVICE.md).
+Limitations now: one mechanism class drives the headline even though it now reproduces in four domains; transfer is within the Event v1 substrate and one example service, not across arbitrary codebases; the real-data scenario's delivery latencies and decision rule are models; equivalence reduction is sound for the declared invariants but not a full partial-order reduction; parallel runs gain little on short branches. The roadmap, with the experiment that would settle each item, is in [docs/ROADMAP.md](docs/ROADMAP.md). A first run against real request-handling code (an example service, with WORLDLINE still driving delivery timing) is described in [docs/REAL_SERVICE.md](docs/REAL_SERVICE.md).
 
 ## Contributing
 
