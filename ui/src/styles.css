@@ -1,4 +1,4 @@
-/* WORLDLINE viewer — hand-written CSS, no UI kit. Light/dark follow prefers-color-scheme.
+/* WORLDLINE viewer, hand-written CSS, no UI kit. Light/dark follow prefers-color-scheme unless data-theme is set on <html>.
  *
  * Colour system (validated with the dataviz skill's validate_palette.js):
  *   Verdicts  PASS / FAIL / UNKNOWN   light #2a78d6 / #d03b3b / #eda100   dark #3987e5 / #d03b3b / #c98500
@@ -92,7 +92,7 @@
   --maxw: 1180px;
 }
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     color-scheme: dark;
     --bg: #0e0e10;
     --bg-elev: #17171a;
@@ -131,6 +131,45 @@
     --shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 30px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 24px 60px -12px rgba(0, 0, 0, 0.6);
   }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e0e10;
+  --bg-elev: #17171a;
+  --bg-sunken: #1f1f23;
+  --bg-glass: rgba(14, 14, 16, 0.72);
+  --fg: #f2f1ee;
+  --fg-2: #c3c2b9;
+  --fg-muted: #9a9890;
+  --line: #26262b;
+  --line-strong: #3a3a40;
+  --ring: rgba(255, 255, 255, 0.08);
+  --accent: #8c86f5;
+  --accent-ink: #a9a4ff;
+  --accent-soft: #23213d;
+  --on-accent: #0e0e10;
+  --pass: #3987e5;
+  --pass-soft: #142335;
+  --fail: #d03b3b;
+  --fail-ink: #f07470;
+  --fail-soft: #331718;
+  --unknown: #c98500;
+  --unknown-soft: #33280f;
+  --warn: #e0a84a;
+  --warn-soft: #2e240e;
+  --kind-empirically-validated: #3987e5;
+  --kind-attested: #199e70;
+  --kind-proved-within-model: #9085e9;
+  --kind-failed: #d03b3b;
+  --kind-unknown: #c98500;
+  --on-kind: #ffffff;
+  --mark: #8f8d86;
+  --quiet: #4b4a47;
+  --sk: #1d1d21;
+  --sk-hi: #26262b;
+  --hero-glow: radial-gradient(60% 55% at 50% 0%, rgba(140, 134, 245, 0.16), transparent 70%);
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 30px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 24px 60px -12px rgba(0, 0, 0, 0.6);
 }
 
 * { box-sizing: border-box; }
@@ -822,3 +861,8 @@ ul.plain { list-style: none; padding: 0; margin: 4px 0; display: flex; flex-dire
 
 .beat-next { margin-top: var(--space-5); color: var(--muted); font-size: var(--text-sm); max-width: 68ch; }
 .beat-next .ext { color: var(--accent); font-weight: 600; }
+
+.theme-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: var(--radius-pill); border: 1px solid var(--line); background: var(--bg-elev); color: var(--fg); font: inherit; font-size: var(--text-xs); cursor: pointer; }
+.theme-btn:hover { border-color: var(--accent); }
+.theme-btn:focus-visible { outline: var(--focus-ring); }
+@media (max-width: 900px) { .topbar-right .theme-btn { display: none; } .mobile-menu .theme-btn { margin: 8px 0 0; } }

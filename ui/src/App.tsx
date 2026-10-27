@@ -104,6 +104,7 @@ export default function App() {
           </nav>
           <div className="topbar-right">
             {simulated && <SimulatedBadge data={ready} />}
+            <ThemeToggle />
             <a className="api-link" href={REPO_URL} target="_blank" rel="noreferrer">
               GitLab
               <ExtIcon />
@@ -127,6 +128,7 @@ export default function App() {
             <a className="mobile-api" href={VERIFIER_DOCS_URL} target="_blank" rel="noreferrer">
               Open verifier API <ExtIcon />
             </a>
+            <ThemeToggle />
           </div>
         )}
         {view === "story" && <StoryProgress ready={!!ready} />}
@@ -142,6 +144,35 @@ export default function App() {
         {FOOTER_TEXT}
       </footer>
     </div>
+  );
+}
+
+type Theme = "light" | "dark" | "system";
+function readTheme(): Theme {
+  try { const t = localStorage.getItem("worldline:theme"); if (t === "light" || t === "dark") return t; } catch { /* no storage */ }
+  return "system";
+}
+function applyTheme(t: Theme) {
+  const root = document.documentElement;
+  if (t === "system") root.removeAttribute("data-theme"); else root.setAttribute("data-theme", t);
+  try { if (t === "system") localStorage.removeItem("worldline:theme"); else localStorage.setItem("worldline:theme", t); } catch { /* no storage */ }
+}
+function useTheme(): [Theme, (t: Theme) => void] {
+  const [t, setT] = useState<Theme>(() => readTheme());
+  useEffect(() => { applyTheme(t); }, [t]);
+  return [t, setT];
+}
+function ThemeToggle() {
+  const [t, setT] = useTheme();
+  const isDark = t === "dark" || (t === "system" && typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  const next: Theme = isDark ? "light" : "dark";
+  return (
+    <button type="button" className="theme-btn" onClick={() => setT(next)} aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"} aria-pressed={isDark}>
+      <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden>
+        {isDark ? <circle cx="8" cy="8" r="4" fill="currentColor" /> : <path d="M11 2.5A6 6 0 1 0 13.5 11 5 5 0 0 1 11 2.5z" fill="currentColor" />}
+      </svg>
+      <span className="theme-label">{isDark ? "Light" : "Dark"}</span>
+    </button>
   );
 }
 
