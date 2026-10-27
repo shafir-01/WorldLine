@@ -9,13 +9,17 @@
     "build": "npm run copy-data && tsc -p tsconfig.json --noEmit && vite build",
     "preview": "vite preview",
     "copy-data": "node scripts/copy-data.mjs",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:e2e": "playwright test",
+    "test:e2e:ci": "playwright test --forbid-only"
   },
   "dependencies": {
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@playwright/test": "1.64.1",
     "@types/react": "18.3.23",
     "@types/react-dom": "18.3.7",
     "@vitejs/plugin-react": "4.5.2",

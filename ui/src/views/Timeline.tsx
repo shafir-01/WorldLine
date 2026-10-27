@@ -1,11 +1,12 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import type { LoadedData, Trace, WEvent } from "../types";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { LoadedData, Trace, VerdictRecord, WEvent } from "../types";
 import { useTrace, type TraceEntry, type TraceGroup } from "../data";
-import { causalDiff } from "../diff";
-import { NS, secs, shortBranch, tClock } from "../format";
-import { ScheduleList } from "../components/Schedule";
-import { VerdictPill } from "../components/Badges";
+import { causalDiff, diffSummary } from "../diff";
+import { NS, eventSummary, humanDuration, humanName, interventionPlain, invariantHelp, invariantName, mmss, opName, parseDecisionExplanation, secs, shortBranch, verdictSentence } from "../format";
+import { VerdictGlyph, VerdictPill } from "../components/Badges";
 import { ShortId } from "../components/ShortId";
+import { Check, Chip, ContextBar, Ctx, Disclosure, HoverCard, keepScroll, Tip, ViewIntro } from "../components/Inspect";
+import "../inspect.css";
 
 interface Props {
   data: LoadedData;
@@ -15,13 +16,16 @@ interface Props {
 }
 
 const ROLE_ORDER = ["harbour_ops", "coast_guard", "ops_center", "convoy_lead", "evaluator"];
-const KIND_ORDER = ["sighting", "ais_position", "status", "capacity", "weather", "alert", "ack", "acknowledged", "correction", "decision"];
-const LANE_PAD = 14;
-const SUBROW = 16;
-const LEFT = 235;
-const RIGHT = 24;
-const AXIS_H = 28;
-const GROUP_LABEL: Record<TraceGroup, string> = { root: "Baseline", minimal: "Minimal counterexample (ddmin)", challenge: "Genome challenge", guided: "Failing branches: guided", random: "Failing branches: random", other: "Other traces" };
+const KIND_ORDER = ["sighting", "threat_report", "correction", "alert", "ack", "status", "ais_position", "weather", "decision"];
+const HEAD_W = 216; // HTML lane header column
+const KIND_W = 96; // kind labels, right-aligned against the plot
+const LEFT = HEAD_W + KIND_W;
+const RIGHT = 28;
+const AXIS_H = 30;
+const LANE_PAD = 10;
+const SUBROW = 17;
+const LANE_MIN = 104;
+const GROUP_LABEL: Record<TraceGroup, string> = { root: "Baseline", minimal: "Minimal counterexample", challenge: "Genome challenge", guided: "Failing worlds: guided", random: "Failing worlds: random", other: "Other traces" };
 const GROUP_ORDER: TraceGroup[] = ["root", "minimal", "challenge", "guided", "random", "other"];
 
 function roleOfDecision(trace: Trace, d: WEvent): string {
@@ -32,194 +36,324 @@ function roleOfDecision(trace: Trace, d: WEvent): string {
   return role ?? Object.keys(trace.views)[0];
 }
 
-function horizonOf(trace: Trace): number {
-  return trace.scenario?.clock?.horizon_ns ?? trace.clock_end.now_ns;
-}
-
-function useWidth<T extends HTMLElement>(): [React.RefObject<T>, number] {
-  const ref = useRef<T>(null);
-  const [w, setW] = useState(900);
-  useEffect(() => {
-    const el = ref.current;
+function useWidth(): [(el: HTMLDivElement | null) => void, number] {
+  const [w, setW] = useState(1100);
+  const ro = useRef<ResizeObserver | null>(null);
+  const ref = useCallback((el: HTMLDivElement | null) => {
+    ro.current?.disconnect();
     if (!el) return;
-    const ro = new ResizeObserver((entries) => setW(Math.max(480, Math.floor(entries[0].contentRect.width))));
-    ro.observe(el);
-    return () => ro.disconnect();
+    ro.current = new ResizeObserver((entries) => setW(Math.max(640, Math.floor(entries[0].contentRect.width))));
+    ro.current.observe(el);
   }, []);
   return [ref, w];
+}
+
+const kindWord = (k: string) => humanName(k).replace(/^ais position$/, "AIS position");
+
+/** The decision the verdicts blame (if any), with the ids the actor had not received. */
+function blamedDecision(verdicts: VerdictRecord[]) {
+  const v = verdicts.find((x) => x.result === "FAIL" && x.invariant_id === "decision.consistent_with_truth");
+  if (!v) return null;
+  const p = parseDecisionExplanation(v.explanation);
+  const missing = v.explanation.match(/had not received \[([^\]]*)\]/)?.[1]?.match(/'([^']+)'/g)?.map((s) => s.slice(1, -1)) ?? v.witness.filter((w) => !w.startsWith("decision:"));
+  const decisionId = v.witness.find((w) => w.startsWith("decision:")) ?? (p.actor ? `decision:${p.actor}:` : "");
+  return { v, ...p, missing, decisionId };
 }
 
 export default function Timeline({ registry, selected, onSelect }: Props) {
   const { trace, verdicts, loading, available, entry } = useTrace(registry, selected);
   const root = useTrace(registry, "root");
   const [compare, setCompare] = useState(true);
-  const [t, setT] = useState<number | null>(null); // AS_KNOWN_AT scrubber, null = end of horizon
+  const [t, setT] = useState<number | null>(null); // "known at" scrubber; null = end of horizon
   const [picked, setPicked] = useState<{ role: string; event: WEvent } | null>(null);
-  const [wrapRef, width] = useWidth<HTMLDivElement>();
+  const [hover, setHover] = useState<{ role: string; event: WEvent; x: number; y: number } | null>(null);
+  const [preset, setPreset] = useState<"relevant" | "all" | "custom">("relevant");
+  const [custom, setCustom] = useState<Set<string>>(new Set());
+  const [zoom, setZoom] = useState(false);
+  const [wrapRef, width] = useWidth();
 
+  const select = (id: string) => keepScroll(() => onSelect(id));
   const witness = useMemo(() => new Set(verdicts.filter((v) => v.result === "FAIL").flatMap((v) => v.witness)), [verdicts]);
   const canCompare = !!(trace && root.trace && trace.branch_id !== "root" && trace.scenario_id === root.trace.scenario_id);
-  const diff = useMemo(() => (compare && canCompare && trace && root.trace ? causalDiff(root.trace, trace) : null), [compare, canCompare, trace, root.trace]);
+  const showCompare = compare && canCompare;
+  const diff = useMemo(() => (showCompare && trace && root.trace ? causalDiff(root.trace, trace) : null), [showCompare, trace, root.trace]);
 
   useEffect(() => {
     setPicked(null);
+    setHover(null);
     setT(null);
   }, [selected]);
 
-  const head = <Head selected={selected} registry={registry} onSelect={onSelect} />;
-  if (!available) {
-    return (
-      <div className="view">
-        {head}
-        <div className="panel empty">
-          No trace file was exported for <code>{shortBranch(selected)}</code>. The pipeline writes traces for <b>root</b>, every <b>failing</b> branch, the <b>minimal</b> counterexample and the <b>challenge</b> counterexample. Pick one above or select a failing
-          node in Worlds.
-        </div>
-      </div>
+  const head = <TraceContext selected={selected} registry={registry} onSelect={select} trace={trace} compare={showCompare} canCompare={canCompare} setCompare={setCompare} rootBranch={trace?.branch_id === "root"} />;
+  const intro = (answer: React.ReactNode) => <ViewIntro eyebrow="Inspect · Timeline" question="What did each role know, and when?" answer={answer} />;
+
+  if (!available || loading || !trace) {
+    const msg = !available ? (
+      <>
+        No timeline was exported for <code>{shortBranch(selected)}</code>. The pipeline writes one for the baseline, every failing world, the minimal counterexample and the challenge counterexample. Pick one from the trace menu above.
+      </>
+    ) : loading ? (
+      "Loading the timeline…"
+    ) : (
+      <>
+        The file <code>{entry?.traceFile}</code> is listed in the data but could not be fetched. The fixture snapshot ships only some traces; build against <code>experiments/out</code> for all of them.
+      </>
     );
-  }
-  if (loading) {
     return (
-      <div className="view">
+      <div className="view ix-view">
+        {intro("Each lane is one role. A dot is when something happened; its tail runs to when that role heard about it.")}
         {head}
-        <div className="panel empty">Loading trace…</div>
-      </div>
-    );
-  }
-  if (!trace) {
-    return (
-      <div className="view">
-        {head}
-        <div className="panel empty error">
-          The trace file <code>{entry?.traceFile}</code> is listed in the data but could not be fetched. The fixture snapshot ships only a subset of traces; build against <code>experiments/out</code> for all of them.
-        </div>
+        <div className={`panel empty ${!available || loading ? "" : "error"}`}>{msg}</div>
       </div>
     );
   }
 
-  const horizon = horizonOf(trace);
-  const tKnown = t ?? horizon;
+  // ------------------------------------------------------------ derived structure
+  const horizon = trace.scenario?.clock?.horizon_ns ?? trace.clock_end.now_ns;
   const roles = [...ROLE_ORDER.filter((r) => trace.views[r]), ...Object.keys(trace.views).filter((r) => !ROLE_ORDER.includes(r))];
-  const roleSpec = new Map((trace.scenario?.roles ?? []).map((r) => [r.id, r]));
+  const eventById = new Map<string, WEvent>();
+  for (const e of trace.truth.events) eventById.set(e.id, e);
+  for (const r of roles) for (const e of trace.views[r].events) if (!eventById.has(e.id)) eventById.set(e.id, e);
+
+  const allKinds = new Map<string, number>();
+  for (const r of roles) for (const e of trace.views[r].events) allKinds.set(e.kind, (allKinds.get(e.kind) ?? 0) + 1);
+  const rules = (trace.scenario?.actors ?? []).flatMap((a) => a.decision_rules.map((rule) => ({ actor: a, rule })));
+  const relevant = new Set<string>();
+  for (const { rule } of rules) for (const m of rule.when.matchAll(/kind='([^']+)'/g)) relevant.add(m[1]);
+  for (const w of witness) {
+    const e = eventById.get(w) ?? eventById.get(w.split("#")[0]);
+    if (e) relevant.add(e.kind);
+  }
+  for (const iv of entry?.schedule ?? []) {
+    const e = iv.target.event_id ? eventById.get(iv.target.event_id) : undefined;
+    if (e) relevant.add(e.kind);
+    if (iv.target.kind) relevant.add(String(iv.target.kind));
+  }
+  if (allKinds.has("correction")) relevant.add("correction");
+  for (const k of [...relevant]) if (!allKinds.has(k)) relevant.delete(k);
+  const shown = preset === "all" ? new Set(allKinds.keys()) : preset === "relevant" ? relevant : custom;
+  const orderKinds = (ks: Iterable<string>) => {
+    const s = new Set(ks);
+    return [...KIND_ORDER.filter((k) => s.has(k)), ...[...s].filter((k) => !KIND_ORDER.includes(k)).sort()];
+  };
+
+  const blamed = blamedDecision(verdicts);
+  const focusDecision = (blamed && trace.decisions.find((d) => d.id === blamed.decisionId || String(d.payload.actor) === blamed.actor)) ?? trace.decisions[0];
+  const focusRule = focusDecision && rules.find((x) => x.rule.id === String(focusDecision.payload.rule_id));
+  const focusAt = focusDecision ? Number(focusDecision.payload.at_ns) : horizon / 2;
+  const win = focusRule?.rule.window_ns ?? 600 * NS;
+  const d0 = zoom ? Math.max(0, focusAt - win) : 0;
+  const d1 = zoom ? Math.min(horizon, focusAt + win / 2) : horizon;
+
   const kindsPerRole = new Map<string, string[]>();
   for (const r of roles) {
-    const ks = new Set(trace.views[r].events.map((e) => e.kind));
-    for (const d of trace.decisions) if (roleOfDecision(trace, d) === r) ks.add("decision");
-    kindsPerRole.set(r, [...KIND_ORDER.filter((k) => ks.has(k)), ...[...ks].filter((k) => !KIND_ORDER.includes(k)).sort()]);
+    const ks = new Set(trace.views[r].events.map((e) => e.kind).filter((k) => shown.has(k)));
+    if (showCompare) for (const e of root.trace?.views[r]?.events ?? []) if (shown.has(e.kind)) ks.add(e.kind);
+    const kinds = orderKinds(ks).filter((k) => k !== "decision");
+    if (trace.decisions.some((d) => roleOfDecision(trace, d) === r)) kinds.push("decision");
+    kindsPerRole.set(r, kinds);
   }
-  const laneH = (r: string) => LANE_PAD * 2 + kindsPerRole.get(r)!.length * SUBROW;
+  const laneH = (r: string) => Math.max(LANE_MIN, LANE_PAD * 2 + kindsPerRole.get(r)!.length * SUBROW);
   const laneTop = new Map<string, number>();
   let y = AXIS_H;
   for (const r of roles) {
     laneTop.set(r, y);
-    y += laneH(r) + 6;
+    y += laneH(r) + 8;
   }
-  const height = y + 8;
+  const height = y + 14;
   const plotW = width - LEFT - RIGHT;
-  const X = (ns: number) => LEFT + (Math.max(0, Math.min(horizon, ns)) / horizon) * plotW;
-  const Y = (r: string, kind: string) => laneTop.get(r)! + LANE_PAD + kindsPerRole.get(r)!.indexOf(kind) * SUBROW + SUBROW / 2;
-  const tickStep = horizon > 2400 * NS ? 300 * NS : 120 * NS;
-  const ticks = Array.from({ length: Math.floor(horizon / tickStep) + 1 }, (_, i) => i * tickStep);
+  const X = (ns: number) => LEFT + ((Math.max(d0, Math.min(d1, ns)) - d0) / (d1 - d0)) * plotW;
+  const inDomain = (a: number, b: number) => Math.max(a, b) >= d0 && Math.min(a, b) <= d1;
+  const Y = (r: string, kind: string) => laneTop.get(r)! + LANE_PAD + Math.max(0, kindsPerRole.get(r)!.indexOf(kind)) * SUBROW + SUBROW / 2;
+  const span = d1 - d0;
+  const tickStep = span > 2400 * NS ? 300 * NS : span > 900 * NS ? 120 * NS : 60 * NS;
+  const ticks: number[] = [];
+  for (let tk = Math.ceil(d0 / tickStep) * tickStep; tk <= d1; tk += tickStep) ticks.push(tk);
 
-  const rootView = (role: string) => new Map((canCompare && compare ? root.trace?.views[role]?.events ?? [] : []).map((e) => [e.id, e]));
-  const rootDecisions = new Map((canCompare && compare ? root.trace?.decisions ?? [] : []).map((d) => [String(d.payload.rule_id), d]));
-  const showCompare = compare && canCompare;
+  const tKnown = t ?? horizon;
+  const arrivals = [...new Set(roles.flatMap((r) => trace.views[r].events.filter((e) => shown.has(e.kind)).map((e) => e.received_time_ns ?? e.event_time_ns)))].sort((a, b) => a - b);
+  const knownCount = (r: string) => trace.views[r].events.filter((e) => (e.received_time_ns ?? e.event_time_ns) <= tKnown).length;
+  const stepTo = (dir: 1 | -1) => {
+    const cur = tKnown;
+    const next = dir === 1 ? arrivals.find((a) => a > cur) : [...arrivals].reverse().find((a) => a < cur);
+    if (next != null) setT(next);
+  };
+
+  const rootView = (role: string) => new Map((showCompare ? root.trace?.views[role]?.events ?? [] : []).map((e) => [e.id, e]));
+  const rootDecisions = new Map((showCompare ? root.trace?.decisions ?? [] : []).map((d) => [String(d.payload.rule_id), d]));
+  const isWit = (e: WEvent) => witness.has(e.id) || witness.has(e.id.split("#")[0]);
+
+  // ------------------------------------------------------------ the one-sentence answer
+  const focusRole = focusDecision ? roleOfDecision(trace, focusDecision) : roles[0];
+  const answer = blamed ? (
+    <>
+      At <b>{mmss(focusAt)}</b> the {humanName(blamed.actor ?? "decider")} ({humanName(focusRole)}) chose <b className="bad">{blamed.chose}</b>, but the truth called for <b>{blamed.truth}</b>: it had not yet heard{" "}
+      {blamed.missing.length ? (
+        <>
+          {blamed.missing.slice(0, 3).map((m, i) => (
+            <span key={m}>
+              {i > 0 && (i === Math.min(3, blamed.missing.length) - 1 ? " and " : ", ")}
+              <code className="wit">{m}</code>
+            </span>
+          ))}
+          {blamed.missing.length > 3 && ` and ${blamed.missing.length - 3} more`}
+        </>
+      ) : (
+        "what it needed"
+      )}
+      .
+    </>
+  ) : (
+    <>
+      All {trace.decisions.length} decision{trace.decisions.length === 1 ? "" : "s"} matched the truth: each role decided on what it had received, and that was enough. Drag the time bar to see what each role knew at any moment.
+    </>
+  );
+
+  const hoverRoot = hover && showCompare ? rootView(hover.role).get(hover.event.id) : undefined;
 
   return (
-    <div className="view">
+    <div className="view ix-view">
+      {intro(answer)}
       {head}
-      <div className="panel">
-        <div className="toolbar">
-          <label className="scrub">
-            <span>
-              AS_KNOWN_AT(<b>{tClock(tKnown)}</b>) {t === null && <span className="muted">(end of horizon)</span>}
+
+      <section className="panel ix-tl-panel" aria-label="Role timelines">
+        <div className="ix-tl-controls">
+          <div className="ix-scrub" role="group" aria-label="Known-at time">
+            <span className="ix-scrub-label">
+              Known at <b className="ix-mono">{mmss(tKnown)}</b>
+              {t === null && <span className="muted"> (end)</span>}
             </span>
-            <input type="range" min={0} max={horizon} step={NS} value={tKnown} onChange={(e) => setT(Number(e.target.value))} aria-label="AS_KNOWN_AT scrubber" />
-            <button className="btn btn-sm" onClick={() => setT(null)} disabled={t === null}>
-              reset
+            <button className="btn btn-sm btn-icon-sm" onClick={() => stepTo(-1)} aria-label="Previous arrival" title="Previous arrival">
+              ‹
             </button>
-          </label>
-          <label
-            className={`toggle ${canCompare ? "" : "disabled"}`}
-            title={trace.branch_id === "root" ? "Select a non-root branch to compare against root" : canCompare ? "Overlay root received-times and show the causal diff" : "This trace is from a different scenario; no baseline trace to compare against"}
-          >
-            <input type="checkbox" checked={showCompare} disabled={!canCompare} onChange={(e) => setCompare(e.target.checked)} />
-            Compare with root
-          </label>
-          <div className="legend legend-right">
-            <span>
-              <svg width="22" height="12">
-                <circle cx="5" cy="6" r="3.5" className="ev-mark" />
-                <line x1="8" y1="6" x2="20" y2="6" className="lag-line" />
-              </svg>{" "}
-              event_time → received_time (information lag)
-            </span>
-            <span>
-              <svg width="14" height="14">
-                <path d="M7 1L13 7 7 13 1 7z" className="dec-mark" />
-              </svg>{" "}
-              decision point
-            </span>
-            <span>
-              <svg width="14" height="14">
-                <circle cx="7" cy="7" r="5" className="wit-ring" />
-              </svg>{" "}
-              FAIL witness
-            </span>
-            {showCompare && (
-              <span>
-                <svg width="22" height="12">
-                  <circle cx="5" cy="6" r="3.5" className="root-mark" />
-                  <line x1="8" y1="6" x2="20" y2="6" className="delta-line" />
-                </svg>{" "}
-                root received_time → branch received_time
-              </span>
+            <input
+              type="range"
+              min={0}
+              max={horizon}
+              step={5 * NS}
+              value={tKnown}
+              onChange={(e) => setT(Number(e.target.value))}
+              aria-label="Known-at time"
+              aria-valuetext={`${mmss(tKnown)} into the scenario; ${roles.map((r) => `${humanName(r)} knows ${knownCount(r)} events`).join(", ")}`}
+            />
+            <button className="btn btn-sm btn-icon-sm" onClick={() => stepTo(1)} aria-label="Next arrival" title="Next arrival">
+              ›
+            </button>
+            {focusDecision && (
+              <button className="btn btn-sm" onClick={() => setT(focusAt)} title="Set the time bar to the moment of the decision">
+                At the decision
+              </button>
             )}
+            <button className="btn btn-sm btn-ghost" onClick={() => setT(null)} disabled={t === null}>
+              Reset
+            </button>
           </div>
+          <button className={`btn btn-sm ${zoom ? "btn-primary" : ""}`} aria-pressed={zoom} onClick={() => setZoom(!zoom)} disabled={!focusDecision} title={focusRule ? `Rule ${focusRule.rule.id} looks back ${humanDuration(win)} from ${mmss(focusAt)}` : ""}>
+            {zoom ? "Show the whole hour" : "Zoom to the decision window"}
+          </button>
         </div>
 
-        <div ref={wrapRef} className="tl-wrap">
-          <svg className="tl" width={width} height={height} role="img" aria-label="per-role timelines">
+        <div className="ix-kinds" role="group" aria-label="Event kinds shown">
+          <span className="ix-filter-k">Show</span>
+          <Chip on={preset === "relevant"} count={relevant.size} onClick={() => setPreset("relevant")} title="Kinds a decision rule reads, kinds in the FAIL witness, and kinds the fault schedule touches">
+            Decision-relevant
+          </Chip>
+          <Chip on={preset === "all"} count={allKinds.size} onClick={() => setPreset("all")}>
+            All kinds
+          </Chip>
+          <span className="ix-sep" aria-hidden />
+          {orderKinds(allKinds.keys()).map((k) => (
+            <Chip
+              key={k}
+              on={shown.has(k)}
+              count={allKinds.get(k)}
+              onClick={() => {
+                const n = new Set(shown);
+                if (n.has(k)) n.delete(k);
+                else n.add(k);
+                setCustom(n);
+                setPreset("custom");
+              }}
+            >
+              {kindWord(k)}
+            </Chip>
+          ))}
+        </div>
+
+        <div className="ix-legend" aria-label="How to read the lanes">
+          <span>
+            <svg width="30" height="12" aria-hidden>
+              <circle cx="5" cy="6" r="3.5" className="ev-mark" />
+              <line x1="8" y1="6" x2="25" y2="6" className="lag-line" />
+              <line x1="25" y1="2" x2="25" y2="10" className="recv-tick" />
+            </svg>
+            happened → heard about it
+          </span>
+          <span>
+            <svg width="14" height="14" aria-hidden>
+              <path d="M7 1L13 7 7 13 1 7z" className="dec-mark" />
+            </svg>
+            decision
+          </span>
+          <span>
+            <svg width="16" height="16" aria-hidden>
+              <circle cx="8" cy="8" r="6" className="wit-ring ix-wit-ring" />
+              <circle cx="8" cy="8" r="3" fill="var(--fail)" />
+            </svg>
+            witness: what the decider was missing
+          </span>
+          {showCompare && (
+            <span>
+              <svg width="30" height="12" aria-hidden>
+                <circle cx="5" cy="6" r="3.5" className="root-mark" />
+                <line x1="8" y1="6" x2="25" y2="6" className="delta-line" />
+              </svg>
+              baseline arrival → this world's arrival
+            </span>
+          )}
+          <span className="muted">Hover or focus a mark for details; click to pin it.</span>
+        </div>
+
+        {diff && (
+          <p className="ix-diff-sentence" role="status">
+            <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden>
+              <path d="M2 5h9M8 2l3 3-3 3M14 11H5M8 8l-3 3 3 3" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            {diffSummary(diff)}
+          </p>
+        )}
+
+        <div ref={wrapRef} className="ix-tl-wrap" style={{ height }}>
+          <svg className="tl" width={width} height={height} role="img" aria-label={`Timelines for ${roles.length} roles from ${mmss(d0)} to ${mmss(d1)}`}>
+            {focusRule && (
+              <rect x={X(focusAt - win)} y={AXIS_H - 6} width={Math.max(0, X(focusAt) - X(focusAt - win))} height={height - AXIS_H} className="ix-window" />
+            )}
             {ticks.map((tk) => (
               <g key={tk} transform={`translate(${X(tk)},0)`}>
                 <line y1={AXIS_H - 6} y2={height} className="grid" />
-                <text y={AXIS_H - 10} className="axis-label" textAnchor="middle">
-                  {tClock(tk)}
+                <text y={AXIS_H - 12} className="axis-label" textAnchor="middle">
+                  {mmss(tk)}
                 </text>
               </g>
             ))}
+            {tKnown < d1 && <rect x={X(tKnown)} y={AXIS_H - 6} width={Math.max(0, width - RIGHT - X(tKnown))} height={height - AXIS_H} className="ix-future" />}
             {roles.map((r) => {
               const top = laneTop.get(r)!;
               const h = laneH(r);
-              const view = trace.views[r].events;
+              const view = trace.views[r].events.filter((e) => shown.has(e.kind));
               const rv = showCompare ? rootView(r) : null;
-              const spec = roleSpec.get(r);
               return (
                 <g key={r} className="lane">
-                  <rect x={0} y={top} width={width} height={h} className="lane-bg" />
-                  <text x={10} y={top + 16} className="lane-title">
-                    {r}
-                  </text>
-                  {spec && (
-                    <text x={10} y={top + 30} className="lane-sub">
-                      latency {secs(spec.delivery.base_latency_ns)} ± {secs(spec.delivery.jitter_ns)} · {spec.delivery.ordering}
-                      {spec.delivery.drop_probability > 0 ? ` · drop ${spec.delivery.drop_probability}` : ""}
-                    </text>
-                  )}
-                  {spec && spec.visibility.length > 0 && (
-                    <text x={10} y={top + 43} className="lane-sub">
-                      sees {spec.visibility.join(", ")}
-                    </text>
-                  )}
+                  <rect x={0} y={top} width={width} height={h} className="lane-bg" rx={8} />
                   {kindsPerRole.get(r)!.map((k) => (
-                    <text key={k} x={LEFT - 8} y={Y(r, k) + 4} className="kind-label" textAnchor="end">
-                      {k}
+                    <text key={k} x={LEFT - 10} y={Y(r, k) + 4} className="kind-label" textAnchor="end">
+                      {k === "decision" ? "decision" : kindWord(k)}
                     </text>
                   ))}
                   {rv &&
                     view.map((e) => {
                       const o = rv.get(e.id);
-                      if (!o || o.received_time_ns == null || e.received_time_ns == null || o.received_time_ns === e.received_time_ns) return null;
+                      if (!o || o.received_time_ns == null || e.received_time_ns == null || o.received_time_ns === e.received_time_ns || !inDomain(o.received_time_ns, e.received_time_ns)) return null;
                       const yy = Y(r, e.kind);
                       return (
                         <g key={`root-${e.id}`} className="overlay">
@@ -230,38 +364,52 @@ export default function Timeline({ registry, selected, onSelect }: Props) {
                     })}
                   {rv &&
                     [...rv.values()]
-                      .filter((o) => !view.some((e) => e.id === o.id))
-                      .map((o) => {
-                        const k = kindsPerRole.get(r)!.includes(o.kind) ? o.kind : kindsPerRole.get(r)![0];
-                        return (
-                          <g key={`only-root-${o.id}`} className="overlay only-root" opacity={0.7}>
-                            <circle cx={X(o.event_time_ns)} cy={Y(r, k)} r={4} className="root-mark" />
-                            <text x={X(o.event_time_ns) + 6} y={Y(r, k) - 5} className="tiny">
-                              dropped in branch
-                            </text>
-                          </g>
-                        );
-                      })}
+                      .filter((o) => shown.has(o.kind) && !trace.views[r].events.some((e) => e.id === o.id) && inDomain(o.event_time_ns, o.event_time_ns))
+                      .map((o) => (
+                        <g key={`only-root-${o.id}`} className="overlay only-root">
+                          <circle cx={X(o.event_time_ns)} cy={Y(r, o.kind)} r={4} className="root-mark" />
+                          <text x={X(o.event_time_ns) + 7} y={Y(r, o.kind) - 6} className="tiny">
+                            {o.id} never arrived here
+                          </text>
+                        </g>
+                      ))}
                   {view.map((e, idx) => {
-                    const yy = Y(r, e.kind);
                     const recv = e.received_time_ns ?? e.event_time_ns;
+                    if (!inDomain(e.event_time_ns, recv)) return null;
+                    const yy = Y(r, e.kind);
                     const known = recv <= tKnown;
-                    const isWit = witness.has(e.id) || witness.has(e.id.split("#")[0]);
+                    const wit = isWit(e);
                     const isPicked = picked?.event === e && picked.role === r;
+                    const open = (ev: React.MouseEvent | React.FocusEvent) => {
+                      const rect = (ev.currentTarget as SVGGElement).getBoundingClientRect();
+                      const pt = "clientX" in ev ? { x: ev.clientX, y: ev.clientY } : { x: rect.right, y: rect.bottom };
+                      setHover({ role: r, event: e, ...pt });
+                    };
                     return (
                       <g
                         key={`${e.id}-${idx}`}
-                        className={`ev ${known ? "" : "ev-unknown"} ${isWit ? "ev-witness" : ""} ${isPicked ? "ev-picked" : ""} ev-kind-${e.kind}`}
+                        className={`ev ${known ? "" : "ev-unknown"} ${wit ? "ev-witness ix-ev-witness" : ""} ${isPicked ? "ev-picked" : ""} ev-kind-${e.kind}`}
                         onClick={() => setPicked({ role: r, event: e })}
+                        onMouseEnter={open}
+                        onMouseMove={open}
+                        onMouseLeave={() => setHover(null)}
+                        onFocus={open}
+                        onBlur={() => setHover(null)}
+                        onKeyDown={(k) => (k.key === "Enter" || k.key === " ") && (k.preventDefault(), setPicked({ role: r, event: e }))}
                         role="button"
-                        tabIndex={0}
-                        onKeyDown={(k) => k.key === "Enter" && setPicked({ role: r, event: e })}
+                        tabIndex={wit ? 0 : -1}
+                        aria-label={`${kindWord(e.kind)} ${e.id} for ${humanName(r)}: ${eventSummary(e.kind, e.payload, e.source_id)} Happened ${mmss(e.event_time_ns)}, heard ${mmss(recv)}.${wit ? " Witness event." : ""}`}
                       >
-                        <title>{`${e.id} ${e.kind} from ${e.source_id}\nevent ${tClock(e.event_time_ns)} → received ${tClock(recv)} (lag ${secs(recv - e.event_time_ns)})`}</title>
+                        <rect x={Math.min(X(e.event_time_ns), X(recv)) - 6} y={yy - 7} width={Math.abs(X(recv) - X(e.event_time_ns)) + 12} height={14} className="ix-hit" />
                         <line x1={X(e.event_time_ns)} x2={X(recv)} y1={yy} y2={yy} className="lag-line" />
                         <line x1={X(recv)} x2={X(recv)} y1={yy - 4} y2={yy + 4} className="recv-tick" />
-                        {isWit && <circle cx={X(e.event_time_ns)} cy={yy} r={7.5} className="wit-ring" />}
-                        <circle cx={X(e.event_time_ns)} cy={yy} r={3.5} className="ev-mark" />
+                        {wit && <circle cx={X(e.event_time_ns)} cy={yy} r={8} className="wit-ring ix-wit-ring" />}
+                        <circle cx={X(e.event_time_ns)} cy={yy} r={wit ? 4.5 : 3.5} className="ev-mark" />
+                        {wit && (
+                          <text x={X(recv) + 6} y={yy - 6} className="ix-wit-label">
+                            {e.id}
+                          </text>
+                        )}
                       </g>
                     );
                   })}
@@ -269,18 +417,37 @@ export default function Timeline({ registry, selected, onSelect }: Props) {
                     .filter((d) => roleOfDecision(trace, d) === r)
                     .map((d) => {
                       const at = Number(d.payload.at_ns);
+                      if (!inDomain(at, at)) return null;
                       const yy = Y(r, "decision");
                       const rd = showCompare ? rootDecisions.get(String(d.payload.rule_id)) : undefined;
                       const differs = rd && rd.payload.option !== d.payload.option;
+                      const blamedHere = blamed && (d.id === blamed.decisionId || String(d.payload.actor) === blamed.actor);
                       const isPicked = picked?.event.id === d.id;
+                      const open = (ev: React.MouseEvent | React.FocusEvent) => {
+                        const rect = (ev.currentTarget as SVGGElement).getBoundingClientRect();
+                        const pt = "clientX" in ev ? { x: ev.clientX, y: ev.clientY } : { x: rect.right, y: rect.bottom };
+                        setHover({ role: r, event: d, ...pt });
+                      };
                       return (
-                        <g key={d.id} className={`dec ${at <= tKnown ? "" : "ev-unknown"} ${differs ? "dec-differs" : ""} ${isPicked ? "ev-picked" : ""}`} onClick={() => setPicked({ role: r, event: d })} role="button" tabIndex={0}>
-                          <title>{`${d.payload.rule_id} @ ${tClock(at)} → ${d.payload.option}${differs ? ` (root: ${rd!.payload.option})` : ""}`}</title>
+                        <g
+                          key={d.id}
+                          className={`dec ${at <= tKnown ? "" : "ev-unknown"} ${differs || blamedHere ? "dec-differs" : ""} ${isPicked ? "ev-picked" : ""}`}
+                          onClick={() => setPicked({ role: r, event: d })}
+                          onMouseEnter={open}
+                          onMouseLeave={() => setHover(null)}
+                          onFocus={open}
+                          onBlur={() => setHover(null)}
+                          onKeyDown={(k) => (k.key === "Enter" || k.key === " ") && (k.preventDefault(), setPicked({ role: r, event: d }))}
+                          role="button"
+                          tabIndex={0}
+                          aria-label={`Decision ${String(d.payload.rule_id)} at ${mmss(at)} by ${humanName(String(d.payload.actor))}: ${String(d.payload.option)}${differs ? `, baseline chose ${String(rd!.payload.option)}` : ""}`}
+                        >
                           <line x1={X(at)} x2={X(at)} y1={top} y2={top + h} className="dec-line" />
-                          <path d={`M${X(at)} ${yy - 6}L${X(at) + 6} ${yy}L${X(at)} ${yy + 6}L${X(at) - 6} ${yy}z`} className="dec-mark" />
-                          <text x={X(at) + 9} y={yy + 4} className="dec-label">
-                            {String(d.payload.rule_id)} → <tspan className="dec-opt">{String(d.payload.option)}</tspan>
-                            {differs && <tspan className="dec-root"> (root: {String(rd!.payload.option)})</tspan>}
+                          <rect x={X(at) - 9} y={yy - 9} width={18} height={18} className="ix-hit" />
+                          <path d={`M${X(at)} ${yy - 7}L${X(at) + 7} ${yy}L${X(at)} ${yy + 7}L${X(at) - 7} ${yy}z`} className="dec-mark" />
+                          <text x={X(at) + (X(at) > width - 260 ? -11 : 11)} y={yy + 4} className="dec-label" textAnchor={X(at) > width - 260 ? "end" : "start"}>
+                            {humanName(String(d.payload.rule_id))} → <tspan className="dec-opt">{String(d.payload.option)}</tspan>
+                            {differs && <tspan className="dec-root"> (baseline: {String(rd!.payload.option)})</tspan>}
                           </text>
                         </g>
                       );
@@ -288,190 +455,325 @@ export default function Timeline({ registry, selected, onSelect }: Props) {
                 </g>
               );
             })}
-            <g transform={`translate(${X(tKnown)},0)`} className="scrub-line">
-              <line y1={AXIS_H - 6} y2={height} />
-              <text y={height - 2} x={X(tKnown) > width - 110 ? -4 : 4} textAnchor={X(tKnown) > width - 110 ? "end" : "start"} className="tiny">
-                known at {tClock(tKnown)}
-              </text>
-            </g>
+            {tKnown <= d1 && tKnown >= d0 && (
+              <g transform={`translate(${X(tKnown)},0)`} className="scrub-line">
+                <line y1={AXIS_H - 6} y2={height - 12} />
+                <text y={height - 2} x={X(tKnown) > width - 110 ? -4 : 4} textAnchor={X(tKnown) > width - 110 ? "end" : "start"} className="tiny">
+                  known at {mmss(tKnown)}
+                </text>
+              </g>
+            )}
           </svg>
+          {roles.map((r) => (
+            <LaneHead key={r} role={r} trace={trace} top={laneTop.get(r)!} height={laneH(r)} known={knownCount(r)} total={trace.views[r].events.length} />
+          ))}
         </div>
+        {zoom && (
+          <p className="small muted ix-zoom-note">
+            Showing {mmss(d0)}–{mmss(d1)}: the {humanDuration(win)} the rule <code>{focusRule?.rule.id}</code> looks back over (shaded), plus what arrived just after.
+          </p>
+        )}
+      </section>
+
+      {hover && (
+        <HoverCard x={hover.x} y={hover.y}>
+          <EventSummary role={hover.role} e={hover.event} witness={isWit(hover.event)} tKnown={tKnown} rootEvent={hoverRoot} />
+        </HoverCard>
+      )}
+
+      <div className="ix-split ix-split-even">
+        <section className="panel" aria-label="Pinned event">
+          <h2 className="ix-h2">{picked ? "Pinned event" : "Pin an event"}</h2>
+          {picked ? (
+            <>
+              <EventSummary role={picked.role} e={picked.event} witness={isWit(picked.event)} tKnown={tKnown} rootEvent={showCompare ? rootView(picked.role).get(picked.event.id) : undefined} />
+              <Disclosure summary="Raw event">
+                <dl className="kv">
+                  <dt>id</dt>
+                  <dd>
+                    <code>{picked.event.id}</code>
+                  </dd>
+                  <dt>event_time_ns</dt>
+                  <dd>{picked.event.event_time_ns.toLocaleString()}</dd>
+                  <dt>received_time_ns</dt>
+                  <dd>{(picked.event.received_time_ns ?? picked.event.event_time_ns).toLocaleString()}</dd>
+                  {picked.event.policy_labels.length > 0 && (
+                    <>
+                      <dt>policy_labels</dt>
+                      <dd>{picked.event.policy_labels.join(", ")}</dd>
+                    </>
+                  )}
+                  {picked.event.provenance_ids.length > 0 && (
+                    <>
+                      <dt>provenance_ids</dt>
+                      <dd>{picked.event.provenance_ids.join(", ")}</dd>
+                    </>
+                  )}
+                </dl>
+                <pre className="json">{JSON.stringify(picked.event.payload, null, 2)}</pre>
+              </Disclosure>
+            </>
+          ) : (
+            <p className="small muted">Click any mark (or focus a witness or decision with Tab and press Enter) to keep its details here while you move the time bar.</p>
+          )}
+        </section>
+
+        <section className="panel" aria-label="This world">
+          <h2 className="ix-h2">This world</h2>
+          {entry?.schedule && entry.schedule.length > 0 ? (
+            <ol className="ix-changes ix-changes-lg">
+              {entry.schedule.map((iv, k) => (
+                <li key={k}>
+                  <span className={`ix-op op-${iv.op}`}>{opName(iv.op)}</span> {interventionPlain(iv)}
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <p className="small muted">{trace.branch_id === "root" ? "Nothing changed: the recorded hour as it happened." : "The fault schedule is not recorded for this trace."}</p>
+          )}
+          <ul className="ix-verdicts">
+            {verdicts
+              .filter((v) => v.result !== "PASS")
+              .map((v) => (
+                <li key={v.invariant_id} className={`ix-verdict v-${v.result.toLowerCase()}`}>
+                  <div className="ix-verdict-head">
+                    <VerdictPill v={v.result} /> <b>{invariantName(v.invariant_id)}</b> <Tip text={invariantHelp(v.invariant_id)} label={`About ${v.invariant_id}`} />
+                  </div>
+                  <code className="ix-term">{v.invariant_id}</code>
+                  <p className="small" title={v.explanation}>
+                    {verdictSentence(v)}
+                  </p>
+                </li>
+              ))}
+          </ul>
+          {verdicts.some((v) => v.result === "PASS") && (
+            <Disclosure summary={`${verdicts.filter((v) => v.result === "PASS").length} rules held`}>
+              <ul className="ix-checklist">
+                {verdicts
+                  .filter((v) => v.result === "PASS")
+                  .map((v) => (
+                    <Check key={v.invariant_id} ok label={invariantName(v.invariant_id)} term={v.invariant_id} help={v.explanation} />
+                  ))}
+              </ul>
+            </Disclosure>
+          )}
+          {verdicts.length === 0 && <p className="small muted">No verdict file for this trace.</p>}
+          <Disclosure summary="Identifiers">
+            <div className="ix-ids">
+              {trace.branch_id !== "root" && <ShortId value={trace.branch_id} label="branch" />}
+              <ShortId value={trace.digest} label="trace" />
+              <span className="small muted">seed {trace.seed}</span>
+            </div>
+          </Disclosure>
+        </section>
       </div>
 
-      <div className="split">
-        <div className="panel">
-          <h3>Branch</h3>
-          <p>{trace.branch_id === "root" ? <b>Baseline (the real hour)</b> : <ShortId value={trace.branch_id} label="branch" />}</p>
-          <div className="small muted">
-            scenario <b>{trace.scenario_id}</b> · seed {trace.seed} · <ShortId value={trace.digest} label="trace" />
-          </div>
-          <h4>Fault schedule</h4>
-          <ScheduleList schedule={entry?.schedule ?? []} empty={trace.branch_id === "root" ? "(empty schedule: baseline world)" : "(schedule not recorded for this trace)"} />
-          <h3>Verdicts</h3>
-          {verdicts.length === 0 && <div className="muted small">no verdict file for this trace</div>}
-          <ul className="verdicts compact">
-            {verdicts.map((v) => (
-              <li key={v.invariant_id} className={`verdict verdict-${v.result.toLowerCase()}`}>
-                <div className="verdict-head">
-                  <VerdictPill v={v.result} /> <span className="inv">{v.invariant_id}</span>
-                </div>
-                {v.result !== "PASS" && <div className="small">{v.explanation}</div>}
-                {v.result === "FAIL" && v.witness.length > 0 && (
-                  <div className="small">
-                    witness:{" "}
-                    {v.witness.map((w) => (
-                      <code key={w} className="wit">
-                        {w}
-                      </code>
-                    ))}
-                  </div>
-                )}
-                {v.missing_data.length > 0 && <div className="small muted">missing signal: {v.missing_data.join(", ")}</div>}
+      {diff && (
+        <Disclosure summary="Every difference from the baseline" meta={`${diff.decisions.length} decision${diff.decisions.length === 1 ? "" : "s"} · ${diff.moved.length} arrival${diff.moved.length === 1 ? "" : "s"} moved`} className="panel-disc">
+          <h5>Decisions that differ</h5>
+          {diff.decisions.length === 0 && <div className="muted small">none</div>}
+          <ul className="plain ix-plain">
+            {diff.decisions.map((d) => (
+              <li key={d.rule_id} className="small">
+                <b>{humanName(d.rule_id)}</b> at {mmss(d.at_ns)}: <code>{d.option_a ?? "none"}</code> → <code className="bad">{d.option_b ?? "none"}</code>
+                {d.known_only_a.length > 0 && <div className="muted">known only in the baseline: {d.known_only_a.join(", ")}</div>}
+                {d.known_only_b.length > 0 && <div className="muted">known only in this world: {d.known_only_b.join(", ")}</div>}
               </li>
             ))}
           </ul>
-        </div>
+          <h5>Arrivals that moved</h5>
+          {diff.moved.length === 0 && <div className="muted small">none</div>}
+          <ul className="plain ix-plain">
+            {diff.moved.map((m) => (
+              <li key={`${m.role}/${m.id}`} className="small">
+                <code>{m.id}</code> for <b>{humanName(m.role)}</b>: {mmss(m.from_ns)} → {mmss(m.to_ns)}{" "}
+                <span className={m.delta_ns > 0 ? "bad" : ""}>
+                  ({m.delta_ns > 0 ? "+" : "−"}
+                  {humanDuration(m.delta_ns)})
+                </span>
+              </li>
+            ))}
+          </ul>
+          {(diff.only_in_a.length > 0 || diff.only_in_b.length > 0 || diff.corrupted.length > 0) && (
+            <>
+              <h5>Presence and content</h5>
+              <ul className="plain ix-plain">
+                {diff.only_in_a.map((x) => (
+                  <li key={`a-${x.role}-${x.event.id}`} className="small">
+                    <code>{x.event.id}</code> never reached <b>{humanName(x.role)}</b> in this world
+                  </li>
+                ))}
+                {diff.only_in_b.map((x) => (
+                  <li key={`b-${x.role}-${x.event.id}`} className="small">
+                    <code>{x.event.id}</code> reached <b>{humanName(x.role)}</b> only in this world
+                  </li>
+                ))}
+                {diff.corrupted.map((c) => (
+                  <li key={`${c.role}/${c.id}`} className="small">
+                    <code>{c.id}</code> arrived at <b>{humanName(c.role)}</b> with different content
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </Disclosure>
+      )}
+    </div>
+  );
+}
 
-        <div className="panel">
-          <h3>{picked ? "Event" : "Pick an event"}</h3>
-          {picked ? <EventCard role={picked.role} e={picked.event} witness={witness} tKnown={tKnown} /> : <p className="muted small">Click a marker or diamond to inspect its payload, provenance and information lag.</p>}
-        </div>
+// ---------------------------------------------------------------- pieces
 
-        {diff && (
-          <div className="panel diff">
-            <h3>
-              Causal diff <span className="muted">root → {shortBranch(trace.branch_id)}</span>
-            </h3>
-            <h4>Decisions that differ ({diff.decisions.length})</h4>
-            {diff.decisions.length === 0 && <div className="muted small">none</div>}
-            <ul className="plain">
-              {diff.decisions.map((d) => (
-                <li key={d.rule_id} className="small">
-                  <b>{d.rule_id}</b> @ {tClock(d.at_ns)}: <code>{d.option_a ?? "—"}</code> → <code className="bad">{d.option_b ?? "—"}</code>
-                  {d.known_only_a.length > 0 && <div className="muted">known only in root: {d.known_only_a.join(", ")}</div>}
-                  {d.known_only_b.length > 0 && <div className="muted">known only in branch: {d.known_only_b.join(", ")}</div>}
-                </li>
-              ))}
-            </ul>
-            <h4>Received time moved ({diff.moved.length})</h4>
-            {diff.moved.length === 0 && <div className="muted small">none</div>}
-            <ul className="plain">
-              {diff.moved.map((m) => (
-                <li key={`${m.role}/${m.id}`} className="small">
-                  <code>{m.id}</code> {m.kind} in <b>{m.role}</b>: {tClock(m.from_ns)} → {tClock(m.to_ns)}{" "}
-                  <span className={m.delta_ns > 0 ? "bad" : "good"}>
-                    ({m.delta_ns > 0 ? "+" : ""}
-                    {secs(m.delta_ns)})
-                  </span>
-                </li>
-              ))}
-            </ul>
-            {(diff.only_in_a.length > 0 || diff.only_in_b.length > 0) && (
-              <>
-                <h4>Presence</h4>
-                <ul className="plain">
-                  {diff.only_in_a.map((x) => (
-                    <li key={`a-${x.role}-${x.event.id}`} className="small">
-                      <code>{x.event.id}</code> {x.event.kind} only in root (<b>{x.role}</b>)
-                    </li>
-                  ))}
-                  {diff.only_in_b.map((x) => (
-                    <li key={`b-${x.role}-${x.event.id}`} className="small">
-                      <code>{x.event.id}</code> {x.event.kind} only in branch (<b>{x.role}</b>)
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-            {diff.corrupted.length > 0 && (
-              <>
-                <h4>Payload differs</h4>
-                <ul className="plain">
-                  {diff.corrupted.map((c) => (
-                    <li key={`${c.role}/${c.id}`} className="small">
-                      <code>{c.id}</code> in <b>{c.role}</b>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-          </div>
-        )}
+function LaneHead({ role, trace, top, height, known, total }: { role: string; trace: Trace; top: number; height: number; known: number; total: number }) {
+  const spec = trace.scenario?.roles?.find((r) => r.id === role);
+  const actors = (trace.scenario?.actors ?? []).filter((a) => a.role === role);
+  const sees = !spec ? "" : spec.visibility.includes("*") ? "sees everything" : `sees ${spec.visibility.map(humanName).join(" + ")}`;
+  const delay = !spec ? "" : spec.delivery.base_latency_ns === 0 && spec.delivery.jitter_ns === 0 ? "No delay" : `~${secs(spec.delivery.base_latency_ns)} late${spec.delivery.ordering !== "fifo" ? ", out of order" : ""}`;
+  const isEvaluator = role === "evaluator";
+  const help = (
+    <>
+      <b>{role}</b>
+      {spec && (
+        <>
+          <br />
+          delivery: base latency {secs(spec.delivery.base_latency_ns)}, jitter {secs(spec.delivery.jitter_ns)}, ordering {spec.delivery.ordering}, drop probability {spec.delivery.drop_probability}
+          <br />
+          visibility: {spec.visibility.join(", ")}
+        </>
+      )}
+      {actors.map((a) =>
+        a.decision_rules.map((rule) => (
+          <span key={rule.id}>
+            <br />
+            {a.id} decides <code>{rule.id}</code> at {mmss(rule.at_ns)}: if {rule.when} then {rule.then}, else {rule.otherwise}
+          </span>
+        )),
+      )}
+    </>
+  );
+  return (
+    <div className="ix-lane-head" style={{ top, height }}>
+      <div className="ix-lane-title">
+        {humanName(role)}
+        <Tip text={help} label={`About the ${humanName(role)} role`} />
+      </div>
+      {actors.some((a) => a.decision_rules.length) ? (
+        <div className="ix-lane-desc">
+          {actors.flatMap((a) => a.decision_rules.map((rule) => `Decides at ${mmss(rule.at_ns)}: ${humanName(rule.id)}`)).join("; ")}
+        </div>
+      ) : isEvaluator ? (
+        <div className="ix-lane-desc">Observer the checks use as ground truth</div>
+      ) : null}
+      <div className="ix-lane-desc muted">
+        {delay}
+        {sees && delay ? " · " : ""}
+        {sees}
+      </div>
+      <div className="ix-lane-known" aria-label={`${known} of ${total} events known`}>
+        knows {known}/{total}
       </div>
     </div>
   );
 }
 
-function Head({ selected, registry, onSelect }: { selected: string; registry: Map<string, TraceEntry>; onSelect: (id: string) => void }) {
+function EventSummary({ role, e, witness, tKnown, rootEvent }: { role: string; e: WEvent; witness: boolean; tKnown: number; rootEvent?: WEvent }) {
+  const isDecision = e.kind === "decision";
+  const recv = e.received_time_ns ?? e.event_time_ns;
+  const lag = recv - e.event_time_ns;
+  const rootRecv = rootEvent?.received_time_ns;
+  return (
+    <div className="ix-ev">
+      <div className="ix-ev-head">
+        {isDecision ? <span className="ix-kind-tag is-dec">decision</span> : <span className="ix-kind-tag">{kindWord(e.kind)}</span>}
+        <code>{e.id}</code>
+        {witness && (
+          <span className="pill pill-fail">
+            <VerdictGlyph v="FAIL" size={9} /> witness
+          </span>
+        )}
+      </div>
+      <p className="ix-ev-sentence">{eventSummary(e.kind, e.payload, e.source_id)}</p>
+      {isDecision ? (
+        <p className="small muted">
+          Decided at {mmss(Number(e.payload.at_ns))} by {humanName(String(e.payload.actor))} ({humanName(role)}).
+        </p>
+      ) : (
+        <p className="small">
+          Happened at <b className="ix-mono">{mmss(e.event_time_ns)}</b>; {humanName(role)} heard about it at <b className="ix-mono">{mmss(recv)}</b>
+          {lag > 0 ? <span className="muted"> ({humanDuration(lag)} later)</span> : null}.
+          {rootRecv != null && rootRecv !== recv && (
+            <>
+              {" "}
+              In the baseline it arrived at <span className="ix-mono">{mmss(rootRecv)}</span>{" "}
+              <span className={recv > rootRecv ? "bad" : ""}>
+                ({recv > rootRecv ? "+" : "−"}
+                {humanDuration(recv - rootRecv)})
+              </span>
+              .
+            </>
+          )}
+        </p>
+      )}
+      {witness && <p className="small ix-ev-wit">The failing check names this event: the decider had not received it when it decided.</p>}
+      {!isDecision && recv > tKnown && <p className="small muted">Not yet heard at {mmss(tKnown)} on the time bar.</p>}
+    </div>
+  );
+}
+
+function TraceContext({
+  selected,
+  registry,
+  onSelect,
+  trace,
+  compare,
+  canCompare,
+  setCompare,
+  rootBranch,
+}: {
+  selected: string;
+  registry: Map<string, TraceEntry>;
+  onSelect: (id: string) => void;
+  trace: Trace | null;
+  compare: boolean;
+  canCompare: boolean;
+  setCompare: (b: boolean) => void;
+  rootBranch: boolean;
+}) {
   const groups = GROUP_ORDER.map((g) => ({ g, entries: [...registry.values()].filter((e) => e.group === g) })).filter((x) => x.entries.length);
   const known = registry.has(selected);
+  const entry = registry.get(selected);
   return (
-    <header className="view-head">
-      <div>
-        <h1>Timeline</h1>
-        <p className="lede">
-          One lane per role over virtual time. A marker sits at <code>event_time_ns</code> (truth) and its thin line runs to <code>received_time_ns</code> (when that role learned of it). Decisions evaluate only what was received before{" "}
-          <code>at_ns</code>; a FAIL witness is what the actor had not yet received.
-        </p>
-      </div>
-      <label className="select">
-        trace
+    <ContextBar label="Timeline context">
+      <label className="ix-select">
+        <span className="ix-ctx-k">World</span>
         <select value={known ? selected : ""} onChange={(e) => onSelect(e.target.value)}>
-          {!known && <option value="">{shortBranch(selected)} (no trace)</option>}
+          {!known && <option value="">{shortBranch(selected)} (no timeline)</option>}
           {groups.map(({ g, entries }) => (
             <optgroup key={g} label={GROUP_LABEL[g]}>
               {entries.map((e) => (
                 <option key={e.key} value={e.key}>
-                  {g === "guided" || g === "random" ? `${shortBranch(e.key)} · ${(e.failingInvariants ?? []).join(", ")}` : e.label}
+                  {g === "guided" || g === "random" ? `${shortBranch(e.key).replace("root/", "")} · ${(e.failingInvariants ?? []).map(invariantName).join(", ")}` : g === "root" ? "Baseline (nothing changed)" : g === "minimal" ? "Minimal counterexample (one change)" : `Challenge: ${e.scenarioId}`}
                 </option>
               ))}
             </optgroup>
           ))}
         </select>
       </label>
-    </header>
+      {entry && (
+        <Ctx k="Scenario">
+          <code>{entry.scenarioId}</code>
+          {trace && <span className="muted"> seed {trace.seed}</span>}
+        </Ctx>
+      )}
+      <span className="ix-context-spacer" />
+      <label className={`ix-switch ${canCompare ? "" : "disabled"}`} title={rootBranch ? "This is the baseline; pick another world to compare" : canCompare ? "Overlay the baseline's arrival times and summarise what changed" : "Different scenario: there is no baseline to compare with"}>
+        <input type="checkbox" role="switch" checked={compare && canCompare} disabled={!canCompare} onChange={(e) => setCompare(e.target.checked)} />
+        <span className="ix-switch-track" aria-hidden>
+          <span className="ix-switch-thumb" />
+        </span>
+        Compare with the baseline
+      </label>
+    </ContextBar>
   );
 }
 
-function EventCard({ role, e, witness, tKnown }: { role: string; e: WEvent; witness: Set<string>; tKnown: number }) {
-  const recv = e.received_time_ns ?? e.event_time_ns;
-  return (
-    <div className="event-card">
-      <div className="ev-title">
-        <code>{e.id}</code> <span className="chip">{e.kind}</span> {witness.has(e.id) && <span className="pill pill-fail">witness</span>}
-        {recv > tKnown && <span className="pill pill-unknown">not yet known at scrubber</span>}
-      </div>
-      <dl className="kv">
-        <dt>role view</dt>
-        <dd>{role}</dd>
-        <dt>source</dt>
-        <dd>{e.source_id}</dd>
-        <dt>event_time</dt>
-        <dd>{tClock(e.event_time_ns)}</dd>
-        <dt>received_time</dt>
-        <dd>
-          {tClock(recv)} <span className="muted">(lag {secs(recv - e.event_time_ns)})</span>
-        </dd>
-        {e.policy_labels.length > 0 && (
-          <>
-            <dt>labels</dt>
-            <dd>{e.policy_labels.join(", ")}</dd>
-          </>
-        )}
-        {e.provenance_ids.length > 0 && (
-          <>
-            <dt>provenance</dt>
-            <dd>{e.provenance_ids.join(", ")}</dd>
-          </>
-        )}
-        {e.quality != null && (
-          <>
-            <dt>quality</dt>
-            <dd>{e.quality}</dd>
-          </>
-        )}
-      </dl>
-      <pre className="json">{JSON.stringify(e.payload, null, 2)}</pre>
-    </div>
-  );
-}
