@@ -1,0 +1,8 @@
+#!include:.gitignore
+.git
+ui/node_modules
+ui/dist
+ui/public/data
+!experiments/out/
+!experiments/out/**
+policies/kernel_private.pem

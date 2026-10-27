@@ -19,6 +19,8 @@ Path A (new project, created after 5 October 2026). Autonomy tier: **Supervised*
 - Repository (public, MIT): https://gitlab.com/shafir2/WorldLine
 - Live viewer (GitLab Pages, built from the pipeline's own output): https://worldline-3e380d.gitlab.io
 - Pipelines: https://gitlab.com/shafir2/WorldLine/-/pipelines
+- First proof-carrying release (kernel AUTHORIZED, 14 of 14 requirements; signed bundle and authorization as assets): https://gitlab.com/shafir2/WorldLine/-/releases/v0.1.3-transcend
+- Public verifier (Cloud Run): `[URL]`
 - Investigation issue with the real witness: https://gitlab.com/shafir2/WorldLine/-/work_items/1
 - Duo agent sessions: Investigator https://gitlab.com/shafir2/WorldLine/-/automate/agent-sessions/10080962; Repairer https://gitlab.com/shafir2/WorldLine/-/automate/agent-sessions/10081188 and follow-up https://gitlab.com/shafir2/WorldLine/-/automate/agent-sessions/10081957; Skeptic https://gitlab.com/shafir2/WorldLine/-/automate/agent-sessions/10081961
 - Repair merge request (left open on purpose, see description): https://gitlab.com/shafir2/WorldLine/-/merge_requests/1
@@ -34,9 +36,9 @@ WORLDLINE runs a system together with its environment deterministically, branche
 
 When a world fails, delta debugging reduces it to a 1-minimal set of interventions and re-checks minimality independently. The mechanism is abstracted into a FailureGenome with structural selectors and preconditions, no event ids, and used to challenge a second scenario from a different domain. A deliberately immune variant is the negative control.
 
-Every claim is typed: PROVED_WITHIN_MODEL, EMPIRICALLY_VALIDATED, ATTESTED, FAILED or UNKNOWN. Evidence is hash-chained and Ed25519-sealed. Agents can never emit ATTESTED. The kernel recomputes what agents report; a mismatch becomes a FAILED integrity record that denies the release. Authorization binds to the exact commit digest and is revoked when an assumption is invalidated.
+Every claim is typed: PROVED_WITHIN_MODEL, EMPIRICALLY_VALIDATED, ATTESTED, FAILED or UNKNOWN. Evidence is hash-chained and Ed25519-sealed. Agents can never emit ATTESTED. The kernel recomputes what agents report; a mismatch becomes a FAILED integrity record that denies the release. Authorization binds to the exact commit digest and is revoked when an assumption is invalidated. Releases are proof-carrying: every tag ships the sealed evidence bundle and the kernel's authorization as release assets, and a public verifier service on Cloud Run, holding only the public key, lets anyone re-check a bundle and the release decision without trusting the pipeline.
 
-On GitLab: the pipeline runs test, explore, kernel-verify, authorize and pages. Three custom Duo agents (Investigator, Repairer, Skeptic) and three flows are enabled on the project. The Investigator re-ran the exploration in a hosted session, confirmed identical digests and posted the witness. The Repairer opened a merge request under a repair contract. GitLab's Code Review found the repair vacuous; the Repairer addressed it; our Skeptic agent still failed it for sidestepping the fault rather than tolerating it. Every step is a real session with a transcript. The merge request is left open because the Skeptic is right, and that is the point: agents never evaluate themselves, and the kernel jobs are protected by CODEOWNERS.
+On GitLab: the pipeline runs test, explore, kernel-verify, authorize, release and pages, with GitLab SAST, secret detection and dependency scanning. Three custom Duo agents (Investigator, Repairer, Skeptic) and three flows are enabled on the project. The Investigator re-ran the exploration in a hosted session, confirmed identical digests and posted the witness. The Repairer opened a merge request under a repair contract. GitLab's Code Review found the repair vacuous; the Repairer addressed it; our Skeptic agent still failed it for sidestepping the fault rather than tolerating it. Every step is a real session with a transcript. The merge request is left open because the Skeptic is right, and that is the point: agents never evaluate themselves, and the kernel jobs are protected by CODEOWNERS.
 
 ## The measured result
 

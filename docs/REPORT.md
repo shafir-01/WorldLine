@@ -74,12 +74,12 @@ Claim ceiling: the kernel protects against agents misreporting what the pipeline
 
 Three custom Duo agents and three flows were created through the catalog API and enabled on the project. Observed sequence on issue 1:
 
-1. Investigator session (GitLab-hosted runner, GitLab's default agent model, image python:3.12): ran `explore` twice, confirmed byte-identical trace digests, minimized a 3-intervention schedule to the delayed correction, posted a report with exact witnesses and digests. Correct in every checkable detail.
-2. Repairer session: opened a merge request with a grace-window rule in a regression scenario, five tests including a non-vacuity test against the original scenario, no protected path touched, and an honest limitations section. All 163 tests pass.
+1. Investigator run (GitLab-hosted runner, GitLab's default agent model, image python:3.12): ran `explore` twice, confirmed byte-identical trace digests, minimized a 3-intervention schedule to the delayed correction, posted a report with exact witnesses and digests. Correct in every checkable detail.
+2. Repairer run: opened a merge request with a grace-window rule in a regression scenario, five tests including a non-vacuity test against the original scenario, no protected path touched, and an honest limitations section. All 163 tests pass.
 3. GitLab's built-in Code Review flow requested changes: with the chosen cutoff the rule can never produce `escalate` for that inject set, so the PASS results demonstrate a constant rule, not a correct one. The finding is right. Neither the test suite nor the kernel would have caught it: tests only asserted the default option, and the kernel recomputes claims, it does not judge whether a repair is meaningful.
-4. A follow-up Repairer session was dispatched with the review to add an escalation-reachability variant.
+4. A follow-up Repairer run was started with the review to add an escalation-reachability variant.
 
-What this shows. The kernel stops agents from misreporting what ran. It does not stop a repair from being vacuous. That gap belongs to the Skeptic role and to a stronger repair contract: a repair must come with a scenario where the non-default decision is still reachable. The contract in AGENTS.md should be amended accordingly. Our own Skeptic flow failed to start under the merge-request trigger because its definition read an input that trigger does not supply; it ran correctly when started with an explicit goal.
+What this shows. The kernel stops agents from misreporting what ran. It does not stop a repair from being vacuous. That gap belongs to the Skeptic role and to a stronger repair contract: a repair must come with a scenario where the non-default decision is still reachable. The contract in AGENTS.md should be amended accordingly. The WORLDLINE Skeptic flow failed to start under the merge-request trigger because its definition read an input that trigger does not supply; it ran correctly when started with an explicit goal.
 
 ## Experiment 6: first kernel run on the GitLab runner
 
@@ -98,7 +98,7 @@ Same scenario, seed and schedule produce byte-identical trace digests in-process
 5. Witnesses report all missing information at decision time, not only the fault-attributed subset.
 6. Benchmark sample is 5 seeds on one machine; no intervals.
 7. Nothing is PROVED_WITHIN_MODEL. All evidence is empirical.
-8. Duo agent sessions are not yet part of the recorded evidence (producer `agent:<name>` records exist in the schema; wiring the session transcript is roadmap).
+8. Duo agent runs are not yet part of the recorded evidence (producer `agent:<name>` records exist in the schema; wiring the run transcript is roadmap).
 
 ## Open questions worth a researcher's time
 

@@ -84,7 +84,9 @@ Claim ceiling: EMPIRICALLY_VALIDATED on two synthetic scenarios on one machine. 
 - Typed evidence records, Ed25519-sealed bundles with distinct tamper findings (edited, dropped, reordered, wrong key, truncated), policy-based authorization, assumption revocation.
 - A kernel that recomputes agent claims before attesting them.
 - Static viewer: branch tree, per-role timelines with information-lag lines, scrubber, causal diff, mechanism cards, evidence chain.
-- GitLab CI pipeline: test, explore, kernel-verify, authorize, pages; kernel jobs isolated by protected refs and CODEOWNERS.
+- GitLab CI pipeline: test, explore, kernel-verify, authorize, release, pages; kernel jobs isolated by protected refs and CODEOWNERS.
+- Proof-carrying releases: every tag ships the signed evidence bundle and the kernel's authorization as release assets.
+- SAST, secret detection and dependency scanning from GitLab's managed templates.
 
 ## Tech stack
 
@@ -165,7 +167,8 @@ experiments/       benchmark.py; out/ is generated and ignored
 ui/                Vite + React viewer
 tests/             158 tests
 docs/              ARCHITECTURE, THESIS (prior art), REPORT (measurements), ROADMAP, GitLab setup, Duo agent prompts
-.gitlab-ci.yml     test -> explore -> kernel-verify -> authorize -> pages
+.gitlab-ci.yml     test -> explore -> kernel-verify -> authorize -> release -> pages
+.gitlab/ci/        security.yml (SAST, secret detection, dependency scanning), gcp.yml (deploy-gcp)
 AGENTS.md, CODEOWNERS, .gitlab/duo/   agent guidance and protected paths
 ```
 
@@ -193,11 +196,11 @@ The repository ships three custom Duo agents and three flows, defined as text in
 
 | Agent / flow | Trigger | Role |
 |---|---|---|
-| Investigator / WORLDLINE Investigate | work item, mention | Re-runs the exploration in a hosted session, checks determinism, minimizes, posts the witness and genome on the issue. Read-only. |
+| Investigator / WORLDLINE Investigate | work item, mention | Re-runs the exploration on a GitLab-hosted runner, checks determinism, minimizes, posts the witness and genome on the issue. Read-only. |
 | Repairer / WORLDLINE Repair | mention | Proposes a fix as a merge request under the repair contract in [AGENTS.md](AGENTS.md): the product scenario must pass under the specimen's minimal fault schedule, the specimen must still fail, no invariant may be weakened, and the non-default decision must remain reachable. |
 | Skeptic / WORLDLINE Skeptic Review | merge request | Reviews a merge request for claims not backed by a test, digest or verdict file, for protected-path edits, and for vacuous repairs. |
 
-Agents never evaluate their own work. `invariants/`, `policies/`, `worldline/evidence/` and the kernel CI jobs are protected by CODEOWNERS; the `kernel-verify` and `authorize` stages decide. Example run: [issue 1](https://gitlab.com/shafir2/WorldLine/-/work_items/1) and [merge request 1](https://gitlab.com/shafir2/WorldLine/-/merge_requests/1), with the agent sessions linked from their notes. Setup: [docs/GITLAB_SETUP.md](docs/GITLAB_SETUP.md).
+Agents never evaluate their own work. `invariants/`, `policies/`, `worldline/evidence/` and the kernel CI jobs are protected by CODEOWNERS; the `kernel-verify` and `authorize` stages decide. Example run: [issue 1](https://gitlab.com/shafir2/WorldLine/-/work_items/1) and [merge request 1](https://gitlab.com/shafir2/WorldLine/-/merge_requests/1), with the agent runs linked from their notes. Setup: [docs/GITLAB_SETUP.md](docs/GITLAB_SETUP.md).
 
 ## Testing
 
@@ -206,6 +209,8 @@ uv run pytest -q                 # 158 tests: unit, property, integration, CLI
 uv run pytest -q tests/test_evidence.py   # tamper findings, agent cannot self-attest, revocation
 cd ui && npm run build           # type-checks with strict TypeScript
 ```
+
+Pipeline: alongside the WORLDLINE jobs, the `test` stage runs GitLab SAST, secret detection and dependency scanning, included from `.gitlab/ci/security.yml`. Findings appear under Secure > Vulnerability report.
 
 ## Deployment
 
@@ -217,6 +222,8 @@ gcloud run deploy worldline-verifier --source . --region europe-north1 --allow-u
 ```
 
 The manual `deploy-gcp` CI job does the same from a protected ref once `GCP_PROJECT` and `GCP_SA_KEY` are set. Details and IAM roles: [service/README.md](service/README.md).
+
+**Releases.** Every `v*` tag produces a GitLab release whose assets are the signed evidence bundle and the kernel's authorization for that exact commit, together with the genome, minimal schedule, challenge result and viewer index. A tag the kernel denies never becomes a release. The first one is [v0.1.3-transcend](https://gitlab.com/shafir2/WorldLine/-/releases/v0.1.3-transcend): AUTHORIZED, 14 of 14 requirements, assets downloadable without signing in. Anyone can re-check a release offline with `uv run worldline authorize` and the public key committed at that tag. Cutting and verifying releases: [docs/RELEASES.md](docs/RELEASES.md).
 
 The `pages` CI job builds the viewer and publishes it with the pipeline's own `experiments/out` as data, so the published page shows what the pipeline actually computed. The viewer is static and can also be served from any bucket or Cloud Run container; there is no backend.
 

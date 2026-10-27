@@ -6,9 +6,9 @@ WORKDIR /src/ui
 COPY ui/package.json ui/package-lock.json ./
 RUN npm ci --no-audit --no-fund
 COPY ui/ ./
-# copy-data looks for ../experiments/out. The glob makes the COPY a no-op when the directory
+# copy-data looks for ../experiments/out and falls back to ui/fixtures when the directory
 # is absent from the build context instead of failing the build.
-COPY experiments/ou[t]/ /src/experiments/out/
+COPY experiments/ /src/experiments/
 RUN npm run build
 
 # Stage 2: runtime. Only the public key and the policy are baked in; the private key is .dockerignored.
