@@ -18,6 +18,8 @@ See [docs/INSTALL.md](docs/INSTALL.md) for installing a published release.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-27
+
 ### Added
 
 - Installable distribution: wheel and sdist with bundled scenarios, invariants, release policy and
@@ -35,16 +37,27 @@ See [docs/INSTALL.md](docs/INSTALL.md) for installing a published release.
   transfers both ways; `worldline real usgs` (144d0b4).
 - Viewer redesign: narrative Story view, plain-language timeline, evidence stepper, live verify button;
   Inspect views restyled (803abee).
+- Viewer: accessibility and layout fixes from the e2e audit (42/42 passing), windowed strategy support; ui-e2e job in CI (face672)
 
 ### CI and releases
 
 - Docker build independent of gitignored output; `.gcloudignore` keeps `experiments/out` (e5b7556).
 - `deploy-gcp` builds from the full explore output; copy-data requires `index.json` (6dad507).
+- Dockerfile: copy bundled package data before building the wheel (6a309c2)
+- Authoring: JSON schema, validate and init commands, triage_board scenario, tutorial. Packaging: wheel data, version/resources, release jobs, changelog. Verifier hardening: logging, security headers, rate limits, readiness, release verify endpoint, runbook. Docs site wired into Pages. (95dc2b7)
+- GitLab workflow: MR evidence comment, investigation issue job, templates, merge checks; kernel soft-fails on MR pipelines (c00c3cd)
 
 ### Documentation
 
 - Public verifier live on Cloud Run: URL and usage (88dc037).
 - Report: release and Cloud Run deployment from the pipeline (4858186).
+- README: real data, real service, invariant library, install, current counts (4b21667)
+
+### Changed
+
+- Explorer: equivalence reduction, windowed strategy, parallel runs, analytic flip thresholds; benchmark updated (074ba49)
+- Viewer: landing and navigation polish, verify tool with live gate check, Inspect views rebuilt around one question each, plain-English labels, accessibility (50fee36)
+- Invariant library: latency bound, causal ordering, duplicate suppression, source quorum, fault-attributed witness, permitted-only knowledge (d37f668)
 
 ## [0.1.3] - 2026-10-27
 
@@ -120,7 +133,8 @@ on an UNKNOWN test claim, as designed.
   shot list (8bf7109); agent loop results, vacuous-repair finding, Skeptic trigger defect (c17ddd3); real
   Duo session and merge request links (a567a16); first kernel run report (2c4c6ec).
 
-[Unreleased]: https://gitlab.com/shafir2/WorldLine/-/compare/v0.1.3-transcend...HEAD
+[Unreleased]: https://gitlab.com/shafir2/WorldLine/-/compare/v0.2.0...HEAD
+[0.2.0]: https://gitlab.com/shafir2/WorldLine/-/compare/v0.1.3-transcend...v0.2.0
 [0.1.3]: https://gitlab.com/shafir2/WorldLine/-/compare/v0.1.0-transcend...v0.1.3-transcend
 [0.1.2]: https://gitlab.com/shafir2/WorldLine/-/commit/b844c88
 [0.1.1]: https://gitlab.com/shafir2/WorldLine/-/compare/v0.1.0-transcend...a404c87
