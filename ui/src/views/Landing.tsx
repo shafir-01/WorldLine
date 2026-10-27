@@ -51,40 +51,48 @@ export default function Landing({ data, totalWorlds, totalFailing }: HeroProps) 
           <div className="tile">
             <dt>Replayed</dt>
             <dd>
-              <span className="tile-v">{totalWorlds}</span>
-              <span className="tile-u">worlds</span>
+              <span className="tile-num">
+                <span className="tile-v">{totalWorlds}</span>
+                <span className="tile-u">worlds</span>
+              </span>
+              <span className="tile-note">same hour, shifted message timing</span>
             </dd>
-            <p className="tile-note">same hour, shifted message timing</p>
           </div>
           <div className="tile">
             <dt>Wrong outcome</dt>
             <dd>
-              <span className="tile-v">{totalFailing}</span>
-              <span className="tile-u">worlds</span>
+              <span className="tile-num">
+                <span className="tile-v">{totalFailing}</span>
+                <span className="tile-u">worlds</span>
+              </span>
+              <span className="tile-note">broke a safety rule</span>
             </dd>
-            <p className="tile-note">broke a safety rule</p>
           </div>
           <div className="tile">
             <dt>Root cause</dt>
             <dd>
-              <span className="tile-v">{m.minimal.length}</span>
-              <span className="tile-u">{m.minimal.length === 1 ? "change" : "changes"}</span>
+              <span className="tile-num">
+                <span className="tile-v">{m.minimal.length}</span>
+                <span className="tile-u">{m.minimal.length === 1 ? "change" : "changes"}</span>
+              </span>
+              <span className="tile-note">
+                narrowed from {m.original.length}
+                {m.one_minimal_verified ? ", verified minimal" : ""}
+              </span>
             </dd>
-            <p className="tile-note">
-              narrowed from {m.original.length}
-              {m.one_minimal_verified ? ", verified minimal" : ""}
-            </p>
           </div>
           <div className="tile">
             <dt>Release gate</dt>
             <dd>
-              <span className="tile-v">{nRecords}</span>
-              <span className="tile-u">records</span>
+              <span className="tile-num">
+                <span className="tile-v">{nRecords}</span>
+                <span className="tile-u">records</span>
+              </span>
+              <span className="tile-note tile-gate">
+                <GateGlyph ok={authorized} />
+                {authorized ? "signed, release authorized" : "signed, release denied"}
+              </span>
             </dd>
-            <p className="tile-note tile-gate">
-              <GateGlyph ok={authorized} />
-              {authorized ? "signed, release authorized" : "signed, release denied"}
-            </p>
           </div>
         </dl>
       </div>

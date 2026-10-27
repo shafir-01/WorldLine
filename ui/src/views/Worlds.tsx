@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import type { BranchNode, ComparisonRow, LoadedData, VerdictRecord } from "../types";
 import type { TraceEntry } from "../data";
-import { cmp, interventionPlain, interventionText, invariantHelp, invariantName, ms, nodeStatus, opName, OP_HELP, scheduleKey, shortBranch, shortId, verdictSentence } from "../format";
+import { cmp, sortStrategies, STRATEGY_HELP, interventionPlain, interventionText, invariantHelp, invariantName, ms, nodeStatus, opName, OP_HELP, scheduleKey, shortBranch, shortId, verdictSentence } from "../format";
 import { ScheduleList } from "../components/Schedule";
 import { VerdictGlyph, VerdictPill } from "../components/Badges";
 import { ShortId } from "../components/ShortId";
@@ -32,7 +32,7 @@ interface Group {
 
 export default function Worlds({ data, registry, selected, onSelect, onOpenTimeline }: Props) {
   const ex = data.exploration;
-  const strategies = ex.strategies.filter((s) => ex.runs[s]);
+  const strategies = sortStrategies(ex.strategies.filter((s) => ex.runs[s]));
   const owner = strategies.find((s) => ex.runs[s].nodes.some((n) => n.branch_id === selected && n.branch_id !== "root"));
   const [strategy, setStrategy] = useState<string>(owner ?? strategies[0]);
   const [invOn, setInvOn] = useState<Set<string>>(new Set());
@@ -133,8 +133,8 @@ export default function Worlds({ data, registry, selected, onSelect, onOpenTimel
           value={strategy}
           onChange={setStrategy}
           options={[
-            ...strategies.map((s) => ({ value: s, label: cap(s), sub: `${ex.runs[s].n_failing} broke`, title: s === "guided" ? "Targets events a decision rule depends on" : s === "random" ? "Samples interventions uniformly" : undefined })),
-            ...(strategies.length > 1 ? [{ value: "both", label: "Both", sub: "merged", title: "Both runs, identical schedules grouped" }] : []),
+            ...strategies.map((s) => ({ value: s, label: cap(s), sub: `${ex.runs[s].n_failing} broke`, title: STRATEGY_HELP[s] })),
+            ...(strategies.length > 1 ? [{ value: "both", label: strategies.length > 2 ? "All" : "Both", sub: "merged", title: `${strategies.length > 2 ? "All" : "Both"} runs, identical schedules grouped` }] : []),
           ]}
         />
         <span className="ix-context-spacer" />
@@ -197,7 +197,7 @@ export default function Worlds({ data, registry, selected, onSelect, onOpenTimel
       <Disclosure summary="Branch tree" meta={`${strategy === "both" ? strategies[0] : strategy} run · the same worlds drawn as parent → child`}>
         <BranchTree nodes={ex.runs[strategy === "both" ? strategies[0] : strategy].nodes} selected={sel.branch_id} registry={registry} onSelect={select} onOpenTimeline={onOpenTimeline} />
       </Disclosure>
-      <Disclosure summary="Guided vs random, in numbers" meta="same scenario, seed and budget">
+      <Disclosure summary={`${strategies.map(cap).join(" vs ")}, in numbers`} meta="same scenario, seed and budget">
         <ComparisonTable comparison={ex.comparison} strategies={strategies} active={strategy} onPick={setStrategy} />
       </Disclosure>
     </div>

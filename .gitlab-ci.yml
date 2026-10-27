@@ -22,6 +22,7 @@ include:
   - local: .gitlab/ci/review.yml
   - local: .gitlab/ci/package.yml
   - local: .gitlab/ci/docs.yml
+  - local: .gitlab/ci/ui.yml
     rules:
       - exists:
           - .gitlab/ci/gcp.yml

@@ -3,7 +3,9 @@
 
 export type Verdict = "PASS" | "FAIL" | "UNKNOWN";
 export type EvidenceKind = "PROVED_WITHIN_MODEL" | "EMPIRICALLY_VALIDATED" | "ATTESTED" | "FAILED" | "UNKNOWN";
-export type Strategy = "guided" | "random";
+/** Exploration strategies the pipeline knows (see docs/EXPLORER.md). exploration.json may carry any subset; benchmark.json aggregates all three. */
+export type Strategy = "guided" | "random" | "windowed";
+
 
 // ---------------------------------------------------------------- events & traces
 
@@ -350,7 +352,8 @@ export interface Benchmark {
   environment: Record<string, string>;
   exploration: {
     rows: ({ seed: number; strategy: string } & ComparisonRow)[];
-    aggregate: Record<string, Record<string, Aggregate>>;
+    /** strategy â†’ metric â†’ Aggregate; also carries scalar roll-ups such as coverage_equal_all / equivalence_violations_total. */
+    aggregate: Record<Strategy | string, Record<string, Aggregate | boolean | number>>;
   };
   minimization: {
     cases: { seed: number; strategy: string; original_size: number; minimal_size: number; oracle_calls: number; cache_hits: number; one_minimal_verified: boolean; wall_ms: number; minimal: FaultSchedule; witness: string[] }[];

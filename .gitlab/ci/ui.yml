@@ -1,0 +1,47 @@
+# End-to-end tests for the static viewer in ui/ (Playwright + axe-core). Included from .gitlab-ci.yml.
+# What the suite covers and how to run it locally: docs/UI_QA.md.
+#
+# The image tag must match the @playwright/test version pinned in ui/package.json, so the
+# browsers baked into the image (PLAYWRIGHT_BROWSERS_PATH=/ms-playwright) are the ones the
+# test runner expects; bump both together.
+#
+# The job has no `needs:` on explore, so `npm run build` copies the synthetic fixtures
+# (ui/fixtures) into the bundle; the tests read the numbers they assert from dist/data, so they
+# hold for either data source.
+
+ui-e2e:
+  stage: test
+  image: mcr.microsoft.com/playwright:v1.64.1-noble
+  needs: []
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_TAG
+  variables:
+    npm_config_cache: "$CI_PROJECT_DIR/.cache/npm"
+    CI: "true"
+  cache:
+    key:
+      files:
+        - ui/package-lock.json
+      prefix: npm
+    paths:
+      - .cache/npm
+  script:
+    - cd ui
+    - npm ci --prefer-offline --no-audit --no-fund
+    - npm run build
+    - npm run test:e2e:ci
+  artifacts:
+    when: on_failure
+    expire_in: 2 weeks
+    paths:
+      - ui/e2e/.output/report/
+      - ui/e2e/.output/test-results/
+      - ui/e2e/.output/axe/
+      - ui/e2e/.output/budget-*.json
+      - ui/e2e/.output/junit.xml
+    reports:
+      junit: ui/e2e/.output/junit.xml

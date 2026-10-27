@@ -176,6 +176,20 @@ export const OP_NAME: Record<string, string> = {
   clock_skew: "Clock skew",
 };
 
+/** One-line description of each exploration strategy (docs/EXPLORER.md). */
+export const STRATEGY_HELP: Record<string, string> = {
+  guided: "Targets events a decision rule depends on",
+  random: "Samples interventions uniformly",
+  windowed: "Only moves deliveries across a decision window, predicted flips first",
+};
+
+/** Known strategies first in a fixed order (guided, random, windowed), unknown ones after, alphabetically. */
+export function sortStrategies(xs: string[]): string[] {
+  const order = ["guided", "random", "windowed"];
+  const rank = (s: string) => (order.includes(s) ? order.indexOf(s) : order.length);
+  return [...xs].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b));
+}
+
 export const OP_HELP: Record<string, string> = {
   delay: "Deliver a message later than the network would have.",
   drop: "The message never arrives.",

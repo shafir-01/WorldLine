@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Aggregate, Authorization, Benchmark, EvidenceKind, EvidenceRecord, LoadedData } from "../types";
-import { claimName, humanName, invariantName, requirementName } from "../format";
+import { claimName, humanName, invariantName, requirementName, sortStrategies, STRATEGY_HELP } from "../format";
 import { ShortId } from "../components/ShortId";
 import { KIND_HELP, KIND_LABEL, KindBadge, KindGlyph, ProducerTag, VerdictGlyph } from "../components/Badges";
 import { ContextBar, Ctx, Disclosure, Seg, Tip, ViewIntro } from "../components/Inspect";
@@ -375,8 +375,8 @@ const MIN_METRICS: { key: string; label: string; digits: number }[] = [
   { key: "wall_ms", label: "Wall ms", digits: 0 },
 ];
 
-function fmtAgg(a: Aggregate | undefined, digits: number, prefix = ""): React.ReactNode {
-  if (!a) return "—";
+function fmtAgg(a: Aggregate | boolean | number | undefined, digits: number, prefix = ""): React.ReactNode {
+  if (a == null || typeof a !== "object") return "—";
   const f = (v: number | null) => (v == null ? "—" : `${prefix}${Number.isInteger(v) ? v : v.toFixed(digits)}`);
   return (
     <>
@@ -413,7 +413,7 @@ function MetricHead({ label, k, def, num = true }: { label: string; k: string; d
 }
 
 function BenchmarkCard({ b }: { b: Benchmark }) {
-  const strategies = Object.keys(b.exploration.aggregate);
+  const strategies = sortStrategies(Object.keys(b.exploration.aggregate));
   const def = (k: string) => b.definitions[k] ?? "";
   const minAgg = b.minimization.aggregate;
   const allVerified = minAgg.one_minimal_verified_all === true;
@@ -428,7 +428,7 @@ function BenchmarkCard({ b }: { b: Benchmark }) {
       </div>
       <div className="bench-grid">
         <div>
-          <h3 className="ix-h">Exploration: guided vs random</h3>
+          <h3 className="ix-h">Exploration: {strategies.join(" vs ")}</h3>
           <div className="table-wrap">
             <table className="table ix-compare">
               <thead>
@@ -443,7 +443,7 @@ function BenchmarkCard({ b }: { b: Benchmark }) {
                 {strategies.map((s) => (
                   <tr key={s}>
                     <td>
-                      <b>{s.charAt(0).toUpperCase() + s.slice(1)}</b>
+                      <b title={STRATEGY_HELP[s]}>{s.charAt(0).toUpperCase() + s.slice(1)}</b>
                     </td>
                     {EXPLORE_METRICS.map((m) => (
                       <td key={m.key} className="num">

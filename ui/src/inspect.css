@@ -14,7 +14,7 @@ kbd { font-family: var(--mono); font-size: 10.5px; padding: 0 5px; border: 1px s
 .ix-question { font-size: 30px; line-height: 1.15; letter-spacing: -0.03em; font-weight: 700; margin: 0 0 8px; }
 .ix-answer { font-size: 16px; line-height: 1.55; color: var(--fg-2); margin: 0; max-width: 78ch; }
 .ix-answer b { color: var(--fg); font-weight: 650; }
-.ix-answer b.bad { color: var(--fail); }
+.ix-answer b.bad { color: var(--fail-ink); }
 
 /* ---------------------------------------------------------------- sticky context bar */
 .ix-context { position: sticky; top: 53px; z-index: 15; margin: 0 -8px; padding: 0 8px; background: var(--bg); }
@@ -31,7 +31,7 @@ kbd { font-family: var(--mono); font-size: 10.5px; padding: 0 5px; border: 1px s
 .ix-steplinks a:hover { background: var(--bg-sunken); color: var(--fg); }
 .ix-decision-chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; padding: 4px 10px; border-radius: 999px; }
 .ix-decision-chip.ok { background: var(--pass-soft); color: var(--fg); }
-.ix-decision-chip.no { background: var(--fail-soft); color: var(--fail); }
+.ix-decision-chip.no { background: var(--fail-soft); color: var(--fail-ink); }
 
 /* segmented radiogroup */
 .ix-seg { display: inline-flex; background: var(--bg-sunken); border-radius: 10px; padding: 3px; gap: 2px; flex-wrap: wrap; }
@@ -121,7 +121,7 @@ kbd { font-family: var(--mono); font-size: 10.5px; padding: 0 5px; border: 1px s
 .ix-verdict p { margin: 6px 0 2px; }
 
 .ix-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; white-space: nowrap; }
-.ix-status.no { color: var(--fail); }
+.ix-status.no { color: var(--fail-ink); }
 .ix-status.skip { color: var(--fg-2); }
 .ix-sat { font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 5px; background: var(--pass-soft); color: var(--fg); white-space: nowrap; }
 
@@ -133,7 +133,7 @@ kbd { font-family: var(--mono); font-size: 10.5px; padding: 0 5px; border: 1px s
 /* ---------------------------------------------------------------- Worlds */
 .ix-list-panel { padding: 8px 0 0; overflow: hidden; }
 .ix-list-head { padding: 4px 18px 8px; }
-.ix-table-scroll { max-height: calc(100vh - 290px); min-height: 360px; overflow: auto; }
+.ix-table-scroll { position: relative; max-height: calc(100vh - 290px); min-height: 360px; overflow: auto; }
 .ix-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
 .ix-table th { position: sticky; top: 0; z-index: 1; background: var(--bg-elev); text-align: left; font-size: 11.5px; font-weight: 600; color: var(--fg-muted); padding: 8px 12px; border-bottom: 1px solid var(--line-strong); white-space: nowrap; }
 .ix-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
@@ -196,7 +196,7 @@ kbd { font-family: var(--mono); font-size: 10.5px; padding: 0 5px; border: 1px s
 .ix-kind-tag.is-dec { background: var(--fg); color: var(--bg); }
 .ix-ev-sentence { font-size: 14px; line-height: 1.45; margin: 4px 0 6px; color: var(--fg); }
 .ix-ev p.small { margin: 3px 0; }
-.ix-ev-wit { color: var(--fail); font-weight: 550; }
+.ix-ev-wit { color: var(--fail-ink); font-weight: 550; }
 
 /* ---------------------------------------------------------------- Mechanism */
 .ix-three { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; counter-reset: none; }
@@ -213,10 +213,10 @@ kbd { font-family: var(--mono); font-size: 10.5px; padding: 0 5px; border: 1px s
 .ix-ivs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .ix-ivs li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 8px; align-items: baseline; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); font-size: 13px; }
 .ix-ivs li.kept { border-color: color-mix(in srgb, var(--fail) 45%, var(--line)); background: color-mix(in srgb, var(--fail-soft) 60%, var(--bg-elev)); font-weight: 550; }
-.ix-ivs li.removed { opacity: 0.55; }
-.ix-ivs li.removed .ix-iv-text { text-decoration: line-through; text-decoration-color: var(--fg-muted); }
+.ix-ivs li.removed { border-style: dashed; }
+.ix-ivs li.removed .ix-iv-text { color: var(--fg-2); text-decoration: line-through; text-decoration-color: var(--fg-muted); }
 .ix-iv-status { grid-column: 2; font-size: 11.5px; color: var(--fg-muted); font-weight: 450; }
-.ix-ivs li.kept .ix-iv-status { color: var(--fail); font-weight: 600; }
+.ix-ivs li.kept .ix-iv-status { color: var(--fail-ink); font-weight: 600; }
 .ix-stepper { list-style: none; margin: 4px 0 12px; padding: 0; display: flex; align-items: flex-start; }
 .ix-stepper li { flex: 1 1 0; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; min-width: 0; }
 .ix-stepper li + li::before { content: ""; position: absolute; top: 11px; right: 50%; width: 100%; height: 1.5px; background: var(--line-strong); z-index: 0; }
@@ -246,7 +246,7 @@ kbd { font-family: var(--mono); font-size: 10.5px; padding: 0 5px; border: 1px s
 .ix-banner.ok { background: var(--pass-soft); border-color: color-mix(in srgb, var(--pass) 30%, var(--line)); }
 .ix-banner.no { background: var(--fail-soft); border-color: color-mix(in srgb, var(--fail) 40%, var(--line)); }
 .ix-banner-word { display: inline-flex; align-items: center; gap: 10px; font-size: 28px; font-weight: 750; letter-spacing: 0.02em; }
-.ix-banner.no .ix-banner-word { color: var(--fail); }
+.ix-banner.no .ix-banner-word { color: var(--fail-ink); }
 .ix-banner-body { flex: 1 1 320px; min-width: 0; }
 .ix-reasons { list-style: none; margin: 0 0 2px; padding: 0; font-size: 14px; font-weight: 550; }
 .ix-req td { vertical-align: middle; }

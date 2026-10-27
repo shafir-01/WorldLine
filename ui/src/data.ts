@@ -72,7 +72,7 @@ export function useData(): DataState {
 
 // ---------------------------------------------------------------- trace registry
 
-export type TraceGroup = "root" | "minimal" | "challenge" | "guided" | "random" | "other";
+export type TraceGroup = "root" | "minimal" | "challenge" | "guided" | "random" | "windowed" | "other";
 
 /** Everything the viewer knows about one openable trace, resolved from exploration.trace_files, minimal_schedule.trace_files and challenge.primary.trace_file. */
 export interface TraceEntry {
@@ -112,7 +112,7 @@ export function buildTraceRegistry(data: LoadedData): Map<string, TraceEntry> {
   const ex = data.exploration;
   for (const [branchId, ref] of Object.entries(ex.trace_files)) {
     const node = findNode(data, branchId);
-    const group: TraceGroup = branchId === "root" ? "root" : ref.strategy === "guided" || ref.strategy === "random" ? ref.strategy : "other";
+    const group: TraceGroup = branchId === "root" ? "root" : ref.strategy === "guided" || ref.strategy === "random" || ref.strategy === "windowed" ? ref.strategy : "other";
     reg.set(branchId, {
       key: branchId,
       label: branchId === "root" ? "root (baseline)" : branchId,

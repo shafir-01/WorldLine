@@ -25,8 +25,8 @@ const AXIS_H = 30;
 const LANE_PAD = 10;
 const SUBROW = 17;
 const LANE_MIN = 104;
-const GROUP_LABEL: Record<TraceGroup, string> = { root: "Baseline", minimal: "Minimal counterexample", challenge: "Genome challenge", guided: "Failing worlds: guided", random: "Failing worlds: random", other: "Other traces" };
-const GROUP_ORDER: TraceGroup[] = ["root", "minimal", "challenge", "guided", "random", "other"];
+const GROUP_LABEL: Record<TraceGroup, string> = { root: "Baseline", minimal: "Minimal counterexample", challenge: "Genome challenge", guided: "Failing worlds: guided", random: "Failing worlds: random", windowed: "Failing worlds: windowed", other: "Other traces" };
+const GROUP_ORDER: TraceGroup[] = ["root", "minimal", "challenge", "guided", "random", "windowed", "other"];
 
 function roleOfDecision(trace: Trace, d: WEvent): string {
   const actor = String(d.payload.actor ?? d.source_id);
@@ -324,7 +324,7 @@ export default function Timeline({ registry, selected, onSelect }: Props) {
         )}
 
         <div ref={wrapRef} className="ix-tl-wrap" style={{ height }}>
-          <svg className="tl" width={width} height={height} role="img" aria-label={`Timelines for ${roles.length} roles from ${mmss(d0)} to ${mmss(d1)}`}>
+          <svg className="tl" width={width} height={height} role="group" aria-label={`Timelines for ${roles.length} roles from ${mmss(d0)} to ${mmss(d1)}`}>
             {focusRule && (
               <rect x={X(focusAt - win)} y={AXIS_H - 6} width={Math.max(0, X(focusAt) - X(focusAt - win))} height={height - AXIS_H} className="ix-window" />
             )}
@@ -440,7 +440,7 @@ export default function Timeline({ registry, selected, onSelect }: Props) {
                           onKeyDown={(k) => (k.key === "Enter" || k.key === " ") && (k.preventDefault(), setPicked({ role: r, event: d }))}
                           role="button"
                           tabIndex={0}
-                          aria-label={`Decision ${String(d.payload.rule_id)} at ${mmss(at)} by ${humanName(String(d.payload.actor))}: ${String(d.payload.option)}${differs ? `, baseline chose ${String(rd!.payload.option)}` : ""}`}
+                          aria-label={`${humanName(String(d.payload.rule_id))} → ${String(d.payload.option)}${differs ? ` (baseline: ${String(rd!.payload.option)})` : ""}: decision ${String(d.payload.rule_id)} at ${mmss(at)} by ${humanName(String(d.payload.actor))}`}
                         >
                           <line x1={X(at)} x2={X(at)} y1={top} y2={top + h} className="dec-line" />
                           <rect x={X(at) - 9} y={yy - 9} width={18} height={18} className="ix-hit" />
@@ -752,7 +752,7 @@ function TraceContext({
             <optgroup key={g} label={GROUP_LABEL[g]}>
               {entries.map((e) => (
                 <option key={e.key} value={e.key}>
-                  {g === "guided" || g === "random" ? `${shortBranch(e.key).replace("root/", "")} · ${(e.failingInvariants ?? []).map(invariantName).join(", ")}` : g === "root" ? "Baseline (nothing changed)" : g === "minimal" ? "Minimal counterexample (one change)" : `Challenge: ${e.scenarioId}`}
+                  {g === "guided" || g === "random" || g === "windowed" ? `${shortBranch(e.key).replace("root/", "")} · ${(e.failingInvariants ?? []).map(invariantName).join(", ")}` : g === "root" ? "Baseline (nothing changed)" : g === "minimal" ? "Minimal counterexample (one change)" : `Challenge: ${e.scenarioId}`}
                 </option>
               ))}
             </optgroup>

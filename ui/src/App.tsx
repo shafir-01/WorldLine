@@ -74,7 +74,19 @@ export default function App() {
 
   return (
     <div className="app">
-      <a className="skip-link" href="#main">
+      <a
+        className="skip-link"
+        href="#main"
+        onClick={(e) => {
+          // The app routes on the hash, so following href="#main" would leave the current view.
+          e.preventDefault();
+          const m = document.getElementById("main");
+          if (m) {
+            m.focus();
+            m.scrollIntoView();
+          }
+        }}
+      >
         Skip to content
       </a>
       <header className="topbar">
@@ -116,7 +128,7 @@ export default function App() {
         {view === "story" && <StoryProgress ready={!!ready} />}
       </header>
 
-      <main id="main" className={`main ${view === "story" ? "main-story" : "main-inspect"}`}>
+      <main id="main" tabIndex={-1} className={`main ${view === "story" ? "main-story" : "main-inspect"}`}>
         {data.status === "loading" && (view === "story" ? <StorySkeleton /> : <InspectSkeleton />)}
         {data.status === "error" && <LoadError message={data.error} />}
         {ready && <Ready data={ready} view={view} selected={selected} select={select} go={go} />}
@@ -224,7 +236,7 @@ function StoryProgress({ ready }: { ready: boolean }) {
             const fill = n < active ? 1 : n === active ? Math.max(0.08, frac) : 0;
             return (
               <li key={b.short}>
-                <button type="button" className={`ps ${n === active ? "ps-active" : ""} ${n < active ? "ps-done" : ""}`} onClick={() => jumpToBeat(n)} aria-label={`Step ${n} of ${STORY_BEATS.length}: ${b.title}`} aria-current={n === active ? "step" : undefined} disabled={!ready}>
+                <button type="button" className={`ps ${n === active ? "ps-active" : ""} ${n < active ? "ps-done" : ""}`} onClick={() => jumpToBeat(n)} aria-label={`${b.short}, step ${n} of ${STORY_BEATS.length}: ${b.title}`} aria-current={n === active ? "step" : undefined} disabled={!ready}>
                   <span className="ps-label">{b.short}</span>
                   <span className="ps-track">
                     <span className="ps-fill" style={{ transform: `scaleX(${fill})` }} />

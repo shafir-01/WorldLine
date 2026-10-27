@@ -119,7 +119,7 @@ function BeatWorlds({ data, defaultRun, totalWorlds, totalFailing, onInspect }: 
           <div className="seg" role="tablist" aria-label="Search strategy">
             {strategies.map((s) => (
               <button type="button" key={s} role="tab" aria-selected={s === strategy} className={`seg-btn ${s === strategy ? "active" : ""}`} onClick={() => setStrategy(s)}>
-                {s === "guided" ? "Guided" : s === "random" ? "Random" : s}
+                {s.charAt(0).toUpperCase() + s.slice(1)}
               </button>
             ))}
           </div>
@@ -215,7 +215,7 @@ function FanTree({ run, highlight, onPick }: { run: ExplorationRun; highlight: s
   const hl = pts.find((p) => p.n.branch_id === highlight);
   return (
     <div className="fan-wrap" onMouseLeave={() => setHover(null)}>
-      <svg className="fan" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${kids.length} worlds explored from one baseline; ${pts.filter((p) => p.st === "FAIL").length} broke a rule`}>
+      <svg className="fan" viewBox={`0 0 ${W} ${H}`} role="group" aria-label={`${kids.length} worlds explored from one baseline; ${pts.filter((p) => p.st === "FAIL").length} broke a rule`}>
         {order.map((p) => {
           const mx = cx + (p.x - cx) * 0.42;
           const my = cy - 18;
