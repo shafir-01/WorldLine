@@ -5,6 +5,7 @@ import { causalDiff } from "../diff";
 import { NS, secs, shortBranch, tClock } from "../format";
 import { ScheduleList } from "../components/Schedule";
 import { VerdictPill } from "../components/Badges";
+import { ShortId } from "../components/ShortId";
 
 interface Props {
   data: LoadedData;
@@ -71,7 +72,7 @@ export default function Timeline({ registry, selected, onSelect }: Props) {
       <div className="view">
         {head}
         <div className="panel empty">
-          No trace file was exported for <code>{selected}</code>. The pipeline writes traces for <b>root</b>, every <b>failing</b> branch, the <b>minimal</b> counterexample and the <b>challenge</b> counterexample. Pick one above or select a failing
+          No trace file was exported for <code>{shortBranch(selected)}</code>. The pipeline writes traces for <b>root</b>, every <b>failing</b> branch, the <b>minimal</b> counterexample and the <b>challenge</b> counterexample. Pick one above or select a failing
           node in Worlds.
         </div>
       </div>
@@ -300,9 +301,9 @@ export default function Timeline({ registry, selected, onSelect }: Props) {
       <div className="split">
         <div className="panel">
           <h3>Branch</h3>
-          <code className="block">{trace.branch_id}</code>
+          <p>{trace.branch_id === "root" ? <b>Baseline (the real hour)</b> : <ShortId value={trace.branch_id} label="branch" />}</p>
           <div className="small muted">
-            scenario <b>{trace.scenario_id}</b> · seed {trace.seed} · trace digest <code title={trace.digest}>{trace.digest.replace(/^sha256:/, "").slice(0, 16)}…</code>
+            scenario <b>{trace.scenario_id}</b> · seed {trace.seed} · <ShortId value={trace.digest} label="trace" />
           </div>
           <h4>Fault schedule</h4>
           <ScheduleList schedule={entry?.schedule ?? []} empty={trace.branch_id === "root" ? "(empty schedule: baseline world)" : "(schedule not recorded for this trace)"} />
@@ -416,7 +417,7 @@ function Head({ selected, registry, onSelect }: { selected: string; registry: Ma
       <label className="select">
         trace
         <select value={known ? selected : ""} onChange={(e) => onSelect(e.target.value)}>
-          {!known && <option value="">{selected} (no trace)</option>}
+          {!known && <option value="">{shortBranch(selected)} (no trace)</option>}
           {groups.map(({ g, entries }) => (
             <optgroup key={g} label={GROUP_LABEL[g]}>
               {entries.map((e) => (

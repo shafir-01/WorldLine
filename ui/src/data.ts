@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Authorization, Benchmark, BranchNode, DataIndex, FaultSchedule, LoadedData, Trace, VerdictRecord } from "./types";
+import { shortBranch } from "./format";
 
 /**
  * All data is fetched relative to the page URL (`./data/...`), never from an absolute `/data` path,
@@ -128,7 +129,7 @@ export function buildTraceRegistry(data: LoadedData): Map<string, TraceEntry> {
   if (m.trace_files?.minimal) {
     reg.set(m.minimal_branch_id, {
       key: m.minimal_branch_id,
-      label: `${m.minimal_branch_id} (minimal)`,
+      label: `minimal counterexample (${shortBranch(m.minimal_branch_id).replace("root/", "")})`,
       group: "minimal",
       traceFile: m.trace_files.minimal,
       verdictsFile: m.trace_files.minimal_verdicts,

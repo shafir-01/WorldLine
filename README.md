@@ -10,7 +10,7 @@
 
 > Every number in this file was written by code that ran; see [Evidence and claim ceilings](#evidence-and-claim-ceilings). All scenarios are synthetic.
 
-![One history branching into alternative worlds](docs/screens/worlds.png)
+![WORLDLINE story view](docs/screens/story.png)
 
 | Timeline with information lag and the FAIL witness | Evidence chain and release authorization |
 |---|---|

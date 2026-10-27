@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type { Aggregate, Authorization, Benchmark, Bundle, EvidenceKind, EvidenceRecord, LoadedData } from "../types";
-import { shortHash } from "../format";
-import { KIND_HELP, KindBadge, KindGlyph, ProducerTag } from "../components/Badges";
+import { shortId } from "../format";
+import { ShortId } from "../components/ShortId";
+import { KIND_HELP, KIND_LABEL, KindBadge, KindGlyph, ProducerTag } from "../components/Badges";
 
 const KINDS: EvidenceKind[] = ["PROVED_WITHIN_MODEL", "EMPIRICALLY_VALIDATED", "ATTESTED", "FAILED", "UNKNOWN"];
 
@@ -35,7 +36,7 @@ export default function Evidence({ data }: Props) {
         <div className="legend legend-col">
           {KINDS.map((k) => (
             <span key={k} title={KIND_HELP[k]}>
-              <KindGlyph kind={k} size={16} /> {k}
+              <KindGlyph kind={k} size={16} /> {KIND_LABEL[k]}
             </span>
           ))}
         </div>
@@ -50,14 +51,14 @@ export default function Evidence({ data }: Props) {
               {bundle.checkpoint && (
                 <>
                   {" "}
-                  · sealed {bundle.checkpoint.sealed_at} by <code>{bundle.checkpoint.signer_key_id}</code>
+                  · sealed {bundle.checkpoint.sealed_at} by <ShortId value={bundle.checkpoint.signer_key_id} />
                 </>
               )}
             </span>
           </div>
           <ol className="chain">
             <li className="chain-genesis">
-              <span className="hash">genesis {bundle.links[0] ? shortHash(bundle.links[0].prev_hash, 12) : ""}</span>
+              <span>genesis {bundle.links[0] ? <ShortId value={bundle.links[0].prev_hash} /> : ""}</span>
             </li>
             {bundle.records.map((r, i) => (
               <RecordBlock key={`${r.id}-${i}`} r={r} i={i} link={bundle.links[i]} open={open === `${i}`} onToggle={() => setOpen(open === `${i}` ? null : `${i}`)} flag={tamperedIdx.has(i) ? "tampered" : flagged.get(r.id)} />
@@ -66,15 +67,13 @@ export default function Evidence({ data }: Props) {
               <li className="chain-checkpoint">
                 <div className="block-head">
                   <KindGlyph kind="ATTESTED" size={16} /> <b>checkpoint</b>{" "}
-                  <span className="hash" title={bundle.checkpoint.root}>
-                    root {shortHash(bundle.checkpoint.root, 16)}
-                  </span>
+                  <ShortId value={bundle.checkpoint.root} label="root" />
                   <span className="small muted">
                     records {bundle.checkpoint.first_index}–{bundle.checkpoint.last_index}
                   </span>
                 </div>
                 <div className="small muted">
-                  signature {bundle.checkpoint.signature.slice(0, 28)}… · key {bundle.checkpoint.signer_key_id}
+                  <ShortId value={bundle.checkpoint.signature} label="signature" /> <ShortId value={bundle.checkpoint.signer_key_id} label="key" />
                 </div>
               </li>
             )}
@@ -103,7 +102,7 @@ export default function Evidence({ data }: Props) {
           <div className={`decision decision-${auth.decision.toLowerCase()}`}>
             <div className="decision-word">{auth.decision}</div>
             <div className="small">
-              policy <code>{auth.policy}</code> · artifact <code title={auth.artifact_digest}>{shortHash(auth.artifact_digest, 12)}</code>
+              policy <code>{auth.policy}</code> · <ShortId value={auth.artifact_digest} label="artifact" />
               {auth.bundle_file && (
                 <>
                   {" "}
@@ -123,8 +122,8 @@ export default function Evidence({ data }: Props) {
           </ul>
           <Section title="Satisfied" tone="good" items={auth.satisfied.map((s) => ({ key: `${s.claim_pattern}:${s.record_id}`, node: <SatisfiedRow s={s} /> }))} />
           <Section title="Missing" tone="bad" items={auth.missing.map((m) => ({ key: m.claim_pattern, node: <>{`${m.claim_pattern}${m.min_kind ? ` needs ${m.min_kind}` : ""}${m.note ? ` — ${m.note}` : ""}`}</> }))} />
-          <Section title="Stale" tone="bad" items={auth.stale.map((s) => ({ key: s.record_id, node: <>{`${s.claim ?? shortHash(s.record_id, 10)} age ${s.age_s ?? "?"}s > ${s.max_age_s ?? "?"}s`}</> }))} />
-          <Section title="Downgraded" tone="bad" items={auth.downgraded.map((d) => ({ key: d.record_id, node: <>{`${shortHash(d.record_id, 10)}: ${d.from ?? "?"} → ${d.to ?? "?"}${d.reason ? ` — ${d.reason}` : ""}`}</> }))} />
+          <Section title="Stale" tone="bad" items={auth.stale.map((s) => ({ key: s.record_id, node: <>{`${s.claim ?? shortId(s.record_id)} age ${s.age_s ?? "?"}s > ${s.max_age_s ?? "?"}s`}</> }))} />
+          <Section title="Downgraded" tone="bad" items={auth.downgraded.map((d) => ({ key: d.record_id, node: <>{`${shortId(d.record_id)}: ${d.from ?? "?"} → ${d.to ?? "?"}${d.reason ? ` — ${d.reason}` : ""}`}</> }))} />
         </aside>
       </div>
 
@@ -136,7 +135,7 @@ export default function Evidence({ data }: Props) {
 function SatisfiedRow({ s }: { s: Authorization["satisfied"][number] }) {
   return (
     <>
-      <code>{s.claim_pattern}</code> ← <code title={s.record_id}>{shortHash(s.record_id, 8)}</code>
+      <code>{s.claim_pattern}</code> ← <ShortId value={s.record_id} />
       <span title={s.kind}>
         <KindGlyph kind={s.kind} size={14} />
       </span>
@@ -180,14 +179,14 @@ function RecordBlock({ r, i, link, open, onToggle, flag }: { r: EvidenceRecord; 
           <span className="muted">procedure</span> <code>{r.procedure}</code>
         </span>
         <span>
-          <span className="muted">subject</span> <code title={r.subject}>{shortHash(r.subject, 12)}</code>
+          <ShortId value={r.subject} label="subject" />
         </span>
         <span>
-          <span className="muted">id</span> <code title={r.id}>{shortHash(r.id, 12)}</code>
+          <ShortId value={r.id} label="id" />
         </span>
         {link && (
           <span>
-            <span className="muted">prev</span> <code title={link.prev_hash}>{shortHash(link.prev_hash, 12)}</code>
+            <ShortId value={link.prev_hash} label="prev" />
           </span>
         )}
         <span>
@@ -209,8 +208,8 @@ function RecordBlock({ r, i, link, open, onToggle, flag }: { r: EvidenceRecord; 
             <div className="muted small">none declared</div>
           )}
           <div className="small muted">
-            inputs_hash {shortHash(r.inputs_hash, 20)}
-            {link && <> · link hash {shortHash(link.hash, 20)}</>}
+            <ShortId value={r.inputs_hash} label="inputs" />
+            {link && <> <ShortId value={link.hash} label="link" /></>}
           </div>
         </div>
       )}
@@ -266,6 +265,7 @@ function BenchmarkCard({ b }: { b: Benchmark }) {
       <div className="bench-grid">
         <div>
           <h4 title={def("aggregate")}>Exploration: guided vs random (mean / median over {b.seeds.length} seeds)</h4>
+          <div className="table-wrap">
           <table className="table compare">
             <thead>
               <tr>
@@ -292,9 +292,11 @@ function BenchmarkCard({ b }: { b: Benchmark }) {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
         <div>
           <h4>Minimization (ddmin) over {b.minimization.cases.length} failing branches</h4>
+          <div className="table-wrap">
           <table className="table compare">
             <thead>
               <tr>
@@ -319,6 +321,7 @@ function BenchmarkCard({ b }: { b: Benchmark }) {
               </tr>
             </tbody>
           </table>
+          </div>
         </div>
       </div>
       <p className="ceiling">

@@ -2,13 +2,27 @@
 
 Static Vite + React + TypeScript viewer over the JSON that the WORLDLINE pipeline writes to `experiments/out/`. No backend, no UI kit: hand-written CSS, plain SVG, light/dark via `prefers-color-scheme`. Built with `base: './'` so it deploys unchanged under a GitLab Pages subpath.
 
-> All scenarios are **synthetic**. The viewer prints the pipeline's own claim ceiling in its footer (`index.json → claim_ceiling`). Transfer claims are within the shared Event v1 substrate, not across heterogeneous codebases.
+> All scenarios are **synthetic**. A persistent footer says so: "All scenarios synthetic. Transfer is within the shared Event v1 substrate, not across heterogeneous codebases."
 
-## Views
+## Story (default route `#/`)
+
+The landing view walks the result in seven full-width beats, each with a plain-English headline, two sentences and one visual. Every number comes from the data files:
+
+1. **One history, many worlds**: both exploration runs as a half-circle fan (failing worlds emphasised, the rest quiet), plus guided vs random as two large numbers and a small bar pair.
+2. **The world that broke**: the minimal counterexample in three lanes (truth, the deciding role, one other role). The delayed correction is drawn as an arrow sliding past the decision marker. A scrubber with a play button shows what the decider knew at each moment.
+3. **One cause**: the ddmin result as "3 interventions tried, 1 explains it", with the removed interventions faded.
+4. **A mechanism, not a bug**: the genome as a sentence, a kind → role → decision diagram, and the preconditions as checklist chips.
+5. **It happens elsewhere**: the challenge primary (reproduced) and the immune control (not reproduced) as two cards.
+6. **Nothing ships on untyped evidence**: the bundle as a stepper of records grouped by producer (agent, kernel), with certainty shown by shape and colour, and an AUTHORIZED / DENIED toggle that flags the edited record.
+7. **Check it yourself**: **Verify this bundle** POSTs `data/bundle.json` to the live verifier's `/api/verify` and shows the answer. **Try the edited copy** does the same with `bundle_tampered.json`. The beat also links the release. Endpoints are defined once, in `src/config.ts`.
+
+`#/story/<n>` deep-links to beat *n*. Raw sha256 strings never appear in the default view. Identifiers show as 7-character short ids with a copy button, and the full value is in the tooltip and on the clipboard (`src/components/ShortId.tsx`).
+
+## Inspect views
 
 | View | What it shows | Screenshot |
 | --- | --- | --- |
-| **Worlds** | Both exploration runs of `exploration.json`. A **guided / random** toggle switches the branch tree (FAIL red, PASS green, UNKNOWN grey; FAIL nodes sort first; a blue dot marks branches with an exported trace). The **Guided vs random** table shows `n_nodes`, `n_failing`, `failing_rate_per_100`, `first_decision_fail_index` and `wall_ms` from `exploration.comparison`; hover a column for its definition. Hover a node for its schedule, click to select, double-click to open its timeline. | `docs/screens/worlds.png` |
+| **Worlds** | Both exploration runs of `exploration.json`. A **guided / random** toggle switches the branch tree (FAIL red diamond, PASS blue circle, UNKNOWN amber broken ring; FAIL nodes sort first; a blue dot marks branches with an exported trace). The **Guided vs random** table shows `n_nodes`, `n_failing`, `failing_rate_per_100`, `first_decision_fail_index` and `wall_ms` from `exploration.comparison`; hover a column for its definition. Hover a node for its schedule, click to select, double-click to open its timeline. | `docs/screens/worlds.png` |
 | **Timeline** | One lane per role for any exported trace: root, every failing branch (grouped by strategy), the ddmin **minimal** counterexample and the genome **challenge** counterexample. Each event sits at `event_time_ns` with a thin line to `received_time_ns`; decisions are diamonds; FAIL-witness events are ringed red; delivery policy and visibility come from the embedded `scenario`. The `AS_KNOWN_AT(t)` scrubber dims everything not yet received. **Compare with root** overlays root received-times and lists the causal diff (on by default; disabled for the challenge trace, which is a different scenario). | `docs/screens/timeline.png` |
 | **Mechanism** | `minimal_schedule.json`: original vs minimal schedule, `one_minimal_verified` / `self_explaining` flags, oracle calls, reduction steps, the recorded `causal_diff`, and (collapsed) the selection rule with every candidate considered. `genome.json`: mechanism sentence, abstract selectors, preconditions, witness shape, origin. `challenge.json`: the **primary** result (REPRODUCED on `convoy_lostlink`) and each **negative control** (`convoy_lostlink_immune`: preconditions met, not reproduced, shown as the control holding). Branch links open the Timeline; the primary's counterexample trace has its own button. | `docs/screens/mechanism.png` |
 | **Evidence** | `bundle.json` as a hash chain (`links[i].prev_hash` per record, signed checkpoint root). Each record carries a certainty badge with a distinct shape **and** colour, a producer tag (kernel vs agent) and, when the authorization satisfied it, a SATISFIED flag. The authorization panel toggles between `authorization.json` (**AUTHORIZED**) and `authorization_denied.json` (**DENIED**, evaluated on `bundle_tampered.json`; the edited record is flagged on the chain). Below: a **Benchmark** card from `benchmark.json` with guided-vs-random and ddmin aggregates (mean / median over seeds), definitions on hover and in an expandable section, and the claim ceiling. | `docs/screens/evidence.png` |
@@ -30,7 +44,7 @@ npm run copy-data    # copies ../experiments/out -> public/data if it has JSON, 
 npm run typecheck
 ```
 
-Screenshots in `docs/screens/*.png` were taken from `npm run preview` with headless Edge at 1440x900:
+Screenshots in `docs/screens/*.png` (story, timeline = beat 2, mechanism = beat 4, evidence = beat 6, worlds = Inspect/Worlds) were taken from `npm run preview` with headless Edge at 1440x900:
 
 ```powershell
 & "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --headless=new --disable-gpu --hide-scrollbars --window-size=1440,900 --virtual-time-budget=10000 --screenshot=..\docs\screens\worlds.png "http://localhost:4173/#/worlds"
@@ -75,12 +89,13 @@ ui/
 ├─ scripts/
 │  └─ copy-data.mjs       experiments/out or fixtures -> public/data
 ├─ src/
-│  ├─ App.tsx             left nav, hash routing (#/view/key), persistent footer with the claim ceiling
+│  ├─ App.tsx             top nav (Story · Inspect), hash routing (#/view/key), persistent footer
+│  ├─ config.ts           verifier URL, release link, footer text (single source)
 │  ├─ data.ts             relative fetch, useData, trace registry, useTrace
 │  ├─ diff.ts             causal_diff computed client-side (root vs branch)
 │  ├─ format.ts           time/hash/intervention formatting
 │  ├─ types.ts            shapes of the real pipeline output
 │  ├─ components/         Badges (KindGlyph, VerdictPill, ProducerTag), Schedule
-│  └─ views/              Worlds, Timeline, Mechanism, Evidence (+ Benchmark card)
+│  └─ views/              Story (default), Worlds, Timeline, Mechanism, Evidence (+ Benchmark card)
 ├─ index.html · vite.config.ts · tsconfig.json · package.json
 ```

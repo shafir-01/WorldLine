@@ -1,8 +1,9 @@
 import type { ChallengeResult, LoadedData } from "../types";
 import { challengeKey, type TraceEntry } from "../data";
-import { interventionText, secs, shortBranch, shortHash, tClock } from "../format";
+import { interventionText, secs, shortBranch, tClock } from "../format";
 import { ScheduleList } from "../components/Schedule";
 import { KindBadge, VerdictPill } from "../components/Badges";
+import { ShortId } from "../components/ShortId";
 
 interface Props {
   data: LoadedData;
@@ -69,8 +70,7 @@ export default function Mechanism({ data, registry, onOpenTimeline }: Props) {
           <h4>Minimal schedule</h4>
           <ScheduleList schedule={minimal.minimal} highlightIndex={0} />
           <div className="muted small">
-            reproduces as branch {branchLink(minimal.minimal_branch_id)} · schedule hash <code title={minimal.minimal_schedule_hash}>{shortHash(minimal.minimal_schedule_hash, 14)}</code> · trace{" "}
-            <code title={minimal.trace_digest}>{shortHash(minimal.trace_digest, 14)}</code>
+            reproduces as branch {branchLink(minimal.minimal_branch_id)} · <ShortId value={minimal.minimal_schedule_hash} label="schedule" /> <ShortId value={minimal.trace_digest} label="trace" />
           </div>
           <p className="small">{minimal.explanation}</p>
           <div className="small">
@@ -124,6 +124,7 @@ export default function Mechanism({ data, registry, onOpenTimeline }: Props) {
               Selection rule and {minimal.candidates_considered.length} candidates considered
             </summary>
             <p className="small muted">{minimal.selection_rule}</p>
+            <div className="table-wrap">
             <table className="table small">
               <thead>
                 <tr>
@@ -146,6 +147,7 @@ export default function Mechanism({ data, registry, onOpenTimeline }: Props) {
                 ))}
               </tbody>
             </table>
+            </div>
           </details>
         </section>
 
@@ -155,9 +157,9 @@ export default function Mechanism({ data, registry, onOpenTimeline }: Props) {
             <h2>Failure genome</h2>
             <KindBadge kind={genome.evidence_kind} />
           </div>
-          <code className="block" title={genome.id}>
-            {genome.id}
-          </code>
+          <p>
+            <ShortId value={genome.id} label="genome" />
+          </p>
           {genome.mechanism_sentence && <p className="headline sentence">{genome.mechanism_sentence}</p>}
           <dl className="kv">
             <dt>violates</dt>
@@ -169,7 +171,7 @@ export default function Mechanism({ data, registry, onOpenTimeline }: Props) {
             <dd>
               {genome.origin.scenario_id} · seed {genome.origin.seed} · {branchLink(genome.origin.branch_id)}
               <div className="muted small">
-                trace {shortHash(genome.origin.trace_digest, 14)} · schedule {shortHash(genome.origin.minimal_schedule_hash, 14)} · commit {genome.origin.code_commit.slice(0, 10)}
+                <ShortId value={genome.origin.trace_digest} label="trace" /> <ShortId value={genome.origin.minimal_schedule_hash} label="schedule" /> <ShortId value={genome.origin.code_commit} label="commit" />
               </div>
               {genome.origin.witness && (
                 <div className="small">
@@ -221,7 +223,7 @@ export default function Mechanism({ data, registry, onOpenTimeline }: Props) {
             <span className={`pill ${challenge.success ? "pill-pass" : "pill-fail"}`}>{challenge.success ? "SUCCESS" : "FAILED"}</span>
           </div>
           <p className="small">
-            Genome <code>{shortHash(challenge.genome_id.replace(/^genome:/, ""), 12)}</code> instantiated on other scenarios. Success means the primary reproduced <b>and</b> every negative control did not.
+            Genome <ShortId value={challenge.genome_id} /> instantiated on other scenarios. Success means the primary reproduced <b>and</b> every negative control did not.
             {challenge.seed_note && (
               <span className="muted" title={challenge.seed_note}>
                 {" "}
@@ -308,7 +310,7 @@ function ChallengeCard({ r, kind, traceKey, onOpenTimeline }: { r: ChallengeResu
       <p className="small">{r.explanation}</p>
       {r.counterexample_digest && (
         <div className="small muted">
-          counterexample trace <code title={r.counterexample_digest}>{shortHash(r.counterexample_digest, 14)}</code>
+          <ShortId value={r.counterexample_digest} label="counterexample trace" />
           {ceDecision && <> · {ceDecision.witness.length} witness events</>}
         </div>
       )}

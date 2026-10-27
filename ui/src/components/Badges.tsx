@@ -1,7 +1,36 @@
 import type { EvidenceKind, Verdict } from "../types";
 
+/**
+ * Verdict glyph: shape AND colour (validated set, see styles.css). PASS = filled circle, FAIL = filled diamond,
+ * UNKNOWN = hollow ring with a gap, so the three read apart in monochrome and under CVD.
+ */
+export function VerdictGlyph({ v, size = 12 }: { v: Verdict; size?: number }) {
+  if (v === "FAIL")
+    return (
+      <svg width={size} height={size} viewBox="0 0 12 12" aria-hidden className="vglyph">
+        <path d="M6 0.5L11.5 6 6 11.5 0.5 6z" fill="var(--fail)" />
+      </svg>
+    );
+  if (v === "UNKNOWN")
+    return (
+      <svg width={size} height={size} viewBox="0 0 12 12" aria-hidden className="vglyph">
+        <circle cx="6" cy="6" r="4.2" fill="none" stroke="var(--unknown)" strokeWidth="2.2" strokeDasharray="5 2.2" />
+      </svg>
+    );
+  return (
+    <svg width={size} height={size} viewBox="0 0 12 12" aria-hidden className="vglyph">
+      <circle cx="6" cy="6" r="5" fill="var(--pass)" />
+    </svg>
+  );
+}
+
 export function VerdictPill({ v }: { v: Verdict }) {
-  return <span className={`pill pill-${v.toLowerCase()}`}>{v}</span>;
+  return (
+    <span className={`pill pill-${v.toLowerCase()}`}>
+      <VerdictGlyph v={v} size={10} />
+      {v}
+    </span>
+  );
 }
 
 /**
@@ -62,10 +91,18 @@ export function KindBadge({ kind }: { kind: EvidenceKind }) {
   return (
     <span className={`kind kind-${kind.toLowerCase().replace(/_/g, "-")}`} title={KIND_HELP[kind]}>
       <KindGlyph kind={kind} size={16} />
-      {kind}
+      {KIND_LABEL[kind]}
     </span>
   );
 }
+
+export const KIND_LABEL: Record<EvidenceKind, string> = {
+  PROVED_WITHIN_MODEL: "Proved in model",
+  EMPIRICALLY_VALIDATED: "Observed",
+  ATTESTED: "Attested",
+  FAILED: "Failed",
+  UNKNOWN: "Unknown",
+};
 
 export const KIND_HELP: Record<EvidenceKind, string> = {
   PROVED_WITHIN_MODEL: "Follows from the model and its assumptions (e.g. ddmin 1-minimality under determinism).",
@@ -79,7 +116,7 @@ export function ProducerTag({ producer }: { producer: string }) {
   const isKernel = producer === "kernel";
   return (
     <span className={`producer ${isKernel ? "producer-kernel" : "producer-agent"}`} title={isKernel ? "Emitted by the authorization kernel" : "Emitted by an agent; the kernel recomputes what it can"}>
-      {isKernel ? "kernel" : producer}
+      {isKernel ? "kernel" : producer.replace(/^agent:/, "agent · ")}
     </span>
   );
 }

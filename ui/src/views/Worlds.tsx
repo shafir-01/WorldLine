@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import type { BranchNode, ComparisonRow, ExplorationRun, LoadedData } from "../types";
 import type { TraceEntry } from "../data";
-import { cmp, interventionText, nodeStatus, secs, shortBranch, shortHash } from "../format";
+import { cmp, interventionText, nodeStatus, secs, shortBranch, shortId } from "../format";
 import { ScheduleList } from "../components/Schedule";
 import { VerdictPill } from "../components/Badges";
+import { ShortId } from "../components/ShortId";
 
 interface Props {
   data: LoadedData;
@@ -203,7 +204,7 @@ export default function Worlds({ data, registry, selected, onSelect, onOpenTimel
               <ScheduleList schedule={hovered.schedule} />
               {hovered.failing_invariants?.length > 0 && <div className="small bad">fails: {hovered.failing_invariants.join(", ")}</div>}
               <div className="muted small">
-                trace {shortHash(hovered.trace_digest)} · cost {(hovered.cost_ns / 1e6).toFixed(0)} ms
+                trace {shortId(hovered.trace_digest)} · cost {(hovered.cost_ns / 1e6).toFixed(0)} ms
               </div>
             </div>
           )}
@@ -211,12 +212,14 @@ export default function Worlds({ data, registry, selected, onSelect, onOpenTimel
 
         <aside className="panel side">
           <h2>Selected branch</h2>
-          <code className="block">{sel.branch_id}</code>
+          <p>{sel.branch_id === "root" ? <b>Baseline (the real hour)</b> : <ShortId value={sel.branch_id} label="branch" />}</p>
           <dl className="kv">
             <dt>parent</dt>
-            <dd>{sel.parent ?? "—"}</dd>
+            <dd>{sel.parent ? (sel.parent === "root" ? "baseline" : <ShortId value={sel.parent} />) : "—"}</dd>
             <dt>trace digest</dt>
-            <dd title={sel.trace_digest}>{shortHash(sel.trace_digest, 16)}</dd>
+            <dd>
+              <ShortId value={sel.trace_digest} />
+            </dd>
             <dt>cost</dt>
             <dd>{secs(sel.cost_ns)} virtual</dd>
             <dt>schedule</dt>
@@ -283,6 +286,7 @@ function ComparisonTable({ comparison, strategies, active, onPick }: { compariso
         <h2>Guided vs random</h2>
         <span className="small muted">same scenario, seed and budget; hover a column header for its definition</span>
       </div>
+      <div className="table-wrap">
       <table className="table compare">
         <thead>
           <tr>
@@ -309,6 +313,7 @@ function ComparisonTable({ comparison, strategies, active, onPick }: { compariso
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
