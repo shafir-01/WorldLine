@@ -1,0 +1,2259 @@
+{
+ "provenance": {
+  "source_url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2025-07-29T23%3A20%3A00Z&endtime=2025-07-30T01%3A40%3A00Z&minmagnitude=5.5&orderby=time-asc",
+  "detail_urls": "each event's properties.detail URL with &includesuperseded=true",
+  "fetched_at_utc": "2026-10-27T11:17:26Z",
+  "sha256": "e2315774e081e531087af74901450134fd563d108aed8405a5b41bc485785d98",
+  "sha256_of": "canonical JSON (sorted keys, compact separators, UTF-8) of the 'payload' object",
+  "license": "USGS, public domain",
+  "raw_responses": [
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2025-07-29T23%3A20%3A00Z&endtime=2025-07-30T01%3A40%3A00Z&minmagnitude=5.5&orderby=time-asc",
+    "sha256": "db6f69a7157b04b89b032d22e9120a867e03d12058f9f9f42b09edb1397059bb",
+    "bytes": 15339
+   },
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qw60&format=geojson&includesuperseded=true",
+    "sha256": "c1688a2bacbac8644161fb4ec0151144e8f541aafe0124a58e34c6a30119182e",
+    "bytes": 1848354
+   },
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000r0y5&format=geojson&includesuperseded=true",
+    "sha256": "8c115219e60dc3682aeb49e8f5329d5ad81ace9804f3122b7a0a20331b4864dc",
+    "bytes": 159031
+   },
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000r0xw&format=geojson&includesuperseded=true",
+    "sha256": "6a84be4f4b584af70337f3e41d83dcd50d0589a0242dfed3acd4c4877e846669",
+    "bytes": 136341
+   },
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000r0xt&format=geojson&includesuperseded=true",
+    "sha256": "de9057ff1392f78c1b93cf38b074f53a2e61b1397a79e648eb91fa8d127c5c7e",
+    "bytes": 84585
+   },
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000r0q2&format=geojson&includesuperseded=true",
+    "sha256": "e14c64a84406d4cb60c8084921de89b02bf0df149424fd8600e1ae0ba46692cb",
+    "bytes": 136659
+   },
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000r0qc&format=geojson&includesuperseded=true",
+    "sha256": "cd716e746610c9a10aa82ee02a29da967346eb513dc9ea3c84b881122f6cd3ab",
+    "bytes": 101201
+   },
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qwhj&format=geojson&includesuperseded=true",
+    "sha256": "e04ecb2207eb9c321fcdc7f289b1173e4e3732eafc2868515c0bef1972aa38c2",
+    "bytes": 172560
+   },
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000r0ql&format=geojson&includesuperseded=true",
+    "sha256": "324973ae7612a80b1a625207e9b754956721105ff7effc455faec70e1fabc886",
+    "bytes": 107451
+   },
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000r0qg&format=geojson&includesuperseded=true",
+    "sha256": "f31005dc6bd2481467ae580772ff881aad9bdcb58142d9ce5f93d6f4dc76a177",
+    "bytes": 113714
+   },
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qwhh&format=geojson&includesuperseded=true",
+    "sha256": "3f860e5667f4bfa395dddc5f0079f590017ec9752292b4adb7f4d451bc3e79af",
+    "bytes": 142934
+   },
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qwi3&format=geojson&includesuperseded=true",
+    "sha256": "52972c3f1f555e7a6f6f9ff9dd94c7ecb435028e671793b92fe18478e91c69b9",
+    "bytes": 142940
+   },
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qw6g&format=geojson&includesuperseded=true",
+    "sha256": "d4be3f66974a04df115f99b54062816c64620d46714786b904ab789174558032",
+    "bytes": 159604
+   },
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000r0pw&format=geojson&includesuperseded=true",
+    "sha256": "09e8cd246eed71544d5bad50b67fc4441223f92cf75afc9fb0909b0e7556f0e3",
+    "bytes": 117552
+   },
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qw6q&format=geojson&includesuperseded=true",
+    "sha256": "adea2aa6214e1158295123fdcb2ef4691927f821f751da57a9da92c773832933",
+    "bytes": 273824
+   },
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000r1em&format=geojson&includesuperseded=true",
+    "sha256": "35fab28bec1876d4f95a2b1a4c46026843e73f4aef713ebb04ed251998ed7714",
+    "bytes": 113718
+   },
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qw6s&format=geojson&includesuperseded=true",
+    "sha256": "d1e53c3c7b78288b1fe353a329de67871209211825ca45fa39f804bec97fe1ad",
+    "bytes": 202529
+   },
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qw6z&format=geojson&includesuperseded=true",
+    "sha256": "0aa08cf66033bd02586f9213f3b0506f2418518916d409f0e0a3c7cba1878a54",
+    "bytes": 165902
+   },
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qw74&format=geojson&includesuperseded=true",
+    "sha256": "87cc8bab22e8dc9471b6b7bb773376aef04bd092f9e431218ab8c6b1e0b43d78",
+    "bytes": 182569
+   },
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qw75&format=geojson&includesuperseded=true",
+    "sha256": "27a9b39b13b5ffb82671d3d230138ef19460bab2de2bfbb75d367a015c0d8ab2",
+    "bytes": 113724
+   },
+   {
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qw7f&format=geojson&includesuperseded=true",
+    "sha256": "d6fa20c45ca0c6fecba7be73cb1e9facff34d72ee38d1745199c2f22b78962bc",
+    "bytes": 113748
+   }
+  ],
+  "notes": [
+   "Data: USGS Earthquake Hazards Program, ComCat via FDSN event web service. Public domain.",
+   "summary: the FDSN query response, unmodified.",
+   "histories: per event, the origin-product versions (current and superseded) from the detail document fetched with includesuperseded=true, reduced to source, code, status, updateTime, preferredWeight, magnitude, magnitude type, origin time, location, depth, review status. The full detail bodies are not stored; their SHA-256 is listed in raw_responses.",
+   "20 of 20 events have an origin-product history; for events without one the scenario uses the summary 'time' and 'updated' fields only (see the scenario provenance).",
+   "Superseded product versions reflect what ComCat retains today; versions deleted from ComCat before the fetch are not visible here."
+  ]
+ },
+ "payload": {
+  "schema": "worldline.usgs.snapshot/1",
+  "query": {
+   "start": "2025-07-29T23:20:00Z",
+   "end": "2025-07-30T01:40:00Z",
+   "minmag": 5.5
+  },
+  "summary": {
+   "type": "FeatureCollection",
+   "metadata": {
+    "generated": 1793099847000,
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2025-07-29T23%3A20%3A00Z&endtime=2025-07-30T01%3A40%3A00Z&minmagnitude=5.5&orderby=time-asc",
+    "title": "USGS Earthquakes",
+    "status": 200,
+    "api": "2.8.2",
+    "count": 20
+   },
+   "features": [
+    {
+     "type": "Feature",
+     "properties": {
+      "mag": 8.8,
+      "place": "2025 Kamchatka Peninsula, Russia Earthquake",
+      "time": 1753831492483,
+      "updated": 1791820795086,
+      "tz": null,
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000qw60",
+      "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qw60&format=geojson",
+      "felt": 125,
+      "cdi": 9.1,
+      "mmi": 8.732,
+      "alert": "red",
+      "status": "reviewed",
+      "tsunami": 1,
+      "sig": 2114,
+      "net": "us",
+      "code": "6000qw60",
+      "ids": ",at00t06p1k,us6000qw60,pt25210002,usauto6000qw60,",
+      "sources": ",at,us,pt,usauto,",
+      "types": ",dyfi,earthquake-name,event-sequence,finite-fault,general-link,general-text,ground-failure,impact-link,impact-text,internal-moment-tensor,internal-origin,losspager,moment-tensor,oaf,origin,phase-data,shakemap,",
+      "nst": 251,
+      "dmin": 1.102,
+      "rms": 0.73,
+      "gap": 30,
+      "magType": "mww",
+      "type": "earthquake",
+      "title": "M 8.8 - 2025 Kamchatka Peninsula, Russia Earthquake"
+     },
+     "geometry": {
+      "type": "Point",
+      "coordinates": [
+       160.2395,
+       52.4948,
+       35
+      ]
+     },
+     "id": "us6000qw60"
+    },
+    {
+     "type": "Feature",
+     "properties": {
+      "mag": 6.3,
+      "place": "94 km SE of Petropavlovsk-Kamchatsky, Russia",
+      "time": 1753831803032,
+      "updated": 1760216278040,
+      "tz": null,
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000r0y5",
+      "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000r0y5&format=geojson",
+      "felt": null,
+      "cdi": null,
+      "mmi": 4.783,
+      "alert": "green",
+      "status": "reviewed",
+      "tsunami": 0,
+      "sig": 611,
+      "net": "us",
+      "code": "6000r0y5",
+      "ids": ",us6000r0y5,",
+      "sources": ",us,",
+      "types": ",ground-failure,losspager,origin,phase-data,shakemap,",
+      "nst": 29,
+      "dmin": 0.815,
+      "rms": 0.67,
+      "gap": 121,
+      "magType": "mb",
+      "type": "earthquake",
+      "title": "M 6.3 - 94 km SE of Petropavlovsk-Kamchatsky, Russia"
+     },
+     "geometry": {
+      "type": "Point",
+      "coordinates": [
+       159.7031,
+       52.5195,
+       16.375
+      ]
+     },
+     "id": "us6000r0y5"
+    },
+    {
+     "type": "Feature",
+     "properties": {
+      "mag": 6.1,
+      "place": "78 km SE of Petropavlovsk-Kamchatsky, Russia",
+      "time": 1753831844566,
+      "updated": 1760216278040,
+      "tz": null,
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000r0xw",
+      "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000r0xw&format=geojson",
+      "felt": null,
+      "cdi": null,
+      "mmi": 4.712,
+      "alert": "green",
+      "status": "reviewed",
+      "tsunami": 0,
+      "sig": 572,
+      "net": "us",
+      "code": "6000r0xw",
+      "ids": ",us6000r0xw,",
+      "sources": ",us,",
+      "types": ",ground-failure,losspager,origin,phase-data,shakemap,",
+      "nst": 57,
+      "dmin": 0.676,
+      "rms": 0.7,
+      "gap": 67,
+      "magType": "mb",
+      "type": "earthquake",
+      "title": "M 6.1 - 78 km SE of Petropavlovsk-Kamchatsky, Russia"
+     },
+     "geometry": {
+      "type": "Point",
+      "coordinates": [
+       159.5787,
+       52.6498,
+       25.423
+      ]
+     },
+     "id": "us6000r0xw"
+    },
+    {
+     "type": "Feature",
+     "properties": {
+      "mag": 5.9,
+      "place": "137 km ENE of Petropavlovsk-Kamchatsky, Russia",
+      "time": 1753831885020,
+      "updated": 1760216278040,
+      "tz": null,
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000r0xt",
+      "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000r0xt&format=geojson",
+      "felt": null,
+      "cdi": null,
+      "mmi": 4.528,
+      "alert": "green",
+      "status": "reviewed",
+      "tsunami": 0,
+      "sig": 536,
+      "net": "us",
+      "code": "6000r0xt",
+      "ids": ",us6000r0xt,",
+      "sources": ",us,",
+      "types": ",losspager,origin,phase-data,shakemap,",
+      "nst": 61,
+      "dmin": 1.247,
+      "rms": 0.96,
+      "gap": 86,
+      "magType": "mb",
+      "type": "earthquake",
+      "title": "M 5.9 - 137 km ENE of Petropavlovsk-Kamchatsky, Russia"
+     },
+     "geometry": {
+      "type": "Point",
+      "coordinates": [
+       160.4312,
+       53.665,
+       42.734
+      ]
+     },
+     "id": "us6000r0xt"
+    },
+    {
+     "type": "Feature",
+     "properties": {
+      "mag": 5.9,
+      "place": "128 km SSE of Vilyuchinsk, Russia",
+      "time": 1753832093625,
+      "updated": 1760216276040,
+      "tz": null,
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000r0q2",
+      "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000r0q2&format=geojson",
+      "felt": null,
+      "cdi": null,
+      "mmi": 4.242,
+      "alert": "green",
+      "status": "reviewed",
+      "tsunami": 0,
+      "sig": 536,
+      "net": "us",
+      "code": "6000r0q2",
+      "ids": ",us6000r0q2,",
+      "sources": ",us,",
+      "types": ",losspager,origin,phase-data,shakemap,",
+      "nst": 87,
+      "dmin": 1.201,
+      "rms": 0.57,
+      "gap": 66,
+      "magType": "mb",
+      "type": "earthquake",
+      "title": "M 5.9 - 128 km SSE of Vilyuchinsk, Russia"
+     },
+     "geometry": {
+      "type": "Point",
+      "coordinates": [
+       159.121,
+       51.8593,
+       35
+      ]
+     },
+     "id": "us6000r0q2"
+    },
+    {
+     "type": "Feature",
+     "properties": {
+      "mag": 6,
+      "place": "124 km ENE of Ozernovskiy, Russia",
+      "time": 1753832161341,
+      "updated": 1760216277040,
+      "tz": null,
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000r0qc",
+      "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000r0qc&format=geojson",
+      "felt": null,
+      "cdi": null,
+      "mmi": 5.39,
+      "alert": "green",
+      "status": "reviewed",
+      "tsunami": 0,
+      "sig": 554,
+      "net": "us",
+      "code": "6000r0qc",
+      "ids": ",us6000r0qc,",
+      "sources": ",us,",
+      "types": ",losspager,origin,phase-data,shakemap,",
+      "nst": 79,
+      "dmin": 1.295,
+      "rms": 0.75,
+      "gap": 84,
+      "magType": "mb",
+      "type": "earthquake",
+      "title": "M 6.0 - 124 km ENE of Ozernovskiy, Russia"
+     },
+     "geometry": {
+      "type": "Point",
+      "coordinates": [
+       158.2503,
+       51.7541,
+       35
+      ]
+     },
+     "id": "us6000r0qc"
+    },
+    {
+     "type": "Feature",
+     "properties": {
+      "mag": 6,
+      "place": "165 km SSE of Vilyuchinsk, Russia",
+      "time": 1753832254403,
+      "updated": 1760216256040,
+      "tz": null,
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000qwhj",
+      "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qwhj&format=geojson",
+      "felt": null,
+      "cdi": null,
+      "mmi": 4.184,
+      "alert": "green",
+      "status": "reviewed",
+      "tsunami": 0,
+      "sig": 554,
+      "net": "us",
+      "code": "6000qwhj",
+      "ids": ",us6000qwhj,",
+      "sources": ",us,",
+      "types": ",ground-failure,losspager,origin,phase-data,shakemap,",
+      "nst": 83,
+      "dmin": 1.545,
+      "rms": 0.83,
+      "gap": 53,
+      "magType": "mb",
+      "type": "earthquake",
+      "title": "M 6.0 - 165 km SSE of Vilyuchinsk, Russia"
+     },
+     "geometry": {
+      "type": "Point",
+      "coordinates": [
+       159.126,
+       51.5092,
+       35
+      ]
+     },
+     "id": "us6000qwhj"
+    },
+    {
+     "type": "Feature",
+     "properties": {
+      "mag": 5.7,
+      "place": "103 km SE of Vilyuchinsk, Russia",
+      "time": 1753832308604,
+      "updated": 1760216277040,
+      "tz": null,
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000r0ql",
+      "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000r0ql&format=geojson",
+      "felt": null,
+      "cdi": null,
+      "mmi": 3.95,
+      "alert": "green",
+      "status": "reviewed",
+      "tsunami": 0,
+      "sig": 500,
+      "net": "us",
+      "code": "6000r0ql",
+      "ids": ",us6000r0ql,",
+      "sources": ",us,",
+      "types": ",losspager,origin,phase-data,shakemap,",
+      "nst": 39,
+      "dmin": 0.893,
+      "rms": 0.98,
+      "gap": 58,
+      "magType": "mb",
+      "type": "earthquake",
+      "title": "M 5.7 - 103 km SE of Vilyuchinsk, Russia"
+     },
+     "geometry": {
+      "type": "Point",
+      "coordinates": [
+       159.5397,
+       52.3144,
+       35
+      ]
+     },
+     "id": "us6000r0ql"
+    },
+    {
+     "type": "Feature",
+     "properties": {
+      "mag": 5.8,
+      "place": "184 km ESE of Ozernovskiy, Russia",
+      "time": 1753832336675,
+      "updated": 1760216277040,
+      "tz": null,
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000r0qg",
+      "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000r0qg&format=geojson",
+      "felt": null,
+      "cdi": null,
+      "mmi": 3.805,
+      "alert": "green",
+      "status": "reviewed",
+      "tsunami": 0,
+      "sig": 518,
+      "net": "us",
+      "code": "6000r0qg",
+      "ids": ",us6000r0qg,",
+      "sources": ",us,",
+      "types": ",losspager,origin,phase-data,shakemap,",
+      "nst": 66,
+      "dmin": 1.981,
+      "rms": 0.83,
+      "gap": 68,
+      "magType": "mb",
+      "type": "earthquake",
+      "title": "M 5.8 - 184 km ESE of Ozernovskiy, Russia"
+     },
+     "geometry": {
+      "type": "Point",
+      "coordinates": [
+       159.0547,
+       51.0614,
+       10
+      ]
+     },
+     "id": "us6000r0qg"
+    },
+    {
+     "type": "Feature",
+     "properties": {
+      "mag": 5.7,
+      "place": "155 km S of Severo-Kuril’sk, Russia",
+      "time": 1753832427004,
+      "updated": 1760216256040,
+      "tz": null,
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000qwhh",
+      "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qwhh&format=geojson",
+      "felt": null,
+      "cdi": null,
+      "mmi": 3.626,
+      "alert": "green",
+      "status": "reviewed",
+      "tsunami": 0,
+      "sig": 500,
+      "net": "us",
+      "code": "6000qwhh",
+      "ids": ",us6000qwhh,",
+      "sources": ",us,",
+      "types": ",losspager,origin,phase-data,shakemap,",
+      "nst": 52,
+      "dmin": 3.886,
+      "rms": 0.74,
+      "gap": 86,
+      "magType": "mb",
+      "type": "earthquake",
+      "title": "M 5.7 - 155 km S of Severo-Kuril’sk, Russia"
+     },
+     "geometry": {
+      "type": "Point",
+      "coordinates": [
+       156.5191,
+       49.2988,
+       10
+      ]
+     },
+     "id": "us6000qwhh"
+    },
+    {
+     "type": "Feature",
+     "properties": {
+      "mag": 5.7,
+      "place": "138 km S of Severo-Kuril’sk, Russia",
+      "time": 1753832797801,
+      "updated": 1760216256040,
+      "tz": null,
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000qwi3",
+      "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qwi3&format=geojson",
+      "felt": null,
+      "cdi": null,
+      "mmi": 3.862,
+      "alert": "green",
+      "status": "reviewed",
+      "tsunami": 0,
+      "sig": 500,
+      "net": "us",
+      "code": "6000qwi3",
+      "ids": ",us6000qwi3,",
+      "sources": ",us,",
+      "types": ",losspager,origin,phase-data,shakemap,",
+      "nst": 86,
+      "dmin": 3.811,
+      "rms": 0.53,
+      "gap": 112,
+      "magType": "mb",
+      "type": "earthquake",
+      "title": "M 5.7 - 138 km S of Severo-Kuril’sk, Russia"
+     },
+     "geometry": {
+      "type": "Point",
+      "coordinates": [
+       156.1591,
+       49.4264,
+       35
+      ]
+     },
+     "id": "us6000qwi3"
+    },
+    {
+     "type": "Feature",
+     "properties": {
+      "mag": 5.6,
+      "place": "176 km SE of Vilyuchinsk, Russia",
+      "time": 1753832897525,
+      "updated": 1760216256040,
+      "tz": null,
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000qw6g",
+      "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qw6g&format=geojson",
+      "felt": null,
+      "cdi": null,
+      "mmi": 3.425,
+      "alert": "green",
+      "status": "reviewed",
+      "tsunami": 0,
+      "sig": 482,
+      "net": "us",
+      "code": "6000qw6g",
+      "ids": ",us6000qw6g,",
+      "sources": ",us,",
+      "types": ",losspager,origin,phase-data,shakemap,",
+      "nst": 50,
+      "dmin": 1.567,
+      "rms": 0.64,
+      "gap": 122,
+      "magType": "mb",
+      "type": "earthquake",
+      "title": "M 5.6 - 176 km SE of Vilyuchinsk, Russia"
+     },
+     "geometry": {
+      "type": "Point",
+      "coordinates": [
+       160.1586,
+       51.7599,
+       10
+      ]
+     },
+     "id": "us6000qw6g"
+    },
+    {
+     "type": "Feature",
+     "properties": {
+      "mag": 5.7,
+      "place": "177 km ESE of Ozernovskiy, Russia",
+      "time": 1753833298717,
+      "updated": 1760216276040,
+      "tz": null,
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000r0pw",
+      "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000r0pw&format=geojson",
+      "felt": null,
+      "cdi": null,
+      "mmi": 3.729,
+      "alert": "green",
+      "status": "reviewed",
+      "tsunami": 0,
+      "sig": 500,
+      "net": "us",
+      "code": "6000r0pw",
+      "ids": ",us6000r0pw,",
+      "sources": ",us,",
+      "types": ",losspager,origin,phase-data,shakemap,",
+      "nst": 45,
+      "dmin": 2.223,
+      "rms": 0.7,
+      "gap": 131,
+      "magType": "mb",
+      "type": "earthquake",
+      "title": "M 5.7 - 177 km ESE of Ozernovskiy, Russia"
+     },
+     "geometry": {
+      "type": "Point",
+      "coordinates": [
+       158.7836,
+       50.8049,
+       10
+      ]
+     },
+     "id": "us6000r0pw"
+    },
+    {
+     "type": "Feature",
+     "properties": {
+      "mag": 6.9,
+      "place": "125 km SE of Petropavlovsk-Kamchatsky, Russia",
+      "time": 1753834198961,
+      "updated": 1760668378040,
+      "tz": null,
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000qw6q",
+      "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qw6q&format=geojson",
+      "felt": 5,
+      "cdi": 6.6,
+      "mmi": 6.246,
+      "alert": "yellow",
+      "status": "reviewed",
+      "tsunami": 0,
+      "sig": 736,
+      "net": "us",
+      "code": "6000qw6q",
+      "ids": ",us6000qw6q,",
+      "sources": ",us,",
+      "types": ",dyfi,ground-failure,losspager,origin,phase-data,shakemap,",
+      "nst": 82,
+      "dmin": 1.087,
+      "rms": 0.95,
+      "gap": 68,
+      "magType": "mww",
+      "type": "earthquake",
+      "title": "M 6.9 - 125 km SE of Petropavlovsk-Kamchatsky, Russia"
+     },
+     "geometry": {
+      "type": "Point",
+      "coordinates": [
+       159.8008,
+       52.1946,
+       36.622
+      ]
+     },
+     "id": "us6000qw6q"
+    },
+    {
+     "type": "Feature",
+     "properties": {
+      "mag": 5.8,
+      "place": "159 km SE of Vilyuchinsk, Russia",
+      "time": 1753834340745,
+      "updated": 1760668380040,
+      "tz": null,
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000r1em",
+      "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000r1em&format=geojson",
+      "felt": null,
+      "cdi": null,
+      "mmi": 3.809,
+      "alert": "green",
+      "status": "reviewed",
+      "tsunami": 0,
+      "sig": 518,
+      "net": "us",
+      "code": "6000r1em",
+      "ids": ",us6000r1em,",
+      "sources": ",us,",
+      "types": ",losspager,origin,phase-data,shakemap,",
+      "nst": 44,
+      "dmin": 1.433,
+      "rms": 0.63,
+      "gap": 60,
+      "magType": "mb",
+      "type": "earthquake",
+      "title": "M 5.8 - 159 km SE of Vilyuchinsk, Russia"
+     },
+     "geometry": {
+      "type": "Point",
+      "coordinates": [
+       159.8227,
+       51.7857,
+       25.681
+      ]
+     },
+     "id": "us6000r1em"
+    },
+    {
+     "type": "Feature",
+     "properties": {
+      "mag": 6.2,
+      "place": "126 km SE of Vilyuchinsk, Russia",
+      "time": 1753834566520,
+      "updated": 1760668382040,
+      "tz": null,
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000qw6s",
+      "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qw6s&format=geojson",
+      "felt": null,
+      "cdi": null,
+      "mmi": 4.282,
+      "alert": "green",
+      "status": "reviewed",
+      "tsunami": 0,
+      "sig": 591,
+      "net": "us",
+      "code": "6000qw6s",
+      "ids": ",us6000qw6s,",
+      "sources": ",us,",
+      "types": ",ground-failure,losspager,origin,phase-data,shakemap,",
+      "nst": 113,
+      "dmin": 1.119,
+      "rms": 0.97,
+      "gap": 36,
+      "magType": "mb",
+      "type": "earthquake",
+      "title": "M 6.2 - 126 km SE of Vilyuchinsk, Russia"
+     },
+     "geometry": {
+      "type": "Point",
+      "coordinates": [
+       159.692,
+       52.1048,
+       35
+      ]
+     },
+     "id": "us6000qw6s"
+    },
+    {
+     "type": "Feature",
+     "properties": {
+      "mag": 5.7,
+      "place": "127 km SSE of Vilyuchinsk, Russia",
+      "time": 1753835726004,
+      "updated": 1760668400040,
+      "tz": null,
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000qw6z",
+      "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qw6z&format=geojson",
+      "felt": null,
+      "cdi": null,
+      "mmi": 4.059,
+      "alert": "green",
+      "status": "reviewed",
+      "tsunami": 0,
+      "sig": 500,
+      "net": "us",
+      "code": "6000qw6z",
+      "ids": ",us6000qw6z,",
+      "sources": ",us,",
+      "types": ",losspager,origin,phase-data,shakemap,",
+      "nst": 68,
+      "dmin": 1.172,
+      "rms": 0.68,
+      "gap": 92,
+      "magType": "mb",
+      "type": "earthquake",
+      "title": "M 5.7 - 127 km SSE of Vilyuchinsk, Russia"
+     },
+     "geometry": {
+      "type": "Point",
+      "coordinates": [
+       159.255,
+       51.9131,
+       35
+      ]
+     },
+     "id": "us6000qw6z"
+    },
+    {
+     "type": "Feature",
+     "properties": {
+      "mag": 5.7,
+      "place": "181 km SSE of Vilyuchinsk, Russia",
+      "time": 1753837118149,
+      "updated": 1760668413040,
+      "tz": null,
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000qw74",
+      "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qw74&format=geojson",
+      "felt": null,
+      "cdi": null,
+      "mmi": 3.558,
+      "alert": "green",
+      "status": "reviewed",
+      "tsunami": 0,
+      "sig": 500,
+      "net": "us",
+      "code": "6000qw74",
+      "ids": ",us6000qw74,",
+      "sources": ",us,",
+      "types": ",losspager,origin,phase-data,shakemap,",
+      "nst": 75,
+      "dmin": 1.632,
+      "rms": 0.98,
+      "gap": 60,
+      "magType": "mb",
+      "type": "earthquake",
+      "title": "M 5.7 - 181 km SSE of Vilyuchinsk, Russia"
+     },
+     "geometry": {
+      "type": "Point",
+      "coordinates": [
+       159.8996,
+       51.585,
+       10
+      ]
+     },
+     "id": "us6000qw74"
+    },
+    {
+     "type": "Feature",
+     "properties": {
+      "mag": 5.7,
+      "place": "144 km S of Vilyuchinsk, Russia",
+      "time": 1753837402907,
+      "updated": 1760668416040,
+      "tz": null,
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000qw75",
+      "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qw75&format=geojson",
+      "felt": null,
+      "cdi": null,
+      "mmi": 4.119,
+      "alert": "green",
+      "status": "reviewed",
+      "tsunami": 0,
+      "sig": 500,
+      "net": "us",
+      "code": "6000qw75",
+      "ids": ",us6000qw75,",
+      "sources": ",us,",
+      "types": ",losspager,origin,phase-data,shakemap,",
+      "nst": 92,
+      "dmin": 1.371,
+      "rms": 1.04,
+      "gap": 109,
+      "magType": "mb",
+      "type": "earthquake",
+      "title": "M 5.7 - 144 km S of Vilyuchinsk, Russia"
+     },
+     "geometry": {
+      "type": "Point",
+      "coordinates": [
+       158.8083,
+       51.6577,
+       35
+      ]
+     },
+     "id": "us6000qw75"
+    },
+    {
+     "type": "Feature",
+     "properties": {
+      "mag": 5.6,
+      "place": "136 km ESE of Ozernovskiy, Russia",
+      "time": 1753839496776,
+      "updated": 1760668446040,
+      "tz": null,
+      "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000qw7f",
+      "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qw7f&format=geojson",
+      "felt": null,
+      "cdi": null,
+      "mmi": 3.936,
+      "alert": "green",
+      "status": "reviewed",
+      "tsunami": 0,
+      "sig": 482,
+      "net": "us",
+      "code": "6000qw7f",
+      "ids": ",us6000qw7f,",
+      "sources": ",us,",
+      "types": ",losspager,origin,phase-data,shakemap,",
+      "nst": 158,
+      "dmin": 2.021,
+      "rms": 0.78,
+      "gap": 76,
+      "magType": "mb",
+      "type": "earthquake",
+      "title": "M 5.6 - 136 km ESE of Ozernovskiy, Russia"
+     },
+     "geometry": {
+      "type": "Point",
+      "coordinates": [
+       158.3088,
+       51.0169,
+       35
+      ]
+     },
+     "id": "us6000qw7f"
+    }
+   ],
+   "bbox": [
+    156.1591,
+    49.2988,
+    10,
+    160.4312,
+    53.665,
+    42.734
+   ]
+  },
+  "histories": {
+   "us6000qw60": {
+    "origin_versions": [
+     {
+      "source": "pt",
+      "code": "pt25210002",
+      "status": "UPDATE",
+      "update_time_ms": 1753832048161,
+      "preferred_weight": 6,
+      "magnitude": 8.0,
+      "magnitude_type": "Mi",
+      "eventtime": "2025-07-29T23:24:52.000Z",
+      "latitude": 52.209,
+      "longitude": 159.979,
+      "depth_km": 73.9,
+      "review_status": "REVIEWED"
+     },
+     {
+      "source": "at",
+      "code": "at00t06p1k",
+      "status": "UPDATE",
+      "update_time_ms": 1753832166206,
+      "preferred_weight": 6,
+      "magnitude": 8.0,
+      "magnitude_type": "Mi",
+      "eventtime": "2025-07-29T23:24:56.000Z",
+      "latitude": 52.2,
+      "longitude": 160.0,
+      "depth_km": 74.0,
+      "review_status": "REVIEWED"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw60",
+      "status": "UPDATE",
+      "update_time_ms": 1753832636040,
+      "preferred_weight": 158,
+      "magnitude": 8.0,
+      "magnitude_type": "mww",
+      "eventtime": "2025-07-29T23:24:50.851Z",
+      "latitude": 52.4732,
+      "longitude": 160.396,
+      "depth_km": 19.263,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw60",
+      "status": "UPDATE",
+      "update_time_ms": 1753834971040,
+      "preferred_weight": 158,
+      "magnitude": 8.7,
+      "magnitude_type": "mww",
+      "eventtime": "2025-07-29T23:24:50.615Z",
+      "latitude": 52.5097,
+      "longitude": 160.261,
+      "depth_km": 18.198,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw60",
+      "status": "UPDATE",
+      "update_time_ms": 1753839158040,
+      "preferred_weight": 158,
+      "magnitude": 8.8,
+      "magnitude_type": "mww",
+      "eventtime": "2025-07-29T23:24:50.842Z",
+      "latitude": 52.53,
+      "longitude": 160.1648,
+      "depth_km": 20.687,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw60",
+      "status": "UPDATE",
+      "update_time_ms": 1753930685040,
+      "preferred_weight": 158,
+      "magnitude": 8.8,
+      "magnitude_type": "mww",
+      "eventtime": "2025-07-29T23:24:52.603Z",
+      "latitude": 52.5117,
+      "longitude": 160.3244,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw60",
+      "status": "UPDATE",
+      "update_time_ms": 1754024856040,
+      "preferred_weight": 158,
+      "magnitude": 8.8,
+      "magnitude_type": "mww",
+      "eventtime": "2025-07-29T23:24:52.625Z",
+      "latitude": 52.5116,
+      "longitude": 160.3244,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw60",
+      "status": "UPDATE",
+      "update_time_ms": 1755215802040,
+      "preferred_weight": 158,
+      "magnitude": 8.8,
+      "magnitude_type": "mww",
+      "eventtime": "2025-07-29T23:24:52.638Z",
+      "latitude": 52.5512,
+      "longitude": 160.2585,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw60",
+      "status": "UPDATE",
+      "update_time_ms": 1755567121040,
+      "preferred_weight": 158,
+      "magnitude": 8.8,
+      "magnitude_type": "mww",
+      "eventtime": "2025-07-29T23:24:52.570Z",
+      "latitude": 52.5324,
+      "longitude": 160.2522,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw60",
+      "status": "UPDATE",
+      "update_time_ms": 1755741658040,
+      "preferred_weight": 158,
+      "magnitude": 8.8,
+      "magnitude_type": "mww",
+      "eventtime": "2025-07-29T23:24:52.480Z",
+      "latitude": 52.498,
+      "longitude": 160.2637,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw60",
+      "status": "UPDATE",
+      "update_time_ms": 1759091412040,
+      "preferred_weight": 158,
+      "magnitude": 8.8,
+      "magnitude_type": "mww",
+      "eventtime": "2025-07-29T23:24:52.483Z",
+      "latitude": 52.4948,
+      "longitude": 160.2395,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw60",
+      "status": "UPDATE",
+      "update_time_ms": 1759864327040,
+      "preferred_weight": 158,
+      "magnitude": 8.8,
+      "magnitude_type": "mww",
+      "eventtime": "2025-07-29T23:24:52.483Z",
+      "latitude": 52.4948,
+      "longitude": 160.2395,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw60",
+      "status": "UPDATE",
+      "update_time_ms": 1760216255040,
+      "preferred_weight": 158,
+      "magnitude": 8.8,
+      "magnitude_type": "mww",
+      "eventtime": "2025-07-29T23:24:52.483Z",
+      "latitude": 52.4948,
+      "longitude": 160.2395,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     }
+    ],
+    "note": ""
+   },
+   "us6000r0y5": {
+    "origin_versions": [
+     {
+      "source": "us",
+      "code": "us6000r0y5",
+      "status": "UPDATE",
+      "update_time_ms": 1755264666040,
+      "preferred_weight": 158,
+      "magnitude": 6.2,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:30:03.670Z",
+      "latitude": 52.4625,
+      "longitude": 159.7077,
+      "depth_km": 14.805,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000r0y5",
+      "status": "UPDATE",
+      "update_time_ms": 1755741893040,
+      "preferred_weight": 158,
+      "magnitude": 6.1,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:30:08.497Z",
+      "latitude": 52.4787,
+      "longitude": 159.7191,
+      "depth_km": 53.789,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000r0y5",
+      "status": "UPDATE",
+      "update_time_ms": 1756427370040,
+      "preferred_weight": 158,
+      "magnitude": 6.3,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:30:03.032Z",
+      "latitude": 52.5195,
+      "longitude": 159.7031,
+      "depth_km": 16.375,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000r0y5",
+      "status": "UPDATE",
+      "update_time_ms": 1760216278040,
+      "preferred_weight": 158,
+      "magnitude": 6.3,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:30:03.032Z",
+      "latitude": 52.5195,
+      "longitude": 159.7031,
+      "depth_km": 16.375,
+      "review_status": "reviewed"
+     }
+    ],
+    "note": ""
+   },
+   "us6000r0xw": {
+    "origin_versions": [
+     {
+      "source": "us",
+      "code": "us6000r0xw",
+      "status": "UPDATE",
+      "update_time_ms": 1755249096040,
+      "preferred_weight": 158,
+      "magnitude": 6.1,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:30:44.578Z",
+      "latitude": 52.6749,
+      "longitude": 159.6078,
+      "depth_km": 24.73,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000r0xw",
+      "status": "UPDATE",
+      "update_time_ms": 1755742065040,
+      "preferred_weight": 158,
+      "magnitude": 6.1,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:30:44.566Z",
+      "latitude": 52.6498,
+      "longitude": 159.5787,
+      "depth_km": 25.423,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000r0xw",
+      "status": "UPDATE",
+      "update_time_ms": 1760216278040,
+      "preferred_weight": 158,
+      "magnitude": 6.1,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:30:44.566Z",
+      "latitude": 52.6498,
+      "longitude": 159.5787,
+      "depth_km": 25.423,
+      "review_status": "reviewed"
+     }
+    ],
+    "note": ""
+   },
+   "us6000r0xt": {
+    "origin_versions": [
+     {
+      "source": "us",
+      "code": "us6000r0xt",
+      "status": "UPDATE",
+      "update_time_ms": 1755466463040,
+      "preferred_weight": 158,
+      "magnitude": 5.9,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:31:25.020Z",
+      "latitude": 53.665,
+      "longitude": 160.4312,
+      "depth_km": 42.734,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000r0xt",
+      "status": "UPDATE",
+      "update_time_ms": 1760216278040,
+      "preferred_weight": 158,
+      "magnitude": 5.9,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:31:25.020Z",
+      "latitude": 53.665,
+      "longitude": 160.4312,
+      "depth_km": 42.734,
+      "review_status": "reviewed"
+     }
+    ],
+    "note": ""
+   },
+   "us6000r0q2": {
+    "origin_versions": [
+     {
+      "source": "us",
+      "code": "us6000r0q2",
+      "status": "UPDATE",
+      "update_time_ms": 1755217198040,
+      "preferred_weight": 158,
+      "magnitude": 5.9,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:34:53.815Z",
+      "latitude": 51.8877,
+      "longitude": 159.121,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000r0q2",
+      "status": "UPDATE",
+      "update_time_ms": 1755218557040,
+      "preferred_weight": 158,
+      "magnitude": 5.9,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:34:53.564Z",
+      "latitude": 51.8558,
+      "longitude": 159.1495,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000r0q2",
+      "status": "UPDATE",
+      "update_time_ms": 1756427588040,
+      "preferred_weight": 158,
+      "magnitude": 5.9,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:34:53.625Z",
+      "latitude": 51.8593,
+      "longitude": 159.121,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000r0q2",
+      "status": "UPDATE",
+      "update_time_ms": 1760216276040,
+      "preferred_weight": 158,
+      "magnitude": 5.9,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:34:53.625Z",
+      "latitude": 51.8593,
+      "longitude": 159.121,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     }
+    ],
+    "note": ""
+   },
+   "us6000r0qc": {
+    "origin_versions": [
+     {
+      "source": "us",
+      "code": "us6000r0qc",
+      "status": "UPDATE",
+      "update_time_ms": 1755217980040,
+      "preferred_weight": 158,
+      "magnitude": 5.9,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:36:06.338Z",
+      "latitude": 51.8732,
+      "longitude": 158.2404,
+      "depth_km": 77.829,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000r0qc",
+      "status": "UPDATE",
+      "update_time_ms": 1756428425040,
+      "preferred_weight": 158,
+      "magnitude": 6.0,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:36:01.341Z",
+      "latitude": 51.7541,
+      "longitude": 158.2503,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000r0qc",
+      "status": "UPDATE",
+      "update_time_ms": 1760216277040,
+      "preferred_weight": 158,
+      "magnitude": 6.0,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:36:01.341Z",
+      "latitude": 51.7541,
+      "longitude": 158.2503,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     }
+    ],
+    "note": ""
+   },
+   "us6000qwhj": {
+    "origin_versions": [
+     {
+      "source": "us",
+      "code": "us6000qwhj",
+      "status": "UPDATE",
+      "update_time_ms": 1753934134040,
+      "preferred_weight": 158,
+      "magnitude": 6.0,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:37:34.957Z",
+      "latitude": 51.5627,
+      "longitude": 159.0872,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qwhj",
+      "status": "UPDATE",
+      "update_time_ms": 1755220374040,
+      "preferred_weight": 158,
+      "magnitude": 6.0,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:37:34.403Z",
+      "latitude": 51.5092,
+      "longitude": 159.126,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qwhj",
+      "status": "UPDATE",
+      "update_time_ms": 1755742992040,
+      "preferred_weight": 158,
+      "magnitude": 6.0,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:37:34.403Z",
+      "latitude": 51.5092,
+      "longitude": 159.126,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qwhj",
+      "status": "UPDATE",
+      "update_time_ms": 1760216256040,
+      "preferred_weight": 158,
+      "magnitude": 6.0,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:37:34.403Z",
+      "latitude": 51.5092,
+      "longitude": 159.126,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     }
+    ],
+    "note": ""
+   },
+   "us6000r0ql": {
+    "origin_versions": [
+     {
+      "source": "us",
+      "code": "us6000r0ql",
+      "status": "UPDATE",
+      "update_time_ms": 1755222721040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:38:28.604Z",
+      "latitude": 52.3144,
+      "longitude": 159.5397,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000r0ql",
+      "status": "UPDATE",
+      "update_time_ms": 1755743107040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:38:28.604Z",
+      "latitude": 52.3144,
+      "longitude": 159.5397,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000r0ql",
+      "status": "UPDATE",
+      "update_time_ms": 1760216277040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:38:28.604Z",
+      "latitude": 52.3144,
+      "longitude": 159.5397,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     }
+    ],
+    "note": ""
+   },
+   "us6000r0qg": {
+    "origin_versions": [
+     {
+      "source": "us",
+      "code": "us6000r0qg",
+      "status": "UPDATE",
+      "update_time_ms": 1755232303040,
+      "preferred_weight": 158,
+      "magnitude": 5.8,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:38:56.687Z",
+      "latitude": 51.0689,
+      "longitude": 159.0717,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000r0qg",
+      "status": "UPDATE",
+      "update_time_ms": 1755743684040,
+      "preferred_weight": 158,
+      "magnitude": 5.8,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:38:56.675Z",
+      "latitude": 51.0614,
+      "longitude": 159.0547,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000r0qg",
+      "status": "UPDATE",
+      "update_time_ms": 1760216277040,
+      "preferred_weight": 158,
+      "magnitude": 5.8,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:38:56.675Z",
+      "latitude": 51.0614,
+      "longitude": 159.0547,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     }
+    ],
+    "note": ""
+   },
+   "us6000qwhh": {
+    "origin_versions": [
+     {
+      "source": "us",
+      "code": "us6000qwhh",
+      "status": "UPDATE",
+      "update_time_ms": 1753934960040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:40:27.237Z",
+      "latitude": 49.308,
+      "longitude": 156.5494,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qwhh",
+      "status": "UPDATE",
+      "update_time_ms": 1755232560040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:40:27.004Z",
+      "latitude": 49.2988,
+      "longitude": 156.5191,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qwhh",
+      "status": "UPDATE",
+      "update_time_ms": 1755744347040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:40:27.004Z",
+      "latitude": 49.2988,
+      "longitude": 156.5191,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qwhh",
+      "status": "UPDATE",
+      "update_time_ms": 1760216256040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:40:27.004Z",
+      "latitude": 49.2988,
+      "longitude": 156.5191,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     }
+    ],
+    "note": ""
+   },
+   "us6000qwi3": {
+    "origin_versions": [
+     {
+      "source": "us",
+      "code": "us6000qwi3",
+      "status": "UPDATE",
+      "update_time_ms": 1753938219040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:46:37.854Z",
+      "latitude": 49.423,
+      "longitude": 156.1744,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qwi3",
+      "status": "UPDATE",
+      "update_time_ms": 1755462000040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:46:37.789Z",
+      "latitude": 49.4137,
+      "longitude": 156.1336,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qwi3",
+      "status": "UPDATE",
+      "update_time_ms": 1755745672040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:46:37.801Z",
+      "latitude": 49.4264,
+      "longitude": 156.1591,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qwi3",
+      "status": "UPDATE",
+      "update_time_ms": 1760216256040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:46:37.801Z",
+      "latitude": 49.4264,
+      "longitude": 156.1591,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     }
+    ],
+    "note": ""
+   },
+   "us6000qw6g": {
+    "origin_versions": [
+     {
+      "source": "us",
+      "code": "us6000qw6g",
+      "status": "UPDATE",
+      "update_time_ms": 1753848001040,
+      "preferred_weight": 158,
+      "magnitude": 5.6,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:48:16.448Z",
+      "latitude": 51.5395,
+      "longitude": 160.1554,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw6g",
+      "status": "UPDATE",
+      "update_time_ms": 1753938926040,
+      "preferred_weight": 158,
+      "magnitude": 5.6,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:48:16.536Z",
+      "latitude": 51.552,
+      "longitude": 160.18,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw6g",
+      "status": "UPDATE",
+      "update_time_ms": 1755462713040,
+      "preferred_weight": 158,
+      "magnitude": 5.6,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:48:17.309Z",
+      "latitude": 51.718,
+      "longitude": 160.2244,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw6g",
+      "status": "UPDATE",
+      "update_time_ms": 1755745865040,
+      "preferred_weight": 158,
+      "magnitude": 5.6,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:48:17.525Z",
+      "latitude": 51.7599,
+      "longitude": 160.1586,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw6g",
+      "status": "UPDATE",
+      "update_time_ms": 1760216256040,
+      "preferred_weight": 158,
+      "magnitude": 5.6,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:48:17.525Z",
+      "latitude": 51.7599,
+      "longitude": 160.1586,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     }
+    ],
+    "note": ""
+   },
+   "us6000r0pw": {
+    "origin_versions": [
+     {
+      "source": "us",
+      "code": "us6000r0pw",
+      "status": "UPDATE",
+      "update_time_ms": 1755476979040,
+      "preferred_weight": 158,
+      "magnitude": 5.6,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:54:58.977Z",
+      "latitude": 50.8364,
+      "longitude": 158.8304,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000r0pw",
+      "status": "UPDATE",
+      "update_time_ms": 1755477069040,
+      "preferred_weight": 158,
+      "magnitude": 5.6,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:54:58.872Z",
+      "latitude": 50.8275,
+      "longitude": 158.8395,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000r0pw",
+      "status": "UPDATE",
+      "update_time_ms": 1755748012040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:54:58.717Z",
+      "latitude": 50.8049,
+      "longitude": 158.7836,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000r0pw",
+      "status": "UPDATE",
+      "update_time_ms": 1760216276040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-29T23:54:58.717Z",
+      "latitude": 50.8049,
+      "longitude": 158.7836,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     }
+    ],
+    "note": ""
+   },
+   "us6000qw6q": {
+    "origin_versions": [
+     {
+      "source": "us",
+      "code": "us6000qw6q",
+      "status": "UPDATE",
+      "update_time_ms": 1753836185040,
+      "preferred_weight": 158,
+      "magnitude": 6.9,
+      "magnitude_type": "mww",
+      "eventtime": "2025-07-30T00:09:53.851Z",
+      "latitude": 52.0824,
+      "longitude": 160.0803,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw6q",
+      "status": "UPDATE",
+      "update_time_ms": 1754019574040,
+      "preferred_weight": 158,
+      "magnitude": 6.9,
+      "magnitude_type": "mww",
+      "eventtime": "2025-07-30T00:09:57.929Z",
+      "latitude": 52.1605,
+      "longitude": 159.9138,
+      "depth_km": 25.342,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw6q",
+      "status": "UPDATE",
+      "update_time_ms": 1755464967040,
+      "preferred_weight": 158,
+      "magnitude": 6.9,
+      "magnitude_type": "mww",
+      "eventtime": "2025-07-30T00:09:56.968Z",
+      "latitude": 52.2075,
+      "longitude": 159.8598,
+      "depth_km": 20.794,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw6q",
+      "status": "UPDATE",
+      "update_time_ms": 1756351561040,
+      "preferred_weight": 158,
+      "magnitude": 6.9,
+      "magnitude_type": "mww",
+      "eventtime": "2025-07-30T00:09:58.961Z",
+      "latitude": 52.1946,
+      "longitude": 159.8008,
+      "depth_km": 36.622,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw6q",
+      "status": "UPDATE",
+      "update_time_ms": 1760668378040,
+      "preferred_weight": 158,
+      "magnitude": 6.9,
+      "magnitude_type": "mww",
+      "eventtime": "2025-07-30T00:09:58.961Z",
+      "latitude": 52.1946,
+      "longitude": 159.8008,
+      "depth_km": 36.622,
+      "review_status": "reviewed"
+     }
+    ],
+    "note": ""
+   },
+   "us6000r1em": {
+    "origin_versions": [
+     {
+      "source": "us",
+      "code": "us6000r1em",
+      "status": "UPDATE",
+      "update_time_ms": 1756072386040,
+      "preferred_weight": 158,
+      "magnitude": 5.9,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T00:12:20.845Z",
+      "latitude": 51.7767,
+      "longitude": 159.8619,
+      "depth_km": 26.969,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000r1em",
+      "status": "UPDATE",
+      "update_time_ms": 1756073240040,
+      "preferred_weight": 158,
+      "magnitude": 5.8,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T00:12:20.745Z",
+      "latitude": 51.7857,
+      "longitude": 159.8227,
+      "depth_km": 25.681,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000r1em",
+      "status": "UPDATE",
+      "update_time_ms": 1760668380040,
+      "preferred_weight": 158,
+      "magnitude": 5.8,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T00:12:20.745Z",
+      "latitude": 51.7857,
+      "longitude": 159.8227,
+      "depth_km": 25.681,
+      "review_status": "reviewed"
+     }
+    ],
+    "note": ""
+   },
+   "us6000qw6s": {
+    "origin_versions": [
+     {
+      "source": "us",
+      "code": "us6000qw6s",
+      "status": "UPDATE",
+      "update_time_ms": 1753836271040,
+      "preferred_weight": 158,
+      "magnitude": 6.3,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T00:16:03.101Z",
+      "latitude": 52.0349,
+      "longitude": 159.6752,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw6s",
+      "status": "UPDATE",
+      "update_time_ms": 1754020379040,
+      "preferred_weight": 158,
+      "magnitude": 6.2,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T00:16:06.451Z",
+      "latitude": 52.0572,
+      "longitude": 159.714,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw6s",
+      "status": "UPDATE",
+      "update_time_ms": 1755465185040,
+      "preferred_weight": 158,
+      "magnitude": 6.2,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T00:16:06.522Z",
+      "latitude": 52.0992,
+      "longitude": 159.6673,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw6s",
+      "status": "UPDATE",
+      "update_time_ms": 1756352107040,
+      "preferred_weight": 158,
+      "magnitude": 6.2,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T00:16:06.520Z",
+      "latitude": 52.1048,
+      "longitude": 159.692,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw6s",
+      "status": "UPDATE",
+      "update_time_ms": 1760668382040,
+      "preferred_weight": 158,
+      "magnitude": 6.2,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T00:16:06.520Z",
+      "latitude": 52.1048,
+      "longitude": 159.692,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     }
+    ],
+    "note": ""
+   },
+   "us6000qw6z": {
+    "origin_versions": [
+     {
+      "source": "us",
+      "code": "us6000qw6z",
+      "status": "UPDATE",
+      "update_time_ms": 1753837029040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T00:35:22.240Z",
+      "latitude": 51.8397,
+      "longitude": 159.3217,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw6z",
+      "status": "UPDATE",
+      "update_time_ms": 1754023094040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T00:35:26.662Z",
+      "latitude": 51.86,
+      "longitude": 159.4376,
+      "depth_km": 41.777,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw6z",
+      "status": "UPDATE",
+      "update_time_ms": 1755465497040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T00:35:26.140Z",
+      "latitude": 51.9188,
+      "longitude": 159.3001,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw6z",
+      "status": "UPDATE",
+      "update_time_ms": 1756351938040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T00:35:26.004Z",
+      "latitude": 51.9131,
+      "longitude": 159.255,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw6z",
+      "status": "UPDATE",
+      "update_time_ms": 1760668400040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T00:35:26.004Z",
+      "latitude": 51.9131,
+      "longitude": 159.255,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     }
+    ],
+    "note": ""
+   },
+   "us6000qw74": {
+    "origin_versions": [
+     {
+      "source": "us",
+      "code": "us6000qw74",
+      "status": "UPDATE",
+      "update_time_ms": 1753839359040,
+      "preferred_weight": 158,
+      "magnitude": 5.8,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T00:58:40.123Z",
+      "latitude": 51.7074,
+      "longitude": 159.4094,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw74",
+      "status": "UPDATE",
+      "update_time_ms": 1754024460040,
+      "preferred_weight": 158,
+      "magnitude": 5.8,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T00:58:38.321Z",
+      "latitude": 51.6068,
+      "longitude": 159.8611,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw74",
+      "status": "UPDATE",
+      "update_time_ms": 1755465968040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T00:58:38.150Z",
+      "latitude": 51.5894,
+      "longitude": 159.9029,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw74",
+      "status": "UPDATE",
+      "update_time_ms": 1756073152040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T00:58:38.163Z",
+      "latitude": 51.5894,
+      "longitude": 159.8971,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw74",
+      "status": "UPDATE",
+      "update_time_ms": 1756352293040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T00:58:38.149Z",
+      "latitude": 51.585,
+      "longitude": 159.8996,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw74",
+      "status": "UPDATE",
+      "update_time_ms": 1760668413040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T00:58:38.149Z",
+      "latitude": 51.585,
+      "longitude": 159.8996,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     }
+    ],
+    "note": ""
+   },
+   "us6000qw75": {
+    "origin_versions": [
+     {
+      "source": "us",
+      "code": "us6000qw75",
+      "status": "UPDATE",
+      "update_time_ms": 1753838574040,
+      "preferred_weight": 158,
+      "magnitude": 5.8,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T01:03:18.769Z",
+      "latitude": 51.6453,
+      "longitude": 158.6633,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw75",
+      "status": "UPDATE",
+      "update_time_ms": 1755399434040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T01:03:22.907Z",
+      "latitude": 51.6577,
+      "longitude": 158.8083,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw75",
+      "status": "UPDATE",
+      "update_time_ms": 1760668416040,
+      "preferred_weight": 158,
+      "magnitude": 5.7,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T01:03:22.907Z",
+      "latitude": 51.6577,
+      "longitude": 158.8083,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     }
+    ],
+    "note": ""
+   },
+   "us6000qw7f": {
+    "origin_versions": [
+     {
+      "source": "us",
+      "code": "us6000qw7f",
+      "status": "UPDATE",
+      "update_time_ms": 1753840864040,
+      "preferred_weight": 158,
+      "magnitude": 5.6,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T01:38:13.101Z",
+      "latitude": 50.9601,
+      "longitude": 158.4157,
+      "depth_km": 10.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw7f",
+      "status": "UPDATE",
+      "update_time_ms": 1755836521040,
+      "preferred_weight": 158,
+      "magnitude": 5.6,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T01:38:16.776Z",
+      "latitude": 51.0169,
+      "longitude": 158.3088,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     },
+     {
+      "source": "us",
+      "code": "us6000qw7f",
+      "status": "UPDATE",
+      "update_time_ms": 1760668446040,
+      "preferred_weight": 158,
+      "magnitude": 5.6,
+      "magnitude_type": "mb",
+      "eventtime": "2025-07-30T01:38:16.776Z",
+      "latitude": 51.0169,
+      "longitude": 158.3088,
+      "depth_km": 35.0,
+      "review_status": "reviewed"
+     }
+    ],
+    "note": ""
+   }
+  }
+ }
+}

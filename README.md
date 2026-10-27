@@ -141,9 +141,17 @@ uv run worldline authorize experiments/out/bundle.json --policy policies/release
 # show that invalidating an assumption revokes authorization
 uv run worldline authorize experiments/out/bundle.json --policy policies/release.yaml --public-key policies/kernel_public.pem --artifact-digest $(git rev-parse HEAD) --invalidate-assumption "bounded horizon" --out /tmp/revoked.json
 
+# a scenario whose truth stream is real USGS data (offline from the committed snapshot; drop --offline to re-fetch)
+uv run worldline real usgs --start 2025-07-29T23:20:00Z --end 2025-07-30T01:40:00Z --minmag 5.5 --offline
+
+# the same root/explore/minimize/genome-challenge pipeline against a real FastAPI service (needs --extra service)
+uv run worldline http demo --budget 60 --seed 42 --out experiments/out_http
+
 # benchmark guided vs random over seeds
 uv run python experiments/benchmark.py --seeds 5 --budget 150 --out experiments/out/benchmark.json
 ```
+
+Real data: `scenarios/real/` holds a scenario whose events, magnitudes and revision times are real USGS records, while its roles, latencies and decision rule are labelled models. See [docs/REAL_DATA.md](docs/REAL_DATA.md) for provenance, results and the claim ceiling.
 
 Writing a scenario: copy `scenarios/port_alert.yaml`. Roles declare delivery latency, jitter, ordering and visible policy labels. Actors declare decision rules in the predicate DSL, for example `count(kind='sighting', payload.confidence>=0.6, not_corrected) >= 2`. Invariants live in `invariants/core.yaml`.
 
@@ -158,9 +166,13 @@ worldline/
   explorer/        explore (guided vs random), ddmin, minimize, causal_diff
   genome/          FailureGenome extract and challenge
   evidence/        typed records, sealed Bundle, Policy, authorize, kernel recompute
+  adapters/        real-data adapters (usgs: USGS FDSN events -> scenario with provenance)
+                   http/: drive a real ASGI service with truth + fault schedules (docs/REAL_SERVICE.md)
   cli/             `worldline` command
+examples/service_demo/  example FastAPI approvals service the http adapter runs against
 service/           FastAPI public verifier (Cloud Run): viewer + /api/verify + /api/authorize
-scenarios/         port_alert, convoy_lostlink, convoy_lostlink_immune (negative control)
+scenarios/         port_alert, convoy_lostlink, convoy_lostlink_immune (negative control); real/ (USGS-derived)
+data/real/usgs/    pinned USGS snapshot with provenance (source URL, fetch time, SHA-256, public domain)
 invariants/        core.yaml
 policies/          release.yaml, kernel_public.pem
 experiments/       benchmark.py; out/ is generated and ignored
@@ -250,7 +262,7 @@ Nothing here is PROVED_WITHIN_MODEL yet. All scenarios are synthetic and labelle
 
 ## Roadmap and limitations
 
-Limitations now: two scenarios, one invariant family drives the headline; transfer is substrate-internal; no partial-order reduction, so exploration is budget-bound; delay values are swept, not solved; the Duo flow definitions were only partly verifiable against official documentation at build time. The roadmap, with the experiment that would settle each item, is in [docs/ROADMAP.md](docs/ROADMAP.md).
+Limitations now: two scenarios, one invariant family drives the headline; transfer is substrate-internal; no partial-order reduction, so exploration is budget-bound; delay values are swept, not solved; the Duo flow definitions were only partly verifiable against official documentation at build time. The roadmap, with the experiment that would settle each item, is in [docs/ROADMAP.md](docs/ROADMAP.md). A first run against real request-handling code (an example service, with WORLDLINE still driving delivery timing) is described in [docs/REAL_SERVICE.md](docs/REAL_SERVICE.md).
 
 ## Contributing
 

@@ -3,6 +3,7 @@
     run | explore | minimize | genome extract | genome challenge | report      (agent side)
     keygen | verify | authorize                                               (kernel side)
     demo                                                                      (whole chain, locally)
+    real usgs                                                                 (real-data scenario from USGS)
 
 Every command prints the digests it produced. The kernel commands read only the
 output directory, the policy and the keys, and recompute every result they attest.
@@ -37,6 +38,11 @@ app = typer.Typer(help="WORLDLINE: branch executions, isolate the causal differe
                   no_args_is_help=True, add_completion=False, pretty_exceptions_enable=False)
 genome_app = typer.Typer(help="Portable failure mechanisms.", no_args_is_help=True)
 app.add_typer(genome_app, name="genome")
+real_app = typer.Typer(help="Scenarios whose truth stream is real recorded public data (with provenance).",
+                       no_args_is_help=True)
+app.add_typer(real_app, name="real")
+from .http_cmd import http_app  # noqa: E402  (lazy-imports the http adapter inside its commands)
+app.add_typer(http_app, name="http")
 
 console = Console(highlight=False)
 DEFAULT_OUT = Path("experiments") / "out"
@@ -666,6 +672,56 @@ def demo(out: Path = typer.Option(DEFAULT_OUT, "--out"),
     _echo(f"wrote {out / 'authorization.json'} and {out / 'authorization_denied.json'}")
     if a["decision"] != AUTHORIZED or d["decision"] != DENIED:
         raise typer.Exit(code=1)
+
+
+# =============================================================================== real data
+
+def do_real_usgs(start: str, end: str, minmag: float, out: Path | None, snapshot_dir: Path, offline: bool,
+                 threshold: float, decision_at: int | None) -> dict:
+    from worldline.adapters import usgs
+
+    key = usgs.window_key(start, end, minmag)
+    snap_path = snapshot_dir / f"{key}.json"
+    if offline:
+        if not snap_path.exists():
+            raise ValueError(f"--offline: no snapshot at {snap_path}")
+    else:
+        raw = usgs.fetch_window(start, end, minmag)
+        usgs.snapshot(raw, snap_path)
+    if not usgs.verify_snapshot(snap_path):
+        raise ValueError(f"snapshot {snap_path} fails its SHA-256 check")
+    out_yaml = out or Path("scenarios") / "real" / f"usgs_{key}.yaml"
+    sc = usgs.to_scenario(snap_path, out_yaml, threshold=threshold, decision_at_s=decision_at,
+                          snapshot_ref=snap_path.as_posix())
+    prov = usgs.load_snapshot(snap_path)["provenance"]
+    return {"key": key, "snapshot": str(snap_path), "snapshot_sha256": prov["sha256"],
+            "fetched_at_utc": prov["fetched_at_utc"], "scenario": str(out_yaml), "scenario_id": sc.id,
+            "reports": sum(1 for i in sc.injects if i.kind == "quake_report"),
+            "corrections": sum(1 for i in sc.injects if i.kind == "correction"),
+            "decision_at_s": sc.actors[0].decision_rules[0].at_ns / 1e9}
+
+
+@real_app.command("usgs")
+def real_usgs(start: str = typer.Option(..., "--start", help="Window start, UTC ISO (e.g. 2025-07-29T23:20:00Z)."),
+              end: str = typer.Option(..., "--end", help="Window end, UTC ISO."),
+              minmag: float = typer.Option(..., "--minmag", help="Minimum magnitude for the FDSN query."),
+              out: Optional[Path] = typer.Option(None, "--out", help="Scenario YAML (default scenarios/real/usgs_<window>.yaml)."),
+              snapshot_dir: Path = typer.Option(Path("data") / "real" / "usgs", "--snapshot-dir"),
+              offline: bool = typer.Option(False, "--offline", help="Regenerate from the existing snapshot, no network."),
+              threshold: float = typer.Option(8.5, "--threshold", help="MODEL: magnitude threshold of the decision rule."),
+              decision_at: Optional[int] = typer.Option(None, "--decision-at",
+                                                        help="MODEL: decision time in s after window start "
+                                                             "(default: just after the first rule-flipping correction).")) -> None:
+    """Fetch a USGS window (or reuse its snapshot), record provenance, and generate a real-data scenario."""
+    try:
+        r = do_real_usgs(start, end, minmag, out, snapshot_dir, offline, threshold, decision_at)
+    except ValueError as exc:
+        _fail(str(exc))
+    _echo(f"snapshot {r['snapshot']}  sha256 {r['snapshot_sha256']}  fetched {r['fetched_at_utc']}"
+          f"{'  (offline)' if offline else ''}")
+    _echo(f"scenario {r['scenario_id']}: {r['reports']} real reports, {r['corrections']} real corrections; "
+          f"MODEL decision at {r['decision_at_s']:.0f}s")
+    _echo(f"wrote {r['scenario']}")
 
 
 if __name__ == "__main__":  # pragma: no cover

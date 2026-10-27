@@ -9,3 +9,5 @@ experiments/out/
 policies/kernel_private.pem
 experiments/out/
 report.xml
+experiments/out_real/
+experiments/out_http/

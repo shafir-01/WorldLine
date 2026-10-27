@@ -1,0 +1,133 @@
+# WORLDLINE scenario generated from REAL recorded USGS data. Do not edit by hand:
+#   uv run worldline real usgs --start 2025-07-29T23:20:00Z --end 2025-07-30T01:40:00Z --minmag 5.5 --offline
+#
+# REAL (USGS ComCat, public domain; snapshot data/real/usgs/20250729T2320Z_20250730T0140Z_m5.5.json):
+#   which events occurred, ids, place labels (today's catalogue text), first-published locations and
+#   depths, origin times; the first-published
+#   magnitude of each event and every later magnitude revision, each at its real USGS publication
+#   time (at_ns = publication time - window start, ms resolution). quake_report = first
+#   publication; correction = a later change of the shown magnitude.
+#   window 2025-07-29T23:20:00Z .. 2025-07-30T01:40:00Z, minmagnitude 5.5; snapshot sha256 e2315774e081e531087af74901450134fd563d108aed8405a5b41bc485785d98
+#
+# MODEL (declared, NOT real; no claim that any agency operates this way):
+#   roles field_ops (fifo 5s +2s), regional_hq (network 60s +30s jitter),
+#   evaluator (0s); actor duty_seismologist and its rule (threshold M8.5) and decision time.
+#   decision time = publication of corr-us6000qw60-1 (3771.040s) + regional_hq base 60s + jitter 30s + margin 30s, rounded up.
+#   'issue_advisory' / 'hold' are labels of the model, not real advisories.
+#
+# Latent defect (present in the real timeline, exposed only by a modelled delay): if the real
+# rule-flipping correction reaches regional_hq after the decision time, the duty seismologist
+# decides on a stale magnitude and decision.consistent_with_truth FAILs.
+id: usgs_20250729T2320Z_20250730T0140Z_m5_5
+seed: 20250729
+clock: {epoch_ns: 0, tick_ns: 1s, horizon_ns: 8400000000000}
+provenance:
+  real: [event ids; place labels (today's catalogue text); locations and depths as first published, first-published magnitudes and their publication times, magnitude revisions (corrections) and their publication
+      times, origin times]
+  model: ['roles field_ops, regional_hq, evaluator and their delivery latency/jitter/ordering', 'actor duty_seismologist, its decision rule, threshold and decision time', scenario seed (only drives the
+      modelled delivery jitter)]
+  source_url: https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2025-07-29T23%3A20%3A00Z&endtime=2025-07-30T01%3A40%3A00Z&minmagnitude=5.5&orderby=time-asc
+  fetched_at_utc: '2026-10-27T11:17:26Z'
+  snapshot: data/real/usgs/20250729T2320Z_20250730T0140Z_m5.5.json
+  snapshot_sha256: e2315774e081e531087af74901450134fd563d108aed8405a5b41bc485785d98
+  license: USGS, public domain
+  window_utc: {start: '2025-07-29T23:20:00Z', end: '2025-07-30T01:40:00Z', minmag: 5.5}
+  time_mapping: at_ns = (USGS publication time - window start) in ns; millisecond resolution from USGS
+  magnitude_model: 'shown magnitude = current origin product with highest preferredWeight (ties: latest update), approximating ComCat preferred-origin selection; each change in the window is one correction;
+    corrects = the previous estimate (report or prior correction)'
+  counts: {reports: 6, corrections: 2, excluded_events: 14, events_without_history: 0}
+  excluded:
+  - {usgs_id: us6000r0y5, reason: first origin product published after the window end (later catalogue addition or review); not knowable in the window}
+  - {usgs_id: us6000r0xw, reason: first origin product published after the window end (later catalogue addition or review); not knowable in the window}
+  - {usgs_id: us6000r0xt, reason: first origin product published after the window end (later catalogue addition or review); not knowable in the window}
+  - {usgs_id: us6000r0q2, reason: first origin product published after the window end (later catalogue addition or review); not knowable in the window}
+  - {usgs_id: us6000r0qc, reason: first origin product published after the window end (later catalogue addition or review); not knowable in the window}
+  - {usgs_id: us6000qwhj, reason: first origin product published after the window end (later catalogue addition or review); not knowable in the window}
+  - {usgs_id: us6000r0ql, reason: first origin product published after the window end (later catalogue addition or review); not knowable in the window}
+  - {usgs_id: us6000r0qg, reason: first origin product published after the window end (later catalogue addition or review); not knowable in the window}
+  - {usgs_id: us6000qwhh, reason: first origin product published after the window end (later catalogue addition or review); not knowable in the window}
+  - {usgs_id: us6000qwi3, reason: first origin product published after the window end (later catalogue addition or review); not knowable in the window}
+  - {usgs_id: us6000qw6g, reason: first origin product published after the window end (later catalogue addition or review); not knowable in the window}
+  - {usgs_id: us6000r0pw, reason: first origin product published after the window end (later catalogue addition or review); not knowable in the window}
+  - {usgs_id: us6000r1em, reason: first origin product published after the window end (later catalogue addition or review); not knowable in the window}
+  - {usgs_id: us6000qw7f, reason: first origin product published after the window end (later catalogue addition or review); not knowable in the window}
+  rule_flipping_corrections:
+  - {id: corr-us6000qw60-1, at_ns: 3771040000000, rule_value_after: true}
+  decision_time: decision time = publication of corr-us6000qw60-1 (3771.040s) + regional_hq base 60s + jitter 30s + margin 30s, rounded up
+roles:
+- id: field_ops
+  visibility: ['*']
+  delivery: {base_latency_ns: 5s, jitter_ns: 2s, drop_probability: 0.0, ordering: fifo}
+- id: regional_hq
+  visibility: ['*']
+  delivery: {base_latency_ns: 60s, jitter_ns: 30s, drop_probability: 0.0, ordering: network}
+- id: evaluator
+  visibility: ['*']
+  delivery: {base_latency_ns: 0, jitter_ns: 0, drop_probability: 0.0, ordering: fifo}
+actors:
+- id: duty_seismologist
+  role: regional_hq
+  decision_rules:
+  - {id: advisory_or_hold, at_ns: 3892000000000, window_ns: 3892000000000, when: 'count(kind=''quake_report'', payload.mag>=8.5, not_corrected) >= 1 or count(kind=''correction'', payload.mag>=8.5, not_corrected)
+      >= 1', then: issue_advisory, otherwise: hold}
+injects:
+- id: quake-us6000qw60
+  at_ns: 848161000000
+  source_id: usgs_comcat
+  kind: quake_report
+  payload: {id: us6000qw60, mag: 8.0, mag_type: Mi, depth_km: 73.9, lat: 52.209, lon: 159.979, place: '2025 Kamchatka Peninsula, Russia Earthquake', origin_time_utc: '2025-07-29T23:24:52.483Z', published_utc: '2025-07-29T23:34:08.161Z',
+    contributor: pt, source: usgs}
+  policy_labels: [public]
+- id: corr-us6000qw60-1
+  at_ns: 3771040000000
+  source_id: usgs_comcat
+  kind: correction
+  payload: {corrects: quake-us6000qw60, report: quake-us6000qw60, id: us6000qw60, mag: 8.7, mag_type: mww, previous_mag: 8.0, note: upgrade 8 -> 8.7, place: '2025 Kamchatka Peninsula, Russia Earthquake',
+    origin_time_utc: '2025-07-29T23:24:52.483Z', published_utc: '2025-07-30T00:22:51.040Z', contributor: us, source: usgs}
+  policy_labels: [public]
+  priority: 5
+- id: quake-us6000qw6q
+  at_ns: 4985040000000
+  source_id: usgs_comcat
+  kind: quake_report
+  payload: {id: us6000qw6q, mag: 6.9, mag_type: mww, depth_km: 10.0, lat: 52.0824, lon: 160.0803, place: '125 km SE of Petropavlovsk-Kamchatsky, Russia', origin_time_utc: '2025-07-30T00:09:58.961Z', published_utc: '2025-07-30T00:43:05.040Z',
+    contributor: us, source: usgs}
+  policy_labels: [public]
+- id: quake-us6000qw6s
+  at_ns: 5071040000000
+  source_id: usgs_comcat
+  kind: quake_report
+  payload: {id: us6000qw6s, mag: 6.3, mag_type: mb, depth_km: 10.0, lat: 52.0349, lon: 159.6752, place: '126 km SE of Vilyuchinsk, Russia', origin_time_utc: '2025-07-30T00:16:06.520Z', published_utc: '2025-07-30T00:44:31.040Z',
+    contributor: us, source: usgs}
+  policy_labels: [public]
+- id: quake-us6000qw6z
+  at_ns: 5829040000000
+  source_id: usgs_comcat
+  kind: quake_report
+  payload: {id: us6000qw6z, mag: 5.7, mag_type: mb, depth_km: 10.0, lat: 51.8397, lon: 159.3217, place: '127 km SSE of Vilyuchinsk, Russia', origin_time_utc: '2025-07-30T00:35:26.004Z', published_utc: '2025-07-30T00:57:09.040Z',
+    contributor: us, source: usgs}
+  policy_labels: [public]
+- id: quake-us6000qw75
+  at_ns: 7374040000000
+  source_id: usgs_comcat
+  kind: quake_report
+  payload: {id: us6000qw75, mag: 5.8, mag_type: mb, depth_km: 10.0, lat: 51.6453, lon: 158.6633, place: '144 km S of Vilyuchinsk, Russia', origin_time_utc: '2025-07-30T01:03:22.907Z', published_utc: '2025-07-30T01:22:54.040Z',
+    contributor: us, source: usgs}
+  policy_labels: [public]
+- id: corr-us6000qw60-2
+  at_ns: 7958040000000
+  source_id: usgs_comcat
+  kind: correction
+  payload: {corrects: corr-us6000qw60-1, report: quake-us6000qw60, id: us6000qw60, mag: 8.8, mag_type: mww, previous_mag: 8.7, note: upgrade 8.7 -> 8.8, place: '2025 Kamchatka Peninsula, Russia Earthquake',
+    origin_time_utc: '2025-07-29T23:24:52.483Z', published_utc: '2025-07-30T01:32:38.040Z', contributor: us, source: usgs}
+  policy_labels: [public]
+  priority: 5
+- id: quake-us6000qw74
+  at_ns: 8159040000000
+  source_id: usgs_comcat
+  kind: quake_report
+  payload: {id: us6000qw74, mag: 5.8, mag_type: mb, depth_km: 10.0, lat: 51.7074, lon: 159.4094, place: '181 km SSE of Vilyuchinsk, Russia', origin_time_utc: '2025-07-30T00:58:38.149Z', published_utc: '2025-07-30T01:35:59.040Z',
+    contributor: us, source: usgs}
+  policy_labels: [public]
+transitions: []
+invariants: [epistemic.no_future_knowledge, decision.consistent_with_truth, absence.no_corrupted_in_decision]
