@@ -1,5 +1,7 @@
 # WORLDLINE public verifier (`service/`)
 
+Live deployment: https://worldline-verifier-301330323690.europe-north1.run.app
+
 A FastAPI service, deployed to Google Cloud Run, that does two things:
 
 1. Serves the built [viewer](../ui/README.md) at `/` together with the pipeline's output under `data/` (the same files GitLab Pages publishes).

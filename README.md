@@ -214,7 +214,14 @@ Pipeline: alongside the WORLDLINE jobs, the `test` stage runs GitLab SAST, secre
 
 ## Deployment
 
-**Public verifier on Google Cloud Run.** `service/` is a FastAPI application that serves the viewer and exposes the authorization kernel as a public API holding only the public key: `POST /api/verify` returns the tamper findings for any bundle, `POST /api/authorize?artifact_digest=…` returns the policy decision for an exact artifact, `GET /api/evidence` returns the deployed release's bundle and authorization. Anyone can check a release without trusting the pipeline that produced it. Build and deploy:
+**Public verifier on Google Cloud Run**, live at https://worldline-verifier-301330323690.europe-north1.run.app. `service/` is a FastAPI application that serves the viewer and exposes the authorization kernel as a public API holding only the public key: `POST /api/verify` returns the tamper findings for any bundle, `POST /api/authorize?artifact_digest=…` returns the policy decision for an exact artifact, `GET /api/evidence` returns the deployed release's bundle and authorization. Anyone can check a release without trusting the pipeline that produced it. Try it against the current release bundle:
+
+```bash
+curl -sL https://gitlab.com/api/v4/projects/88121109/packages/generic/worldline-evidence/v0.1.3-transcend/bundle.json -o bundle.json
+curl -s -X POST -H 'Content-Type: application/json' --data-binary @bundle.json \n  'https://worldline-verifier-301330323690.europe-north1.run.app/api/authorize?artifact_digest=1bfce46216da6cf05085684a26f7074b9cbf6ad9'
+```
+
+Build and deploy:
 
 ```bash
 gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com

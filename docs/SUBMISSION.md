@@ -20,7 +20,7 @@ Path A (new project, created after 5 October 2026). Autonomy tier: **Supervised*
 - Live viewer (GitLab Pages, built from the pipeline's own output): https://worldline-3e380d.gitlab.io
 - Pipelines: https://gitlab.com/shafir2/WorldLine/-/pipelines
 - First proof-carrying release (kernel AUTHORIZED, 14 of 14 requirements; signed bundle and authorization as assets): https://gitlab.com/shafir2/WorldLine/-/releases/v0.1.3-transcend
-- Public verifier (Cloud Run): `[URL]`
+- Public verifier (Google Cloud Run, live): https://worldline-verifier-301330323690.europe-north1.run.app (viewer at /, API at /api/verify, /api/authorize, /api/evidence, /api/version)
 - Investigation issue with the real witness: https://gitlab.com/shafir2/WorldLine/-/work_items/1
 - Duo agent sessions: Investigator https://gitlab.com/shafir2/WorldLine/-/automate/agent-sessions/10080962; Repairer https://gitlab.com/shafir2/WorldLine/-/automate/agent-sessions/10081188 and follow-up https://gitlab.com/shafir2/WorldLine/-/automate/agent-sessions/10081957; Skeptic https://gitlab.com/shafir2/WorldLine/-/automate/agent-sessions/10081961
 - Repair merge request (left open on purpose, see description): https://gitlab.com/shafir2/WorldLine/-/merge_requests/1
