@@ -1,0 +1,66 @@
+# WORLDLINE review jobs: put the evidence where reviewers already look. Included from .gitlab-ci.yml.
+#
+#   mr-evidence          MR pipelines only. Posts, or edits in place, one MR note with the kernel
+#                        decision (or "kernel did not run on this ref"), the invariant verdicts of the
+#                        root and minimal traces, the minimal schedule in plain English, the genome and
+#                        its challenge outcome, links, and the claim ceiling. Never blocks the MR.
+#   investigation-issue  Manual, protected refs. Opens or updates the tracking issue for the current
+#                        explore finding, labelled worldline:investigate, and mentions the WORLDLINE
+#                        Investigate flow's service account so the Investigator picks it up.
+#
+# Both run scripts/mr_comment.py (standard library only; no uv sync). Neither job reads
+# WORLDLINE_KERNEL_KEY, writes evidence or changes a kernel input: they only report.
+#
+# CI variable (Settings > CI/CD > Variables): WORLDLINE_BOT_TOKEN, a project access token with
+# role Reporter and scope `api`, masked and protected. CI_JOB_TOKEN cannot write notes or issues;
+# without the variable, mr-evidence prints the note to its log and keeps it as an artifact, and
+# investigation-issue is not offered. See docs/WORKFLOW.md.
+
+mr-evidence:
+  stage: authorize
+  image: python:3.12-slim
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: always
+  needs:
+    - job: explore
+      artifacts: true
+      optional: true
+    - job: kernel-verify
+      artifacts: true
+      optional: true
+    - job: authorize
+      artifacts: true
+      optional: true
+  allow_failure: true
+  script:
+    # The kernel decision is shown only if authorization.json was issued for $CI_COMMIT_SHA.
+    - python scripts/mr_comment.py mr --out "$WORLDLINE_OUT" --save mr_evidence.md
+  artifacts:
+    when: always
+    paths:
+      - mr_evidence.md
+      - experiments/out/
+    expire_in: 2 weeks
+
+investigation-issue:
+  stage: authorize
+  image: python:3.12-slim
+  rules:
+    - if: $CI_COMMIT_REF_PROTECTED == "true" && $WORLDLINE_BOT_TOKEN
+      when: manual
+  needs:
+    - job: explore
+      artifacts: true
+  allow_failure: true
+  interruptible: false
+  variables:
+    # Set to "1" when running the job to mention the Investigator again on an existing issue.
+    WORLDLINE_RETRIGGER: "0"
+  script:
+    - python scripts/mr_comment.py issue --out "$WORLDLINE_OUT" --save investigation_issue.md
+  artifacts:
+    when: always
+    paths:
+      - investigation_issue.md
+    expire_in: 2 weeks

@@ -19,6 +19,7 @@
 include:
   - local: .gitlab/ci/security.yml
   - local: .gitlab/ci/gcp.yml
+  - local: .gitlab/ci/review.yml
     rules:
       - exists:
           - .gitlab/ci/gcp.yml
@@ -73,7 +74,10 @@ default:
 # which is intended: only protected tags (`v*`) can become releases.
 .rules-kernel:
   rules:
+    # Merge-request pipelines from unprotected branches cannot see the protected signing key;
+    # the kernel still runs for inspection but must not block the merge check on that ref.
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH
+      allow_failure: true
     - if: $CI_COMMIT_REF_PROTECTED == "true"
     - if: $CI_COMMIT_TAG
 
