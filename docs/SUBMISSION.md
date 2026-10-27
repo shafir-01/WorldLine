@@ -52,6 +52,8 @@ Scenario A is a synthetic port security incident. Scenario B is a synthetic logi
 
 Claim ceiling: EMPIRICALLY_VALIDATED on two synthetic scenarios, one machine. Transfer is across scenarios sharing the Event v1 substrate, not across heterogeneous codebases.
 
+The pipeline also deploys the verifier to Cloud Run through a manual `deploy-gcp` job that only unlocks after the kernel authorizes the commit; the live service reports the pipeline commit.
+
 ## How we built it
 
 Python 3.12 with uv; PyYAML, Typer, Rich, cryptography; pytest and Hypothesis (158 tests). A Vite, React and TypeScript viewer with hand-written SVG, no backend. GitLab CI with protected kernel jobs. GitLab Duo Agent Platform agents and flows created through the GraphQL catalog API from prompt files kept in the repository. No LLM anywhere in the simulated world or the checker.

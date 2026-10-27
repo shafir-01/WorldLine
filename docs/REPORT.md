@@ -85,6 +85,12 @@ What this shows. The kernel stops agents from misreporting what ran. It does not
 
 The first main-branch pipeline with the signing key present (pipeline 2991432180) passed test, explore, pages and kernel-verify, then **authorize DENIED** the commit: `missing: no acceptable record for 'tests:unit'`, `downgraded: tests:unit is UNKNOWN < EMPIRICALLY_VALIDATED`. Cause: the test job published `report.xml` only as a JUnit report, which GitLab does not hand to downstream jobs as a file, so the kernel could not recompute the test claim and typed it UNKNOWN. The policy requires EMPIRICALLY_VALIDATED for that claim, so the release was refused. This is the intended behaviour of the kernel under a missing signal and was fixed by publishing the file as a regular artifact. Both outcomes are in the pipeline history.
 
+## Experiment 7: release and deployment from the pipeline
+
+Tag `v0.1.3-transcend` produced a release whose assets are the sealed evidence bundle, the kernel's authorization, the genome, the minimal schedule, the challenge result and the run index, uploaded to the project's package registry and downloadable without signing in. The downloaded bundle authorizes offline with `worldline authorize` and the committed public key: AUTHORIZED, all requirements met, for the tagged commit.
+
+The manual `deploy-gcp` job, gated behind `authorize`, built the verifier image with Cloud Build and deployed it to Cloud Run from pipeline 2993578142. The live service reports the pipeline's commit at `/api/version`, verifies the good bundle, rejects a tampered bundle with `record_edited` at the exact record, authorizes the release bundle for its commit, and denies a wrong digest with a subject mismatch. Only the public key is in the image.
+
 ## Determinism
 
 Same scenario, seed and schedule produce byte-identical trace digests in-process and across a fresh interpreter (tested by subprocess). Root `port_alert` digest with seed 20261026: `sha256:d16ac439…`. Any change to delivery policy, rule, or inject changes it.
