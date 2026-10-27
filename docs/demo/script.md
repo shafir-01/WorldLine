@@ -4,43 +4,43 @@ Spoken over a screen recording. Two tabs: the live site (https://worldline-verif
 
 ---
 
-**[Site. Land on the top of the Story page, cursor still]**
+**[Site · top]**
 
 WorldLine is an autonomous engineering platform that stress tests futures your software hasn't lived, discovers why it breaks, transfers that knowledge to other systems, and refuses to ship unproven fixes. Conventional tests check what you expected. They miss what happens when the right information arrives at the wrong time. WorldLine makes those invisible failures executable.
 
-**[Click "See it work". You land on the fan of worlds. Hover one red diamond while speaking]**
+**[Click "See it work" · hover a red diamond]**
 
 Watch a harbour emergency become 133 alternative realities. WorldLine changes which messages arrive, when they arrive, and what each participant knows. In 43 worlds, a safety rule breaks. Our guided explorer finds the critical failure by world six. Random search misses it within the same budget.
 
-**[Scroll to the timeline. Press play on the scrubber so it runs to the decision marker, or click "At the decision"]**
+**[Scroll · Timeline · press play]**
 
 Here, the top timeline shows reality; the next shows what the officer knew. A radar contact was retracted, but the correction never reached him in time. He escalates a threat that no longer exists. The decision rule works. The information arrives too late.
 
-**[Scroll to "One cause". Let the three cards show, two struck through, one kept, with the 90.2 s threshold]**
+**[Scroll · One cause]**
 
 WorldLine doesn't just flag the failure. It performs causal minimization, stripping away disturbances until one delayed message remains. It identifies the timing boundary at 90.2 seconds. We now have the reproducible explanation of what failed, and why.
 
-**[Scroll to the mechanism card with the correction → decider → decision diagram and the precondition chips]**
+**[Scroll · Mechanism card]**
 
 This is the leap: we remove the harbour, the radar, and the officer, retaining the cause as an executable Failure Genome. It is no longer a test tied to one application. It is a transferable attack on the underlying weakness.
 
-**[Scroll to "Elsewhere". The convoy card reads Reproduced, the immune twin reads Not reproduced]**
+**[Scroll · Elsewhere cards]**
 
 We unleash that genome across logistics, hospital triage, a replay using USGS earthquake revisions, and a live HTTP service. The same causal weakness reappears in different settings. But the resistant twin survives. WorldLine doesn't just make software fail; it learns which systems are vulnerable to that failure, and which aren't.
 
-**[Switch to the GitLab tab, merge request 1. Scroll slowly through the description, then the review comments]**
+**[GitLab tab · MR 1 · scroll the comments]**
 
 Now GitLab Duo moves from discovery to repair. Investigator reproduces the bug. Repairer opens a merge request. Code Review catches a hollow fix that avoids the decision instead of correcting it, and Skeptic rejects the retry. We leave that request open. Autonomous engineering must withstand criticism, not just generate passing tests.
 
-**[Back to the site. Scroll to "Evidence". Click the "Edited copy" toggle so the DENIED banner appears and record 1 lights up]**
+**[Site · Evidence · click "Edited copy"]**
 
 Our verification kernel recomputes critical claims and seals 31 evidence records cryptographically. Change a record and verification fails. Agents cannot approve their own unsupported claims.
 
-**[Scroll to "Verify". Click "Verify bundle" and wait for Intact. Click "Check release" and wait for Authorized. Then click "Use the edited copy" and "Verify bundle" again for Tampered]**
+**[Scroll · Verify · click Verify, then Check release, then Edited copy]**
 
 The Google Cloud verifier puts that control in your hands. Genuine bundle: verified. Correct release commit: authorized. Tampered record or wrong commit: denied.
 
-**[Click the WORLDLINE wordmark to return to the landing. Hold still]**
+**[Click the wordmark · hold]**
 
 WorldLine discovers failures before another system repeats them, converts those discoveries into reusable engineering intelligence, and makes independent evidence the condition for release. This is what comes after code.
 
