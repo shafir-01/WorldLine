@@ -1,0 +1,85 @@
+# Extended WORLDLINE invariants. Loaded together with core.yaml by
+# worldline.invariants.load_invariants("invariants/"); ids are unique across both files.
+# Every FAIL carries a witness of event ids; every UNKNOWN names the missing signal.
+# Params below are instantiated for scenarios/port_alert.yaml; each one PASSes on its root world.
+# Reference: docs/INVARIANTS.md. Protected path: only the kernel/maintainers edit this file (see CODEOWNERS).
+invariants:
+  - id: latency.bound
+    version: "1.0"
+    kind: latency
+    description: >
+      Every `correction` reaches harbour_ops within bound_ns of its event_time
+      (received_time_ns - event_time_ns <= bound_ns). FAIL witness: every offending event id in
+      canonical order. UNKNOWN when the role has no view or never received that kind.
+    params:
+      role: harbour_ops
+      kind: correction
+      bound_ns: 60000000000          # 60 s
+    required_signals: []
+
+  - id: ordering.causal
+    version: "1.0"
+    kind: ordering
+    description: >
+      If event B references event A through a payload link field (corrects, acks, acknowledges,
+      in_reply_to), every role receives A (or a copy of A) no later than B. Checked in every role
+      view. FAIL witness: [A, B] for the first violation in receipt order. UNKNOWN when no view
+      event carries a link field that resolves to a truth event.
+    params:
+      link_fields: [corrects, acks, acknowledges, in_reply_to]
+    required_signals: []
+
+  - id: duplicate.suppressed
+    version: "1.0"
+    kind: duplicate
+    description: >
+      No decision's known_event_ids contains two copies of the same origin event (origin = id
+      before '#dup', else the first provenance id, else the id). This is the duplicate-delivery
+      mechanism random exploration found on port_alert. FAIL witness: [decision id, copy ids...]
+      for the first duplicated origin. UNKNOWN when the trace has no decisions.
+    params:
+      use_provenance: true
+    required_signals: []
+
+  - id: quorum.independent_sources
+    version: "1.0"
+    kind: quorum
+    description: >
+      A duty_officer `escalate` rests on at least two distinct source_ids among the known,
+      uncorrected sightings with confidence >= 0.6. FAIL witness: [decision id, supporting event
+      ids...]; the explanation names the distinct sources counted. PASS when no decision chose the
+      option. UNKNOWN when the trace has no matching decisions.
+    params:
+      rule_id: escalate_or_monitor
+      option: escalate
+      min_sources: 2
+      exclude_corrected: true
+      match:
+        kind: sighting
+        payload_min: {confidence: 0.6}
+    required_signals: []
+
+  - id: decision.fault_attributed
+    version: "1.0"
+    kind: decision
+    description: >
+      Same verdict as decision.consistent_with_truth. With a reference trace
+      (check(..., reference=root_trace)) the FAIL witness is only the truth events missing at
+      decision time in this trace but received in the reference: the information the fault took
+      away. Without a reference the witness lists all missing information and the explanation says
+      so. UNKNOWN (decision_rule_evaluator) when no evaluator is supplied.
+    params:
+      witness: fault_attributed
+    required_signals: [decision]
+
+  - id: epistemic.permitted_only
+    version: "1.0"
+    kind: epistemic
+    description: >
+      Approximation of non-interference: no decision's known_event_ids includes an event whose
+      policy_labels its actor's role may not see under the scenario's role visibility. FAIL witness:
+      [decision id, offending event ids...]. UNKNOWN (scenario) without a scenario, (decision) without
+      decisions, or (role:/event:) when a role or cited event cannot be resolved.
+    params:
+      rule: permitted_only
+    required_signals: []

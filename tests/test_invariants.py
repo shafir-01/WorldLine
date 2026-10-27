@@ -73,7 +73,12 @@ def test_load_core_yaml_from_dir_and_file(invs):
     expected = {"epistemic.no_future_knowledge", "epistemic.label_isolation", "response.alert_ack",
                 "absence.no_corrupted_in_decision", "decision.consistent_with_truth", "always.non_negative_capacity"}
     assert expected <= set(invs)
-    assert load_invariants(ROOT / "invariants" / "core.yaml").keys() == invs.keys()
+    core = load_invariants(ROOT / "invariants" / "core.yaml")
+    assert set(core) == expected  # the core file is unchanged
+    extended = load_invariants(ROOT / "invariants" / "extended.yaml")
+    assert not set(core) & set(extended)  # ids unique across files
+    assert set(invs) == set(core) | set(extended)  # the directory loads both files
+    assert all(invs[k] == core[k] for k in core)
     assert all(isinstance(i, Invariant) and i.version == "1.0" for i in invs.values())
     with pytest.raises(ValueError):
         Invariant(id="x", version="1", kind="sometimes")
@@ -246,7 +251,8 @@ def test_decision_consistent_with_truth(invs):
 
 # ---------------------------------------------------------------- check_all
 
-def test_check_all_runs_every_core_invariant(invs):
+def test_check_all_runs_every_core_invariant():
+    invs = load_invariants(ROOT / "invariants" / "core.yaml")
     truth = log(*base_truth())
     tr = FakeTrace(truth=truth, views={"harbour_ops": view_of(truth), "coast_guard": view_of(truth)},
                    decisions=[decision(1, 25, option="alert", known=("e1", "e2"))])
