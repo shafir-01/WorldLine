@@ -28,6 +28,10 @@ WORKDIR /app
 COPY pyproject.toml uv.lock README.md LICENSE ./
 RUN uv sync --frozen --no-dev --extra service --no-install-project
 COPY worldline/ ./worldline/
+# The wheel bundles these as package data (see pyproject force-include); they must exist before the project builds.
+COPY scenarios/ ./scenarios/
+COPY invariants/ ./invariants/
+COPY policies/release.yaml policies/kernel_public.pem ./policies/
 RUN uv sync --frozen --no-dev --extra service --no-editable
 
 # ---- Stage 3: runtime. Only the public key and the policy are baked in; the private key is .dockerignored.
