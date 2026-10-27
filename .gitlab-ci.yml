@@ -20,6 +20,8 @@ include:
   - local: .gitlab/ci/security.yml
   - local: .gitlab/ci/gcp.yml
   - local: .gitlab/ci/review.yml
+  - local: .gitlab/ci/package.yml
+  - local: .gitlab/ci/docs.yml
     rules:
       - exists:
           - .gitlab/ci/gcp.yml
@@ -286,7 +288,7 @@ release-assets:
           "curl -LO %s/bundle.json" % base,
           "curl -LO https://gitlab.com/%s/-/raw/%s/policies/kernel_public.pem" % (path, tag),
           "curl -LO https://gitlab.com/%s/-/raw/%s/policies/release.yaml" % (path, tag),
-          "uv run worldline authorize bundle.json --policy release.yaml --public-key kernel_public.pem --artifact-digest " + sha,
+          "uv run worldline authorize bundle.json --policy release.yaml --public-key kernel_public.pem --artifact-digest " + sha + " --out authorization.json",
           "```",
           "",
           "The kernel recomputes the decision from the bundle, the policy and the public key alone; see docs/RELEASES.md.",
@@ -336,6 +338,8 @@ pages:
   needs:
     - job: explore
       artifacts: true
+    - job: docs
+      artifacts: true
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   cache:
@@ -349,6 +353,8 @@ pages:
     - rm -rf public && mkdir -p public/experiments
     - cp -r ui/dist/. public/
     - cp -r experiments/out public/experiments/out
+    - mkdir -p public/docs
+    - if [ -d public_docs ]; then cp -r public_docs/. public/docs/; fi
   artifacts:
     paths:
       - public

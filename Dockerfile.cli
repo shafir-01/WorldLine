@@ -1,0 +1,47 @@
+# WORLDLINE command-line image.
+#
+#   docker build -f Dockerfile.cli -t worldline .
+#   docker run --rm worldline demo                       # whole chain: AUTHORIZED, then DENIED on a tampered bundle
+#   docker run --rm worldline --version
+#   docker run --rm -v "$PWD/out:/app/experiments/out" worldline demo   # keep the evidence on the host
+#
+# The source tree is installed in editable mode at /app so that `worldline demo` can run the
+# unit tests for its `tests:unit` claim (the release policy requires it) and every CLI default
+# (scenarios/, invariants/, policies/release.yaml) resolves from the working directory.
+# Only the kernel PUBLIC key is copied; `demo` generates a throwaway private key inside the
+# container. Built and pushed by the `package-image` job in .gitlab/ci/package.yml (kaniko).
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+WORKDIR /app
+COPY pyproject.toml README.md LICENSE CHANGELOG.md ./
+COPY worldline/ ./worldline/
+COPY scenarios/ ./scenarios/
+COPY invariants/ ./invariants/
+COPY policies/release.yaml policies/kernel_public.pem ./policies/
+COPY tests/ ./tests/
+COPY data/ ./data/
+
+# Runtime deps plus pytest/hypothesis for demo's tests:unit claim; no service extras.
+RUN pip install --no-cache-dir -e ".[dev]" \
+ && rm -rf /root/.cache \
+ && find /app -name '__pycache__' -prune -exec rm -rf {} + \
+ && useradd --system --uid 10001 --home-dir /app worldline \
+ && mkdir -p /app/experiments/out \
+ && chown -R worldline /app
+
+ARG GIT_COMMIT=""
+ENV WORLDLINE_COMMIT=$GIT_COMMIT
+LABEL org.opencontainers.image.title="worldline" \
+      org.opencontainers.image.description="WORLDLINE CLI: branch executions, isolate the causal difference, type the evidence, gate the release." \
+      org.opencontainers.image.source="https://gitlab.com/shafir2/WorldLine" \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.revision=$GIT_COMMIT
+
+USER worldline
+ENTRYPOINT ["worldline"]
+CMD ["--help"]

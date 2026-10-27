@@ -39,7 +39,7 @@ curl -LO "https://gitlab.com/shafir2/WorldLine/-/raw/$tag/policies/kernel_public
 curl -LO "https://gitlab.com/shafir2/WorldLine/-/raw/$tag/policies/release.yaml"
 $commit = (git rev-list -n 1 $tag)        # or copy the "Commit" line from the release notes
 
-uv run worldline authorize bundle.json --policy release.yaml --public-key kernel_public.pem --artifact-digest $commit
+uv run worldline authorize bundle.json --policy release.yaml --public-key kernel_public.pem --artifact-digest $commit --out authorization.json
 ```
 
 Expected: `decision: AUTHORIZED` with the same `artifact_digest` as the release notes. The command

@@ -1,0 +1,83 @@
+# WORLDLINE distribution: Python package + CLI container image, tag pipelines only.
+# Include from .gitlab-ci.yml:   include: - local: .gitlab/ci/package.yml
+# See docs/INSTALL.md for how end users install what these jobs publish.
+#
+# Both jobs need `authorize` (the kernel release gate): a tag whose evidence is DENIED never
+# publishes a wheel or an image, exactly like it never becomes a release.
+#
+#   package        uv build -> wheel + sdist; uv publish to this project's PyPI package registry
+#                  (job token, no extra secrets); dist/ kept as job artifacts.
+#   package-image  kaniko builds Dockerfile.cli and pushes it to this project's container registry
+#                  as $CI_REGISTRY_IMAGE/cli:<tag> and :latest. kaniko runs unprivileged, so it
+#                  works on gitlab.com shared runners (docker-in-docker would need privileged mode).
+
+package:
+  stage: release
+  image: python:3.12
+  interruptible: false
+  rules:
+    - if: $CI_COMMIT_TAG
+  needs:
+    - job: authorize
+      artifacts: false
+  variables:
+    UV_CACHE_DIR: "$CI_PROJECT_DIR/.cache/uv"
+  script:
+    - pip install --quiet uv
+    # The tag must name the version that is being published (v0.1.4 or v0.1.4-suffix).
+    - |
+      VERSION=$(python -c "import re; print(re.search(r'__version__\s*=\s*\"([^\"]+)\"', open('worldline/__init__.py').read()).group(1))")
+      echo "tag $CI_COMMIT_TAG, package version $VERSION"
+      case "$CI_COMMIT_TAG" in
+        "v$VERSION"|"v$VERSION"-*) ;;
+        *) echo "tag $CI_COMMIT_TAG does not match worldline/__init__.py version $VERSION (run scripts/release.py)" >&2; exit 1 ;;
+      esac
+    - uv build --out-dir dist
+    - ls -l dist
+    - test -n "$(ls dist/*.whl)" && test -n "$(ls dist/*.tar.gz)"
+    # Smoke-test the wheel in a clean venv before publishing it.
+    - uv venv /tmp/smoke
+    - uv pip install --python /tmp/smoke/bin/python dist/*.whl
+    - /tmp/smoke/bin/worldline --help > /dev/null
+    - /tmp/smoke/bin/python -m worldline.cli.version --json
+    - |
+      uv publish \
+        --publish-url "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi" \
+        --username gitlab-ci-token \
+        --password "$CI_JOB_TOKEN" \
+        dist/*
+    - echo "published; install with:"
+    - echo "  uvx --index ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi/simple worldline --help"
+  artifacts:
+    name: "worldline-$CI_COMMIT_TAG-dist"
+    paths:
+      - dist/
+    expire_in: 1 year
+
+package-image:
+  stage: release
+  image:
+    name: gcr.io/kaniko-project/executor:v1.23.2-debug
+    entrypoint: [""]
+  interruptible: false
+  rules:
+    - if: $CI_COMMIT_TAG
+  needs:
+    - job: authorize
+      artifacts: false
+  script:
+    - mkdir -p /kaniko/.docker
+    - |
+      AUTH=$(printf '%s:%s' "$CI_REGISTRY_USER" "$CI_REGISTRY_PASSWORD" | base64 | tr -d '\n')
+      printf '{"auths":{"%s":{"auth":"%s"}}}' "$CI_REGISTRY" "$AUTH" > /kaniko/.docker/config.json
+    - |
+      /kaniko/executor \
+        --context "$CI_PROJECT_DIR" \
+        --dockerfile "$CI_PROJECT_DIR/Dockerfile.cli" \
+        --build-arg "GIT_COMMIT=$CI_COMMIT_SHA" \
+        --label "org.opencontainers.image.version=$CI_COMMIT_TAG" \
+        --destination "$CI_REGISTRY_IMAGE/cli:$CI_COMMIT_TAG" \
+        --destination "$CI_REGISTRY_IMAGE/cli:latest" \
+        --snapshot-mode=redo \
+        --use-new-run
+    - echo "pushed $CI_REGISTRY_IMAGE/cli:$CI_COMMIT_TAG (docker run --rm $CI_REGISTRY_IMAGE/cli:$CI_COMMIT_TAG demo)"

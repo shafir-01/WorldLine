@@ -1,0 +1,111 @@
+# WORLDLINE documentation site. Build with:  python scripts/build_docs.py  (stages docs, generates
+# the CLI reference, then runs `uvx --with mkdocs-material mkdocs build --strict`).
+# Published under the GitLab Pages site at /docs/, next to the viewer.
+site_name: WORLDLINE
+site_description: >-
+  Counterfactual computing substrate: branch executions, isolate the causal difference,
+  type the evidence, gate the release.
+site_author: shafir-01
+repo_url: https://gitlab.com/shafir2/WorldLine
+repo_name: shafir2/WorldLine
+edit_uri: -/blob/main/docs/site/
+copyright: MIT License. All scenarios are synthetic unless labelled as real data.
+
+docs_dir: docs/site
+exclude_docs: |
+  _partials/
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/gitlab
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn
+
+nav:
+  - Home: index.md
+  - Get started:
+      - Install: get-started/install.md
+      - First run: get-started/first-run.md
+      - Read the output: get-started/read-the-output.md
+      - Install a release: get-started/install-release.md
+  - Concepts:
+      - concepts/index.md
+      - Worlds: concepts/worlds.md
+      - Interventions: concepts/interventions.md
+      - Invariants: concepts/invariants.md
+      - Minimization: concepts/minimization.md
+      - Failure genome: concepts/genome.md
+      - Evidence kinds: concepts/evidence-kinds.md
+      - The kernel: concepts/kernel.md
+  - Guides:
+      - Author a scenario: guides/authoring.md
+      - Real-data scenarios: guides/real-data.md
+      - Real services: guides/real-service.md
+      - GitLab workflow: guides/gitlab-workflow.md
+      - GitLab setup (full): guides/gitlab-setup.md
+      - Releases and verification: guides/releases.md
+      - Operations: guides/operations.md
+  - Reference:
+      - CLI: reference/cli.md
+      - Scenario schema: reference/scenario-schema.md
+      - Invariants: reference/invariants.md
+      - Invariant catalogue: reference/invariant-catalogue.md
+      - Verifier API: reference/verifier-api.md
+      - Viewer and data contract: reference/viewer.md
+      - Module contracts: reference/architecture.md
+  - Research:
+      - research/index.md
+      - Thesis and prior art: research/thesis.md
+      - Technical report: research/report.md
+      - Roadmap: research/roadmap.md
+  - Changelog: changelog.md

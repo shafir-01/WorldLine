@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://worldline.dev/schema/scenario.schema.json",
+  "title": "WORLDLINE scenario",
+  "description": "Structural grammar of a WORLDLINE scenario YAML, as implemented by worldline/worlds/scenario.py. Semantic checks (predicate DSL parsing, referential integrity, horizon and visibility warnings) are layered on top by worldline/worlds/schema.py.",
+  "type": "object",
+  "required": ["id", "seed", "clock"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9_.-]+$",
+           "description": "Scenario id. Appears in every trace, verdict and genome origin."},
+    "seed": {"type": "integer", "description": "Root seed for every random stream (delivery jitter, drops)."},
+    "specimen": {"type": "boolean",
+                 "description": "true marks a deliberately defective, frozen laboratory scenario. Repairs land in scenarios/product/."},
+    "provenance": {"type": "object",
+                   "description": "Free-form provenance for scenarios built from recorded data (real vs modelled parts, source URL, snapshot hash)."},
+    "clock": {"$ref": "#/$defs/clock"},
+    "roles": {"type": "array", "items": {"$ref": "#/$defs/role"}},
+    "actors": {"type": "array", "items": {"$ref": "#/$defs/actor"}},
+    "injects": {"type": "array", "items": {"$ref": "#/$defs/inject"}},
+    "transitions": {"type": "array", "items": {"$ref": "#/$defs/transition"}},
+    "invariants": {"type": "array", "items": {"type": "string", "minLength": 1},
+                   "description": "Invariant ids (declared in invariants/*.yaml) checked by default."}
+  },
+  "patternProperties": {
+    "^x-": {"description": "Extension keys are ignored by the loader."}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "duration": {
+      "description": "Integer nanoseconds, or a string with a unit suffix ns|us|ms|s|m|h (e.g. 1500s, 25m, 1h).",
+      "anyOf": [
+        {"type": "integer"},
+        {"type": "string", "pattern": "^\\s*-?\\d+(\\.\\d+)?\\s*(ns|us|ms|s|m|h)?\\s*$"}
+      ]
+    },
+    "nonNegativeDuration": {
+      "description": "A duration that must be >= 0.",
+      "anyOf": [
+        {"type": "integer", "minimum": 0},
+        {"type": "string", "pattern": "^\\s*\\d+(\\.\\d+)?\\s*(ns|us|ms|s|m|h)?\\s*$"}
+      ]
+    },
+    "id": {"type": "string", "minLength": 1},
+    "clock": {
+      "type": "object",
+      "required": ["horizon_ns"],
+      "properties": {
+        "epoch_ns": {"$ref": "#/$defs/duration", "description": "Start of simulated time (default 0)."},
+        "tick_ns": {"$ref": "#/$defs/nonNegativeDuration", "description": "Clock resolution (default 1s)."},
+        "horizon_ns": {"$ref": "#/$defs/nonNegativeDuration", "description": "End of simulated time."}
+      },
+      "additionalProperties": false
+    },
+    "delivery": {
+      "type": "object",
+      "properties": {
+        "base_latency_ns": {"$ref": "#/$defs/nonNegativeDuration"},
+        "jitter_ns": {"$ref": "#/$defs/nonNegativeDuration",
+                      "description": "Uniform extra latency in [0, jitter_ns], drawn deterministically per role and event."},
+        "drop_probability": {"type": "number", "minimum": 0, "maximum": 1},
+        "ordering": {"enum": ["fifo", "network"],
+                     "description": "fifo: receipt order follows truth order. network: jitter may reorder."}
+      },
+      "additionalProperties": false
+    },
+    "role": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "visibility": {"type": "array", "items": {"type": "string", "minLength": 1},
+                       "description": "Policy labels this role may see; \"*\" sees everything. An event is visible only if ALL its labels are listed."},
+        "delivery": {"$ref": "#/$defs/delivery"}
+      },
+      "additionalProperties": false
+    },
+    "decision_rule": {
+      "type": "object",
+      "required": ["id", "at_ns", "window_ns", "when", "then", "otherwise"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "at_ns": {"$ref": "#/$defs/nonNegativeDuration", "description": "Decision point."},
+        "window_ns": {"$ref": "#/$defs/nonNegativeDuration",
+                      "description": "Only events received within [at_ns - window_ns, at_ns] are counted."},
+        "when": {"type": "string", "minLength": 1, "description": "Predicate DSL expression, see docs/AUTHORING.md."},
+        "then": {"type": "string", "minLength": 1},
+        "otherwise": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "actor": {
+      "type": "object",
+      "required": ["id", "role"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "role": {"$ref": "#/$defs/id"},
+        "decision_rules": {"type": "array", "items": {"$ref": "#/$defs/decision_rule"}}
+      },
+      "additionalProperties": false
+    },
+    "inject": {
+      "type": "object",
+      "required": ["at_ns", "source_id", "kind"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id", "description": "Defaults to <kind>-<NNN> (per-kind ordinal)."},
+        "at_ns": {"$ref": "#/$defs/nonNegativeDuration", "description": "Truth time of the event."},
+        "source_id": {"$ref": "#/$defs/id"},
+        "kind": {"$ref": "#/$defs/id"},
+        "payload": {"type": "object",
+                    "description": "Free-form. Reserved fields: corrects (on kind correction), acknowledges (on acks)."},
+        "policy_labels": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "geometry": {"type": ["object", "null"]},
+        "priority": {"type": "integer", "description": "Tie-break within the same instant: higher first."}
+      },
+      "additionalProperties": false
+    },
+    "transition": {
+      "type": "object",
+      "required": ["id", "kind", "from_ns", "to_ns"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "kind": {"enum": ["outage"]},
+        "from_ns": {"$ref": "#/$defs/nonNegativeDuration"},
+        "to_ns": {"$ref": "#/$defs/nonNegativeDuration"},
+        "source_id": {"type": ["string", "null"], "description": "Silenced source; null silences every source."},
+        "roles": {"type": "array", "items": {"type": "string", "minLength": 1},
+                  "description": "Affected roles; empty means all roles."},
+        "params": {"type": "object"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

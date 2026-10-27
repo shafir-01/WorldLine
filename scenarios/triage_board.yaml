@@ -1,0 +1,108 @@
+# WORLDLINE scenario: synthetic hospital emergency department triage board (30 minutes).
+#
+# A non-security domain. A triage nurse at the front of the department assesses arriving
+# patients and posts an acuity level (ESI 1 = most urgent ... 5 = least) to the shared triage
+# board. The bed manager watches the same board from the patient-flow office over a slower,
+# reordering network feed, and decides whether to open the overflow resuscitation bay, which
+# pulls a nurse and a doctor off the floor. Clinical notes and lab results stay with the
+# clinical team and never reach the bed manager.
+#
+# Nothing here is a real patient, hospital or protocol. All synthetic.
+#
+# Seeded latent defect (do not "fix" it here, a later module must discover it):
+#   flow_coordinator (role bed_manager) decides at 780s: open the resus bay if two or more patients on the board are
+#   ESI 1-2 and not corrected. At 690s the triage nurse re-assesses P-103 and downgrades
+#   acuity-003 from ESI 2 to ESI 3 (correction-001). In this baseline the correction reaches
+#   bed_manager at ~741s (40s latency + up to 20s jitter), so only one urgent patient remains and the decision is
+#   "standard_bed". If delivery of correction-001 to bed_manager is delayed by roughly 40s or
+#   more it arrives after the decision point, and the same rule opens the resus bay on a
+#   stale acuity: decision.consistent_with_truth FAILs.
+# SPECIMEN: deliberately defective laboratory scenario. Frozen. Repairs land on scenarios/product/ (see AGENTS.md).
+specimen: true
+id: triage_board
+seed: 314
+clock:
+  epoch_ns: 0
+  tick_ns: 1s
+  horizon_ns: 30m
+
+roles:
+  - id: triage_nurse                       # at the triage desk: fast, sees everything
+    visibility: ["*"]
+    delivery: {base_latency_ns: 1s, jitter_ns: 1s, drop_probability: 0.0, ordering: fifo}
+  - id: bed_manager                        # patient-flow office: slower board feed, no clinical detail
+    visibility: [board, bed_ops]
+    delivery: {base_latency_ns: 40s, jitter_ns: 20s, drop_probability: 0.0, ordering: network}
+  - id: evaluator
+    visibility: ["*"]
+    delivery: {base_latency_ns: 0, jitter_ns: 0, drop_probability: 0.0, ordering: fifo}
+
+actors:
+  - id: flow_coordinator
+    role: bed_manager
+    decision_rules:
+      - id: open_resus_or_standard
+        at_ns: 780s
+        window_ns: 900s
+        when: "count(kind='acuity_assessment', payload.esi<=2, not_corrected) >= 2"
+        then: open_resus_bay
+        otherwise: standard_bed
+  - id: charge_nurse
+    role: triage_nurse
+    decision_rules:
+      - id: rapid_response_or_observe
+        at_ns: 1500s
+        window_ns: 600s
+        when: "exists(kind='vitals_alert', payload.spo2<90) or exists(kind='sepsis_screen', payload.positive=true)"
+        then: call_rapid_response
+        otherwise: continue_observation
+
+injects:
+  # --- arrivals on the board (public to the department) --------------------------
+  - {id: arrival-101, at_ns: 60s,   source_id: registration, kind: arrival, payload: {patient: P-101, mode: walk_in},   policy_labels: [board]}
+  - {id: arrival-102, at_ns: 240s,  source_id: registration, kind: arrival, payload: {patient: P-102, mode: ambulance}, policy_labels: [board]}
+  - {id: arrival-103, at_ns: 420s,  source_id: registration, kind: arrival, payload: {patient: P-103, mode: walk_in},   policy_labels: [board]}
+  - {id: arrival-104, at_ns: 560s,  source_id: registration, kind: arrival, payload: {patient: P-104, mode: walk_in},   policy_labels: [board]}
+  - {id: arrival-105, at_ns: 1080s, source_id: registration, kind: arrival, payload: {patient: P-105, mode: ambulance}, policy_labels: [board]}
+  - {id: arrival-106, at_ns: 1380s, source_id: registration, kind: arrival, payload: {patient: P-106, mode: walk_in},   policy_labels: [board]}
+
+  # --- acuity assessments posted to the board -------------------------------------
+  - {id: acuity-001, at_ns: 150s,  source_id: triage_desk, kind: acuity_assessment, payload: {patient: P-101, esi: 3, complaint: "abdominal pain"},        policy_labels: [board]}
+  - {id: acuity-002, at_ns: 330s,  source_id: triage_desk, kind: acuity_assessment, payload: {patient: P-102, esi: 2, complaint: "chest pain, diaphoretic"}, policy_labels: [board], priority: 10}
+  - {id: acuity-003, at_ns: 480s,  source_id: triage_desk, kind: acuity_assessment, payload: {patient: P-103, esi: 2, complaint: "shortness of breath"},     policy_labels: [board], priority: 10}
+  - {id: acuity-004, at_ns: 620s,  source_id: triage_desk, kind: acuity_assessment, payload: {patient: P-104, esi: 4, complaint: "ankle injury"},            policy_labels: [board]}
+  # The correction: on re-assessment P-103's saturation and rate are normal (panic attack).
+  # Downgrades acuity-003 to ESI 3. Baseline arrival at bed_manager ~730-750s, decision at 780s.
+  - id: correction-001
+    at_ns: 690s
+    source_id: triage_desk
+    kind: correction
+    payload: {corrects: acuity-003, patient: P-103, esi: 3, reason: "re-assessment: SpO2 98%, RR 16, anxiety"}
+    policy_labels: [board]
+    priority: 5
+  - {id: acuity-005, at_ns: 1140s, source_id: triage_desk, kind: acuity_assessment, payload: {patient: P-105, esi: 3, complaint: "fall, head strike"}, policy_labels: [board]}
+  - {id: acuity-006, at_ns: 1440s, source_id: triage_desk, kind: acuity_assessment, payload: {patient: P-106, esi: 5, complaint: "prescription refill"}, policy_labels: [board]}
+
+  # --- bed availability (bed_ops) ---------------------------------------------------
+  - {id: beds-001, at_ns: 0s,    source_id: bed_board, kind: bed_status, payload: {acute_free: 3, resus_free: 1}, policy_labels: [bed_ops]}
+  - {id: beds-002, at_ns: 600s,  source_id: bed_board, kind: bed_status, payload: {acute_free: 2, resus_free: 1}, policy_labels: [bed_ops]}
+  - {id: beds-003, at_ns: 1200s, source_id: bed_board, kind: bed_status, payload: {acute_free: 1, resus_free: 1}, policy_labels: [bed_ops]}
+  - {id: beds-004, at_ns: 1680s, source_id: bed_board, kind: bed_status, payload: {acute_free: 2, resus_free: 1}, policy_labels: [bed_ops]}
+
+  # --- clinical detail (never visible to bed_manager) --------------------------------
+  - {id: note-001,  at_ns: 500s,  source_id: triage_desk,   kind: triage_note,   payload: {patient: P-103, text: "hyperventilating, tingling fingers"}, policy_labels: [clinical_private]}
+  - {id: vitals-001, at_ns: 700s, source_id: monitor_bay_2, kind: vitals,        payload: {patient: P-102, hr: 104, spo2: 95, sbp: 138},             policy_labels: [clinical_private]}
+  - {id: lab-001,   at_ns: 900s,  source_id: lab_interface, kind: lab_result,    payload: {patient: P-102, test: troponin, value_ng_l: 12},          policy_labels: [clinical_private]}
+  - {id: lab-002,   at_ns: 1050s, source_id: lab_interface, kind: lab_result,    payload: {patient: P-101, test: lactate, value_mmol_l: 2.6},        policy_labels: [clinical_private]}
+  - {id: sepsis-001, at_ns: 1260s, source_id: triage_desk,  kind: sepsis_screen, payload: {patient: P-101, positive: false, qsofa: 1},               policy_labels: [clinical_private]}
+  - {id: valert-001, at_ns: 1320s, source_id: monitor_bay_4, kind: vitals_alert, payload: {patient: P-101, spo2: 87, hr: 122},                       policy_labels: [clinical_private], priority: 10}
+  - {id: lab-003,   at_ns: 1600s, source_id: lab_interface, kind: lab_result,    payload: {patient: P-105, test: inr, value: 1.1},                    policy_labels: [clinical_private]}
+
+transitions:
+  # The lab interface drops out for a few minutes; lab-002 happens but nobody hears about it.
+  - {id: lab_interface_outage, kind: outage, from_ns: 1000s, to_ns: 1100s, source_id: lab_interface}
+
+invariants:
+  - epistemic.no_future_knowledge
+  - decision.consistent_with_truth
+  - absence.no_corrupted_in_decision

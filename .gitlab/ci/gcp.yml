@@ -44,7 +44,7 @@ deploy-gcp:
         --memory 512Mi \
         --cpu 1 \
         --min-instances 0 \
-        --max-instances 3 \
+        --max-instances 3 --concurrency 40 --timeout 60 \
         --set-env-vars "GIT_COMMIT=$CI_COMMIT_SHA" \
         --labels "worldline-commit=${CI_COMMIT_SHORT_SHA},worldline-pipeline=${CI_PIPELINE_ID}" \
         --quiet

@@ -1,0 +1,35 @@
+# Documentation site (mkdocs-material), published under the Pages site at /docs/.
+#
+# Include from .gitlab-ci.yml:
+#   include:
+#     - local: .gitlab/ci/docs.yml
+#
+# scripts/build_docs.py stages docs/*.md into docs/site/, generates the CLI and invariants
+# reference from the code, and runs `mkdocs build --strict` (a broken link fails the job).
+# The site lands in public_docs/; the `pages` job copies it to public/docs/ (it must list
+# `docs` under its `needs:` to receive the artifact).
+
+docs:
+  stage: test
+  image: python:3.12
+  needs: []
+  extends: [.rules-default]
+  variables:
+    NO_MKDOCS_2_WARNING: "1"
+  cache:
+    key:
+      files:
+        - uv.lock
+      prefix: docs
+    paths:
+      - .cache/uv
+      - .cache/pip
+  before_script:
+    - pip install --quiet uv
+  script:
+    - python scripts/build_docs.py --out public_docs
+    - test -f public_docs/index.html
+  artifacts:
+    paths:
+      - public_docs/
+    expire_in: 1 week

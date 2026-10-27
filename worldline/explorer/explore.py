@@ -5,6 +5,14 @@ Two strategies share one budget so they can be compared honestly:
   guided  — interventions concentrated on events whose kinds a decision rule depends
             on, and on roles that make decisions. Read from the Scenario, never from
             truth-at-runtime, so the explorer has no information an engineer lacks.
+
+A third, `windowed`, proposes only interventions that move a decision-relevant delivery across a
+decision boundary (or drop / corrupt one the decision knows), with delays solved from the root
+trace's receipt times (see reduction.py and docs/EXPLORER.md).
+
+`reduce=True` skips a branch whose equivalence signature (reduction.schedule_signature) was already
+explored, and `workers=N` runs branches in a process pool; neither changes which schedules are
+proposed, and the result is identical for every worker count.
 """
 from __future__ import annotations
 
@@ -19,6 +27,10 @@ from worldline.worlds import Scenario, Trace, run
 from worldline.worlds.predicate import parse_predicate
 
 from .ddmin import DDMinResult, ddmin, one_minimal_check
+from .parallel import run_branches
+from .reduction import DeliveryModel, build_model, flip_threshold, schedule_signature, window_candidates
+
+STRATEGIES = ("random", "guided", "windowed")
 
 
 # ------------------------------------------------------------------ rule evaluator
@@ -82,12 +94,16 @@ class ExplorationResult:
     wall_ns: int
     schedule_size: int
     rejected: list[dict] = field(default_factory=list)
+    # reduce=True only: proposals not run because an explored branch (or the root) has the same
+    # equivalence signature. Each: {"schedule", "equivalent_to": branch_id, "signature"}.
+    skipped_equivalent: list[dict] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         d = asdict(self)
         d["n_nodes"] = len(self.nodes)
         d["n_failing"] = len(self.failing)
         d["n_rejected"] = len(self.rejected)
+        d["n_skipped_equivalent"] = len(self.skipped_equivalent)
         d["failing_rate_per_100"] = (100.0 * len(self.failing) / max(1, len(self.nodes) - 1))
         return d
 
@@ -134,8 +150,25 @@ def _candidate_pool(scenario: Scenario, root: Trace, rng: DeterministicRNG, stra
     return guided + [p for p in pool if p.hash() not in seen]
 
 
+def _windowed_pool(model: DeliveryModel, rng: DeterministicRNG) -> list[Intervention]:
+    """Decision-window candidates; those predicted to flip a decision first, each tier shuffled by seed."""
+    cands = window_candidates(model, rng.fork("candidates"))
+    flips = [iv for iv, f in cands if f]
+    rest = [iv for iv, f in cands if not f]
+    return rng.fork("order/flip").shuffle(flips) + rng.fork("order/rest").shuffle(rest)
+
+
 def explore(scenario: Scenario, invariants: dict[str, Invariant], *, budget: int, seed: int,
-            strategy: str = "guided", schedule_size: int = 1, now_ns: int = 0) -> ExplorationResult:
+            strategy: str = "guided", schedule_size: int = 1, now_ns: int = 0,
+            reduce: bool = False, workers: int = 1) -> ExplorationResult:
+    """Explore up to `budget` proposed fault schedules.
+
+    reduce   skip proposals whose equivalence signature matches the root or an earlier branch
+             (recorded in `skipped_equivalent`); never changes which schedules are proposed.
+    workers  run branches in a spawn process pool of this size; output is identical to workers=1.
+    """
+    if strategy not in STRATEGIES:
+        raise ValueError(f"unknown strategy {strategy!r}")
     t0 = time.perf_counter_ns()
     rng = DeterministicRNG(seed, ("explore", strategy))
     root = run(scenario)
@@ -143,13 +176,24 @@ def explore(scenario: Scenario, invariants: dict[str, Invariant], *, budget: int
     baseline_fail = _baseline_failures(root_verdicts)
     nodes = [BranchNode("root", [], None, root.digest, [v.to_dict() for v in root_verdicts], 0,
                         sorted(baseline_fail))]
-    pool = _candidate_pool(scenario, root, rng.fork("pool"), strategy, budget)
+    model = build_model(scenario, root) if (reduce or strategy == "windowed") else None
+    if strategy == "windowed":
+        pool = _windowed_pool(model, rng.fork("pool"))
+    else:
+        pool = _candidate_pool(scenario, root, rng.fork("pool"), strategy, budget)
     if not pool:
         return ExplorationResult(scenario.id, seed, budget, strategy, nodes, [], root.digest,
                                  time.perf_counter_ns() - t0, schedule_size)
-    failing: list[str] = []
-    rejected: list[dict] = []
+
+    # 1. propose (serial, seed-determined; independent of any branch outcome)
+    planned: list[tuple[FaultSchedule, str | None]] = []
+    skipped: list[dict] = []
     seen: set[str] = set()
+    owner: dict[str, str] = {}
+    if reduce:
+        root_sig = schedule_signature(model, invariants, ())
+        if root_sig is not None:
+            owner[root_sig] = "root"
     pick = rng.fork("pick")
     for i in range(budget):
         if strategy == "guided":
@@ -158,6 +202,11 @@ def explore(scenario: Scenario, invariants: dict[str, Invariant], *, budget: int
             chosen = [pool[k]]
             for _ in range(schedule_size - 1):
                 chosen.append(pool[min(len(pool) - 1, int(abs(pick.gauss(0, max(1.0, len(pool) / 4)))))])
+        elif strategy == "windowed":
+            # sweep the pool in order; extra slots (schedule_size > 1) drawn from the same pool
+            if schedule_size == 1 and i >= len(pool):
+                break
+            chosen = [pool[i % len(pool)]] + [pick.choice(pool) for _ in range(schedule_size - 1)]
         else:
             chosen = [pick.choice(pool) for _ in range(schedule_size)]
         sched: FaultSchedule = tuple(chosen)
@@ -165,21 +214,36 @@ def explore(scenario: Scenario, invariants: dict[str, Invariant], *, budget: int
         if sh in seen:
             continue
         seen.add(sh)
-        t1 = time.perf_counter_ns()
-        try:
-            tr = run(scenario, sched)
-        except ValueError as exc:  # schedule violates the time rule (e.g. negative skew): record, do not hide
-            rejected.append({"schedule": [iv.to_dict() for iv in sched], "reason": str(exc)})
+        sig = schedule_signature(model, invariants, sched) if reduce else None
+        if sig is not None:
+            if sig in owner:
+                skipped.append({"schedule": [iv.to_dict() for iv in sched], "equivalent_to": owner[sig],
+                                "signature": sig})
+                continue
+            owner[sig] = f"root/{sh}"
+        planned.append((sched, sig))
+
+    # 2. run (serial or process pool; results in plan order)
+    results = run_branches(scenario, invariants, [[iv.to_dict() for iv in s] for s, _ in planned],
+                           now_ns=now_ns, workers=workers)
+
+    # 3. ordered merge
+    failing: list[str] = []
+    rejected: list[dict] = []
+    for (sched, sig), r in zip(planned, results):
+        if not r["ok"]:
+            if sig is not None:  # the model predicted an admissible world; equivalents were skipped on that basis
+                raise RuntimeError(f"reduction model admitted a schedule the runner rejected: {r['reason']}")
+            rejected.append({"schedule": [iv.to_dict() for iv in sched], "reason": r["reason"]})
             continue
-        verdicts = _verdicts_for(tr, scenario, invariants, now_ns)
-        fails = sorted({v.invariant_id for v in verdicts if v.result == Verdict.FAIL} - baseline_fail)
-        node = BranchNode(tr.branch_id, [iv.to_dict() for iv in sched], "root", tr.digest,
-                          [v.to_dict() for v in verdicts], time.perf_counter_ns() - t1, fails)
+        fails = sorted(set(r["fails"]) - baseline_fail)
+        node = BranchNode(r["branch_id"], [iv.to_dict() for iv in sched], "root", r["digest"],
+                          r["verdicts"], r["cost_ns"], fails)
         nodes.append(node)
         if fails:
             failing.append(node.branch_id)
     return ExplorationResult(scenario.id, seed, budget, strategy, nodes, failing, root.digest,
-                             time.perf_counter_ns() - t0, schedule_size, rejected)
+                             time.perf_counter_ns() - t0, schedule_size, rejected, skipped)
 
 
 # ------------------------------------------------------------------ minimization
@@ -197,6 +261,9 @@ class MinimizationResult:
     explanation: str
     trace_digest: str
     steps: list[dict]
+    # When the minimal schedule is a single concrete delay: the smallest by_ns that still reproduces
+    # the target failure, solved from root receipt times and checked with the oracle at t and t-1.
+    threshold_ns: int | None = None
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -229,4 +296,30 @@ def minimize(scenario: Scenario, invariants: dict[str, Invariant], failing_sched
     v = next(x for x in vs if x.result == Verdict.FAIL)
     return MinimizationResult(scenario.id, target_invariant, [i.to_dict() for i in failing_schedule],
                               [i.to_dict() for i in res.minimal], verified, res.oracle_calls, res.cache_hits,
-                              v.witness, v.explanation, tr.digest, res.trace)
+                              v.witness, v.explanation, tr.digest, res.trace,
+                              delay_threshold(scenario, res.minimal, oracle))
+
+
+def delay_threshold(scenario: Scenario, schedule: Sequence[Intervention],
+                    oracle: Callable[[tuple], bool]) -> int | None:
+    """For a single concrete delay: the smallest by_ns that makes `oracle` fail, else None.
+
+    Candidates are the per-rule flip thresholds (reduction.flip_threshold); the smallest candidate t
+    with oracle(t) True and oracle(t - 1) False is returned. Every decision is constant between delay
+    breakpoints, so no delay below the first flip can change a decision.
+    """
+    if len(schedule) != 1 or schedule[0].op != "delay" or "event_id" not in schedule[0].target:
+        return None
+    iv = schedule[0]
+    model = build_model(scenario)
+    cands = sorted({t for r in model.rules
+                    for t in [flip_threshold(scenario, iv.target["event_id"], iv.role, r.rule_id, model=model)]
+                    if t is not None})
+
+    def with_by(by: int) -> tuple:
+        return (Intervention("delay", dict(iv.target), {**iv.params, "by_ns": by}),)
+
+    for t in cands:
+        if oracle(with_by(t)) and not oracle(with_by(t - 1)):
+            return t
+    return None

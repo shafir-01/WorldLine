@@ -43,6 +43,10 @@ real_app = typer.Typer(help="Scenarios whose truth stream is real recorded publi
 app.add_typer(real_app, name="real")
 from .http_cmd import http_app  # noqa: E402  (lazy-imports the http adapter inside its commands)
 app.add_typer(http_app, name="http")
+from .version import register as _register_version  # noqa: E402
+_register_version(app)
+from . import validate as _validate  # noqa: E402
+_validate.register(app)
 
 console = Console(highlight=False)
 DEFAULT_OUT = Path("experiments") / "out"

@@ -230,7 +230,8 @@ Pipeline: alongside the WORLDLINE jobs, the `test` stage runs GitLab SAST, secre
 
 ```bash
 curl -sL https://gitlab.com/api/v4/projects/88121109/packages/generic/worldline-evidence/v0.1.3-transcend/bundle.json -o bundle.json
-curl -s -X POST -H 'Content-Type: application/json' --data-binary @bundle.json \n  'https://worldline-verifier-301330323690.europe-north1.run.app/api/authorize?artifact_digest=1bfce46216da6cf05085684a26f7074b9cbf6ad9'
+curl -s -X POST -H 'Content-Type: application/json' --data-binary @bundle.json \
+  'https://worldline-verifier-301330323690.europe-north1.run.app/api/authorize?artifact_digest=1bfce46216da6cf05085684a26f7074b9cbf6ad9'
 ```
 
 Build and deploy:

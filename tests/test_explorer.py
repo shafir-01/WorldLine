@@ -54,7 +54,7 @@ def _signature(res):
 
 # ---------------------------------------------------------------- determinism
 
-@pytest.mark.parametrize("strategy", ["random", "guided"])
+@pytest.mark.parametrize("strategy", ["random", "guided", "windowed"])
 def test_same_seed_is_identical(sc, inv, strategy):
     a = explore(sc, inv, budget=30, seed=42, strategy=strategy)
     b = explore(sc, inv, budget=30, seed=42, strategy=strategy)
@@ -63,7 +63,7 @@ def test_same_seed_is_identical(sc, inv, strategy):
     assert [r["schedule"] for r in a.rejected] == [r["schedule"] for r in b.rejected]
 
 
-@pytest.mark.parametrize("strategy", ["random", "guided"])
+@pytest.mark.parametrize("strategy", ["random", "guided", "windowed"])
 def test_different_seeds_differ(sc, inv, strategy):
     a = explore(sc, inv, budget=30, seed=1, strategy=strategy)
     b = explore(sc, inv, budget=30, seed=2, strategy=strategy)
@@ -77,7 +77,7 @@ def test_unknown_strategy_rejected(sc, inv):
 
 # ---------------------------------------------------------------- shape of the result
 
-@pytest.mark.parametrize("strategy", ["random", "guided"])
+@pytest.mark.parametrize("strategy", ["random", "guided", "windowed"])
 def test_root_node_present_and_clean(sc, inv, root, strategy):
     res = explore(sc, inv, budget=20, seed=7, strategy=strategy)
     r = res.nodes[0]
@@ -90,7 +90,7 @@ def test_root_node_present_and_clean(sc, inv, root, strategy):
     assert all(v == Verdict.PASS.value for k, v in by_id.items() if k != "always.non_negative_capacity")
 
 
-@pytest.mark.parametrize("strategy", ["random", "guided"])
+@pytest.mark.parametrize("strategy", ["random", "guided", "windowed"])
 def test_exploration_finds_failures(sc, inv, strategy):
     res = explore(sc, inv, budget=60, seed=42, strategy=strategy)
     assert res.failing, f"{strategy} found no failing branch in 60"
@@ -100,7 +100,7 @@ def test_exploration_finds_failures(sc, inv, strategy):
     assert d["n_failing"] == len(res.failing) and d["n_nodes"] == len(res.nodes)
 
 
-@pytest.mark.parametrize("strategy", ["random", "guided"])
+@pytest.mark.parametrize("strategy", ["random", "guided", "windowed"])
 def test_every_failing_node_has_new_fail(sc, inv, strategy):
     res = explore(sc, inv, budget=60, seed=42, strategy=strategy)
     root_fail = {v["invariant_id"] for v in res.nodes[0].verdicts if v["result"] == Verdict.FAIL.value}
@@ -262,3 +262,13 @@ def test_rule_evaluator_over_truth_differs_from_stale_view(sc, root):
     assert ev("escalate_or_monitor", truth) == "monitor"
     stale = [e for e in truth if e.id != "correction-001"]
     assert ev("escalate_or_monitor", stale) == "escalate"
+
+
+# ---------------------------------------------------------------- additions: defaults stay unchanged
+
+@pytest.mark.parametrize("strategy", ["random", "guided"])
+def test_defaults_do_not_reduce_or_parallelise(sc, inv, strategy):
+    a = explore(sc, inv, budget=30, seed=42, strategy=strategy)
+    b = explore(sc, inv, budget=30, seed=42, strategy=strategy, reduce=False, workers=1)
+    assert _signature(a) == _signature(b)
+    assert a.skipped_equivalent == [] and a.to_dict()["n_skipped_equivalent"] == 0

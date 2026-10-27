@@ -11,3 +11,5 @@ experiments/out/
 report.xml
 experiments/out_real/
 experiments/out_http/
+public/
+public_docs/

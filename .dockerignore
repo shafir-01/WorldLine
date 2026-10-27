@@ -1,4 +1,8 @@
+# Build context for the verifier image. The Dockerfile copies only: pyproject.toml, uv.lock,
+# README.md, LICENSE, worldline/, service/, policies/{release.yaml,kernel_public.pem}, ui/ and
+# experiments/ (for the viewer's data). Everything else stays out to keep uploads small.
 .git
+.gitlab
 .venv
 .cache
 .hypothesis
@@ -10,7 +14,17 @@ node_modules
 ui/node_modules
 ui/dist
 ui/public/data
-docs/screens
+docs
+tests
+scripts
+examples
+experiments/out_real
+experiments/out_http
 report.xml
 duo
+.env
+.env.*
+# Never ship the signing key.
 policies/kernel_private.pem
+**/*.pem
+!policies/kernel_public.pem

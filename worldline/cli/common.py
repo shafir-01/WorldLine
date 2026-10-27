@@ -84,7 +84,16 @@ def resolve_repo_path(path: str | Path) -> Path:
     if p.exists():
         return p
     alt = repo_root() / p
-    return alt if alt.exists() else p
+    if alt.exists():
+        return alt
+    try:  # installed wheel: data lives under worldline/_data
+        from worldline.resources import resolve as _resolve
+        r = Path(_resolve(p))
+        if r.exists():
+            return r
+    except Exception:
+        pass
+    return p
 
 
 def repo_root() -> Path:
