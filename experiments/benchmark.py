@@ -1,4 +1,4 @@
-"""WORLDLINE benchmark: guided vs random exploration, and ddmin minimization, all measured.
+"""WORLDLINE benchmark: guided vs random vs windowed exploration, equivalence reduction, parallel runs and ddmin.
 
     uv run python experiments/benchmark.py --seeds 5 --budget 150 --out experiments/out/benchmark.json
 
@@ -8,6 +8,7 @@ process; the "definitions" block says exactly how each one was computed.
 from __future__ import annotations
 
 import argparse
+import os
 import statistics
 import sys
 import time
@@ -21,7 +22,7 @@ from worldline.cli import common as C
 from worldline.explorer import explore, minimize
 from worldline.interventions import schedule_hash
 
-STRATEGIES = ("guided", "random")
+STRATEGIES = ("guided", "random", "windowed")
 
 DEFINITIONS = {
     "n_nodes": "Branches actually run for the strategy, root included. Below budget+1 when schedules repeat "
@@ -36,8 +37,26 @@ DEFINITIONS = {
     "minimal_size": "Number of interventions in the 1-minimal schedule ddmin returned.",
     "oracle_calls": "Distinct schedules ddmin executed (cache hits excluded).",
     "one_minimal_verified": "Independent check: the minimal schedule fails and every single-intervention removal passes.",
+    "threshold_ns": "For a minimal schedule that is one concrete delay: the smallest by_ns that still fails, solved "
+                    "from root receipt times and checked with the oracle at t (fails) and t-1 (passes); else null.",
     "aggregate": "mean and median over seeds per strategy; first_decision_fail_index aggregates over non-null values "
                  "and reports how many seeds found none.",
+    "windowed": "Strategy proposing only interventions that move a decision-relevant delivery across a decision "
+                "boundary (exit at_ns, enter the window, solved flip threshold) or drop/corrupt one the decision "
+                "knows; candidates predicted to flip a decision come first. See docs/EXPLORER.md.",
+    "runs": "Schedules actually executed by the runner without reduction: (n_nodes - 1) + n_rejected.",
+    "runs_reduced": "Same seed, budget and proposals with reduce=True: schedules executed after skipping those whose "
+                    "equivalence signature matches the root or an earlier executed branch.",
+    "skipped_equivalent": "Proposals not executed under reduce=True (runs = runs_reduced + skipped_equivalent).",
+    "run_reduction_pct": "100 * skipped_equivalent / runs.",
+    "n_failing_sets": "Distinct non-empty failing-invariant sets over all nodes of the unreduced run.",
+    "coverage_equal": "The set of distinct failing-invariant sets is identical with and without reduction.",
+    "equivalence_violations": "Skipped schedules whose failing invariants (from the unreduced run of the same schedule) "
+                              "differ from those of the branch they were declared equivalent to. Must be 0.",
+    "wall_ms_reduced": "wall_ms of the reduce=True run (includes computing every signature).",
+    "parallel": "explore(workers=N): spawn process pool, ordered merge, at --parallel-budget, seed 1; median of "
+                "--parallel-reps wall times; speedup = serial median / median; identical_to_serial compares every "
+                "field except timing (wall_ns, cost_ns).",
 }
 
 
@@ -48,6 +67,58 @@ def _agg(values: list) -> dict:
             "n": len(vals), "n_null": len(values) - len(vals)}
 
 
+def _coverage(res) -> set[tuple]:
+    return {tuple(n.failing_invariants) for n in res.nodes if n.failing_invariants}
+
+
+def _reduction_stats(full, red) -> dict:
+    """Compare an unreduced and a reduced exploration of the same proposals."""
+    runs = len(full.nodes) - 1 + len(full.rejected)
+    runs_red = len(red.nodes) - 1 + len(red.rejected)
+    fails_by_sched = {schedule_hash(C.schedule_from_dicts(n.schedule)): n.failing_invariants for n in full.nodes}
+    rep = {n.branch_id: n.failing_invariants for n in red.nodes}
+    violations = sum(1 for sk in red.skipped_equivalent
+                     if fails_by_sched.get(schedule_hash(C.schedule_from_dicts(sk["schedule"])))
+                     != rep[sk["equivalent_to"]])
+    return {"runs": runs, "runs_reduced": runs_red, "skipped_equivalent": len(red.skipped_equivalent),
+            "run_reduction_pct": 100.0 * len(red.skipped_equivalent) / max(1, runs),
+            "n_failing_sets": len(_coverage(full)), "coverage_equal": _coverage(full) == _coverage(red),
+            "equivalence_violations": violations, "wall_ms_reduced": red.wall_ns / 1e6,
+            "first_decision_fail_index_reduced": C.first_decision_fail_index(red.to_dict())}
+
+
+def _strip_timing(res) -> dict:
+    d = res.to_dict()
+    d.pop("wall_ns")
+    for n in d["nodes"]:
+        n.pop("cost_ns")
+    return d
+
+
+def _parallel(sc, inv, args, console: Console) -> dict:
+    workers = [int(w) for w in args.parallel_workers.split(",") if w.strip()]
+    rows = []
+    for s in ("random", "guided"):
+        ref = serial_ms = None
+        for w in workers:
+            times, out = [], None
+            for _ in range(args.parallel_reps):
+                t0 = time.perf_counter_ns()
+                out = explore(sc, inv, budget=args.parallel_budget, seed=1, strategy=s,
+                              schedule_size=args.schedule_size, workers=w)
+                times.append((time.perf_counter_ns() - t0) / 1e6)
+            med = statistics.median(times)
+            if ref is None:
+                ref, serial_ms = _strip_timing(out), med
+            rows.append({"strategy": s, "workers": w, "median_ms": med, "all_ms": times,
+                         "runs": len(out.nodes) - 1 + len(out.rejected), "speedup": serial_ms / med,
+                         "identical_to_serial": _strip_timing(out) == ref})
+            console.print(f"parallel {s} workers {w}: median {med:.0f} ms, speedup {serial_ms / med:.2f}, "
+                          f"identical {rows[-1]['identical_to_serial']}", markup=False)
+    return {"budget": args.parallel_budget, "seed": 1, "schedule_size": args.schedule_size, "reps": args.parallel_reps,
+            "cpu_count": os.cpu_count(), "start_method": "spawn", "rows": rows}
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--seeds", type=int, default=5, help="Seeds 1..N")
@@ -56,6 +127,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--scenario", default="scenarios/port_alert.yaml")
     ap.add_argument("--minimize-cases", type=int, default=5, help="Failing schedules of size 3-4 to minimize")
     ap.add_argument("--out", default="experiments/out/benchmark.json")
+    ap.add_argument("--parallel-budget", type=int, default=300)
+    ap.add_argument("--parallel-workers", default="1,2,4,8", help="Comma-separated worker counts; empty skips")
+    ap.add_argument("--parallel-reps", type=int, default=3)
     args = ap.parse_args(argv)
 
     console = Console(highlight=False)
@@ -63,21 +137,23 @@ def main(argv: list[str] | None = None) -> int:
     sc, inv = C.load_world(scenario_path)
     target = C.TARGET_INVARIANT
 
-    # ---- exploration: both strategies, seeds 1..N, one shared budget
+    # ---- exploration: every strategy, seeds 1..N, one shared budget; each also re-run with reduce=True
     rows: list[dict] = []
     failing_pool: list[tuple[int, str, list[dict]]] = []  # (seed, strategy, schedule dicts) for minimization
     for seed in range(1, args.seeds + 1):
         for s in STRATEGIES:
             res = explore(sc, inv, budget=args.budget, seed=seed, strategy=s, schedule_size=args.schedule_size)
-            d = res.to_dict()
-            row = {"seed": seed, "strategy": s, **C.comparison_row(d)}
+            red = explore(sc, inv, budget=args.budget, seed=seed, strategy=s, schedule_size=args.schedule_size,
+                          reduce=True)
+            row = {"seed": seed, "strategy": s, **C.comparison_row(res.to_dict()), **_reduction_stats(res, red)}
             rows.append(row)
             for n in res.nodes:
                 if target in n.failing_invariants and 3 <= len(n.schedule) <= 4:
                     failing_pool.append((seed, s, n.schedule))
-            console.print(f"seed {seed} {s:6} nodes {row['n_nodes']:4} failing {row['n_failing']:3} "
-                          f"first decision FAIL idx {row['first_decision_fail_index']} wall {row['wall_ms']:.0f} ms",
-                          markup=False)
+            console.print(f"seed {seed} {s:8} nodes {row['n_nodes']:4} failing {row['n_failing']:3} "
+                          f"first decision FAIL idx {row['first_decision_fail_index']} wall {row['wall_ms']:.0f} ms | "
+                          f"runs {row['runs']} -> {row['runs_reduced']} reduced, coverage equal "
+                          f"{row['coverage_equal']}, violations {row['equivalence_violations']}", markup=False)
 
     # Size-4 schedules only arise with --schedule-size 4; with the default 3 the pool is size 3, which the
     # definitions record. To give ddmin 4-element inputs as well, also explore once per seed at size 4.
@@ -88,11 +164,18 @@ def main(argv: list[str] | None = None) -> int:
                 if target in n.failing_invariants and len(n.schedule) == 4:
                     failing_pool.append((seed, "guided@size4", n.schedule))
 
-    aggregate = {}
+    aggregate: dict = {}
+    reduction_summary: dict = {}
     for s in STRATEGIES:
         sub = [r for r in rows if r["strategy"] == s]
         aggregate[s] = {k: _agg([r[k] for r in sub])
-                        for k in ("n_nodes", "n_failing", "failing_rate_per_100", "first_decision_fail_index", "wall_ms")}
+                        for k in ("n_nodes", "n_failing", "failing_rate_per_100", "first_decision_fail_index", "wall_ms",
+                                  "runs", "runs_reduced", "skipped_equivalent", "run_reduction_pct", "n_failing_sets",
+                                  "wall_ms_reduced")}
+        reduction_summary[s] = {"coverage_equal_all": all(r["coverage_equal"] for r in sub),
+                                "equivalence_violations_total": sum(r["equivalence_violations"] for r in sub),
+                                "runs_total": sum(r["runs"] for r in sub),
+                                "runs_reduced_total": sum(r["runs_reduced"] for r in sub)}
 
     # ---- minimization: distinct failing schedules of size 3-4
     seen: set[str] = set()
@@ -123,44 +206,68 @@ def main(argv: list[str] | None = None) -> int:
         cases.append({"seed": seed, "strategy": s, "original_size": len(m.original), "minimal_size": len(m.minimal),
                       "oracle_calls": m.oracle_calls, "cache_hits": m.cache_hits,
                       "one_minimal_verified": m.one_minimal_verified, "wall_ms": (time.perf_counter_ns() - t0) / 1e6,
-                      "minimal": m.minimal, "witness": m.witness})
+                      "minimal": m.minimal, "witness": m.witness, "threshold_ns": m.threshold_ns})
         console.print(f"minimize seed {seed} {s}: {len(m.original)} -> {len(m.minimal)} in {m.oracle_calls} oracle calls, "
-                      f"1-minimal {m.one_minimal_verified}", markup=False)
+                      f"1-minimal {m.one_minimal_verified}, threshold_ns {m.threshold_ns}", markup=False)
 
     min_agg = {k: _agg([c[k] for c in cases]) for k in ("original_size", "minimal_size", "oracle_calls", "wall_ms")}
     min_agg["one_minimal_verified_all"] = all(c["one_minimal_verified"] for c in cases) if cases else None
 
+    parallel = _parallel(sc, inv, args, console) if args.parallel_workers.strip() else None
+
     out = {
         "scenario_id": sc.id, "scenario_path": str(args.scenario), "target_invariant": target,
         "budget": args.budget, "schedule_size": args.schedule_size, "seeds": list(range(1, args.seeds + 1)),
+        "invariants": sorted(inv),
         "environment": C.environment(),
         "definitions": DEFINITIONS,
-        "exploration": {"rows": rows, "aggregate": aggregate},
+        "exploration": {"rows": rows, "aggregate": aggregate, "reduction_summary": reduction_summary},
         "minimization": {"cases": cases, "skipped": skipped, "aggregate": min_agg},
+        "parallel": parallel,
         "claim_ceiling": "EMPIRICALLY_VALIDATED on one synthetic scenario and this machine; wall times are not portable",
     }
     C.write_json(args.out, out)
+
+    def fmt(a: dict, k: str, f: str = "{:.1f}") -> str:
+        v = a[k]
+        if v["mean"] is None:
+            return "none"
+        extra = f" ({v['n_null']} none)" if v["n_null"] else ""
+        return f"{f.format(v['mean'])} / {f.format(v['median'])}{extra}"
 
     t = Table(title=f"{sc.id}: budget {args.budget}, seeds 1..{args.seeds} (mean / median)", box=box.ASCII)
     for col in ("strategy", "nodes", "failing", "fail/100", "first decision FAIL idx", "wall ms"):
         t.add_column(col)
     for s in STRATEGIES:
         a = aggregate[s]
-
-        def f(k, fmt="{:.1f}"):
-            v = a[k]
-            if v["mean"] is None:
-                return "none"
-            extra = f" ({v['n_null']} none)" if v["n_null"] else ""
-            return f"{fmt.format(v['mean'])} / {fmt.format(v['median'])}{extra}"
-        t.add_row(s, f("n_nodes"), f("n_failing"), f("failing_rate_per_100"), f("first_decision_fail_index"), f("wall_ms", "{:.0f}"))
+        t.add_row(s, fmt(a, "n_nodes"), fmt(a, "n_failing"), fmt(a, "failing_rate_per_100"),
+                  fmt(a, "first_decision_fail_index"), fmt(a, "wall_ms", "{:.0f}"))
     console.print(t)
+    t3 = Table(title="equivalence reduction: same proposals with reduce=True (mean / median)", box=box.ASCII)
+    for col in ("strategy", "runs", "runs reduced", "skipped", "reduction %", "failing sets", "coverage equal",
+                "violations"):
+        t3.add_column(col)
+    for s in STRATEGIES:
+        a = aggregate[s]
+        t3.add_row(s, fmt(a, "runs"), fmt(a, "runs_reduced"), fmt(a, "skipped_equivalent"), fmt(a, "run_reduction_pct"),
+                   fmt(a, "n_failing_sets"), str(reduction_summary[s]["coverage_equal_all"]),
+                   str(reduction_summary[s]["equivalence_violations_total"]))
+    console.print(t3)
+    if parallel:
+        t4 = Table(title=f"parallel explore, budget {parallel['budget']}, {parallel['cpu_count']} logical CPUs, spawn",
+                   box=box.ASCII)
+        for col in ("strategy", "workers", "runs", "median ms", "speedup", "identical"):
+            t4.add_column(col)
+        for r in parallel["rows"]:
+            t4.add_row(r["strategy"], str(r["workers"]), str(r["runs"]), f"{r['median_ms']:.0f}", f"{r['speedup']:.2f}",
+                       str(r["identical_to_serial"]))
+        console.print(t4)
     t2 = Table(title="ddmin on failing schedules", box=box.ASCII)
-    for col in ("seed", "strategy", "original", "minimal", "oracle calls", "1-minimal"):
+    for col in ("seed", "strategy", "original", "minimal", "oracle calls", "1-minimal", "threshold ns"):
         t2.add_column(col)
     for c in cases:
         t2.add_row(str(c["seed"]), c["strategy"], str(c["original_size"]), str(c["minimal_size"]), str(c["oracle_calls"]),
-                   str(c["one_minimal_verified"]))
+                   str(c["one_minimal_verified"]), str(c["threshold_ns"]))
     console.print(t2)
     console.print(f"wrote {args.out}", markup=False)
     return 0
