@@ -2,7 +2,7 @@
 
 Static Vite + React + TypeScript viewer over the JSON that the WORLDLINE pipeline writes to `experiments/out/`. No backend, no UI kit: hand-written CSS, plain SVG, light/dark via `prefers-color-scheme`. Built with `base: './'` so it deploys unchanged under a GitLab Pages subpath.
 
-> Every scenario is **simulated**. A "Simulated scenario" badge in the top bar explains the split on hover or keyboard focus: the world itself (scenario, actors, messages, timing faults) is synthetic; every count, timing, verdict and signature shown about it is measured by the pipeline and can be re-checked. A persistent footer repeats the scope: "All scenarios synthetic. Transfer is within the shared Event v1 substrate, not across heterogeneous codebases."
+> Every scenario is **simulated**. A "Demo data" chip in the top bar explains the split on hover or keyboard focus: the world itself (scenario, people, messages, delays) is made up for the demo; every count, timing, verdict and signature shown about it is computed by the pipeline and can be re-checked. A quiet footer says the same: "Demo scenarios use simulated data. Every number on this page is computed from them and can be re-checked."
 
 ![Story view](../docs/screens/story.png)
 

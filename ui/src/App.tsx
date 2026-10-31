@@ -194,12 +194,12 @@ function SimulatedBadge({ data }: { data: LoadedData | null }) {
           <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" strokeWidth="1.4" />
           <path d="M8 7.2v4M8 4.8v.1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
         </svg>
-        Simulated scenario
+        Demo data
       </button>
       <span role="tooltip" id="sim-tip" className="sim-tip">
-        <b>Simulated:</b> the world itself. {ex ? <>The {ex.scenario_id.replace(/_/g, " ")} scenario (seed {ex.seed})</> : <>The scenario</>}, its actors, messages and timing faults are synthetic.
+        {ex ? <>The {ex.scenario_id.replace(/_/g, " ")} scenario (seed {ex.seed})</> : <>This scenario</>} is a simulated demo world: its people, messages and delays are made up.
         <br />
-        <b>Measured:</b> everything you see about it. Every count, timing, verdict and signature on this page is computed by the pipeline from that simulation and can be re-checked.
+        The results are real. Every count, timing, verdict and signature on this page is computed from that simulation and can be re-checked.
       </span>
     </span>
   );
