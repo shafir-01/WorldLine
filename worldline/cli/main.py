@@ -461,8 +461,8 @@ def do_keygen(out_dir: Path, force: bool = False) -> tuple[Path, Path]:
     if priv_p.exists() and not force:
         raise FileExistsError(f"{priv_p} exists; pass --force to overwrite")
     priv, pub = generate_keypair()
-    priv_p.write_text(priv, encoding="utf-8")
-    pub_p.write_text(pub, encoding="utf-8")
+    priv_p.write_text(priv, encoding="utf-8", newline="\n")
+    pub_p.write_text(pub, encoding="utf-8", newline="\n")
     return priv_p, pub_p
 
 

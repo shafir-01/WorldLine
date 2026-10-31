@@ -37,7 +37,7 @@ MINIMAL_CLAIM_PREFIX = "counterexample:invariant:"
 def write_json(path: Path | str, obj: Any) -> Path:
     p = Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(json.dumps(obj, indent=2, sort_keys=True, default=str), encoding="utf-8")
+    p.write_text(json.dumps(obj, indent=2, sort_keys=True, default=str), encoding="utf-8", newline="\n")
     return p
 
 

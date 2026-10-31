@@ -183,7 +183,7 @@ def snapshot(raw: dict, path: str | Path) -> dict:
     doc = {"provenance": provenance, "payload": payload}
     p = Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(json.dumps(doc, indent=1, ensure_ascii=False, sort_keys=False) + "\n", encoding="utf-8")
+    p.write_text(json.dumps(doc, indent=1, ensure_ascii=False, sort_keys=False) + "\n", encoding="utf-8", newline="\n")
     return doc
 
 
@@ -439,5 +439,5 @@ def to_scenario(snapshot_path: str | Path, out_yaml: str | Path, *, threshold: f
     body = yaml.safe_dump(doc, sort_keys=False, allow_unicode=True, width=200, default_flow_style=None)
     out = Path(out_yaml)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text("\n".join(header) + "\n" + body, encoding="utf-8")
+    out.write_text("\n".join(header) + "\n" + body, encoding="utf-8", newline="\n")
     return scenario_from_dict(yaml.safe_load(out.read_text(encoding="utf-8")))
