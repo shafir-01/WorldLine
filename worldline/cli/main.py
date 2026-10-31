@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Optional
 
 import typer
+import yaml
 from rich import box
 from rich.console import Console
 from rich.table import Table
@@ -30,6 +31,7 @@ from worldline.evidence import (
 from worldline.explorer import causal_diff, explore as run_explore, minimize as run_minimize
 from worldline.genome import FailureGenome, extract
 from worldline.interventions import schedule_hash
+from worldline.resources import data_layout
 from worldline.worlds import load_scenario, run
 
 from . import common as C
@@ -620,6 +622,18 @@ def authorize(bundle_json: Path = typer.Argument(...),
 
 # =============================================================================== demo
 
+def _demo_policy(src: Path, dst: Path) -> Path:
+    """The release policy with tests:unit optional, for demo runs that have no test suite to execute."""
+    doc = yaml.safe_load(src.read_text(encoding="utf-8"))
+    for req in doc.get("required", []):
+        if req.get("claim_pattern") == "tests:unit":
+            req["optional"] = True
+    doc["name"] = f"{doc.get('name', 'release')}-demo"
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    dst.write_text(yaml.safe_dump(doc, sort_keys=False), encoding="utf-8", newline="\n")
+    return dst
+
+
 def _tamper(bundle_json: Path, tampered_out: Path) -> str:
     d = C.read_json(bundle_json)
     target = next((r for r in d["records"] if r["claim"].startswith(C.ROOT_CLAIM_PREFIX)), d["records"][0])
@@ -639,16 +653,25 @@ def demo(out: Path = typer.Option(DEFAULT_OUT, "--out"),
     out.mkdir(parents=True, exist_ok=True)
     scenario, challenge_scenario = C.resolve_repo_path(scenario), C.resolve_repo_path(challenge_scenario)
     commit = C.git_commit() or "local"
-    keys = C.resolve_repo_path(Path("policies"))
+    checkout = data_layout() == "checkout"
+    # An installed package signs with a throwaway keypair next to the output, never inside site-packages.
+    keys = C.repo_root() / "policies" if checkout else out / "keys"
     priv_p, pub_p = keys / "kernel_private.pem", keys / "kernel_public.pem"
     if not priv_p.exists():
         do_keygen(keys)
         _echo(f"[keygen] wrote {priv_p} and {pub_p}")
 
-    if not skip_tests and C.find_junit(out) is None:
-        _echo("[tests] running pytest for the tests:unit claim (excluding tests/test_cli.py) ...")
-        subprocess.run([sys.executable, "-m", "pytest", "-q", "--ignore=tests/test_cli.py",
-                        f"--junitxml={out / 'report.xml'}"], cwd=str(C.repo_root()), check=False)
+    policy = C.resolve_repo_path(Path("policies") / "release.yaml")
+    has_suite = checkout and (C.repo_root() / "tests").is_dir()
+    if C.find_junit(out) is None:
+        if has_suite and not skip_tests:
+            _echo("[tests] running pytest for the tests:unit claim (excluding tests/test_cli.py) ...")
+            subprocess.run([sys.executable, "-m", "pytest", "-q", "--ignore=tests/test_cli.py",
+                            f"--junitxml={out / 'report.xml'}"], cwd=str(C.repo_root()), check=False)
+        else:
+            policy = _demo_policy(policy, out / "demo_policy.yaml")
+            _echo("[tests] no test run here, so this demo treats tests:unit as optional "
+                  "(a real release still requires it)")
 
     _echo(f"[explore] {scenario} budget {budget} seed {seed}")
     expl = do_explore(scenario, budget, seed, out)
@@ -665,11 +688,11 @@ def demo(out: Path = typer.Option(DEFAULT_OUT, "--out"),
     _echo(f"[report] {len(idx['claims'])} agent claims, {len(idx['files'])} files")
     v = do_verify(out, priv_p.read_text(encoding="utf-8"), pub_p, out / "bundle.json")
     _echo(f"[verify] ok={v['ok']} attested={len(v['attested'])} mismatches={len(v['mismatches'])} root {v['root']}")
-    a = do_authorize(out / "bundle.json", keys / "release.yaml", pub_p, commit, out / "authorization.json")
+    a = do_authorize(out / "bundle.json", policy, pub_p, commit, out / "authorization.json")
     console.print(f"[authorize] {a['decision']}  ({'; '.join(a['reasons'][:3])})",
                   style="bold green" if a["decision"] == AUTHORIZED else "bold red", markup=False)
     claim = _tamper(out / "bundle.json", out / "bundle_tampered.json")
-    d = do_authorize(out / "bundle_tampered.json", keys / "release.yaml", pub_p, commit, out / "authorization_denied.json")
+    d = do_authorize(out / "bundle_tampered.json", policy, pub_p, commit, out / "authorization_denied.json")
     console.print(f"[authorize tampered {claim}] {d['decision']}  ({'; '.join(d['reasons'][:2])})",
                   style="bold red" if d["decision"] == DENIED else "bold yellow", markup=False)
     _echo(f"root trace {expl['root_digest']}  minimal trace {m['trace_digest']}  bundle root {v['root']}")
