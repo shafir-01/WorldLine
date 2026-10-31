@@ -18,6 +18,23 @@ See [docs/INSTALL.md](docs/INSTALL.md) for installing a published release.
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-10-31
+
+### Fixed
+
+- `worldline validate` and the release policy now resolve their bundled files from an installed wheel,
+  not only from a checkout.
+- `worldline demo` from an installed package signs with a throwaway keypair next to its output instead of
+  writing into site-packages, and completes without a test suite by treating `tests:unit` as optional in a
+  clearly named demo policy. Releases still require it.
+- Generated files are written with LF line endings on every platform, so a fresh Windows clone passes the
+  byte-identical regeneration tests.
+- The GitLab Pages viewer now ships the sealed bundle and authorization it needs to load.
+
+### Changed
+
+- The viewer's demo-data notice is shorter and plainer.
+
 ## [0.2.0] - 2026-10-27
 
 ### Added
@@ -133,7 +150,8 @@ on an UNKNOWN test claim, as designed.
   shot list (8bf7109); agent loop results, vacuous-repair finding, Skeptic trigger defect (c17ddd3); real
   Duo session and merge request links (a567a16); first kernel run report (2c4c6ec).
 
-[Unreleased]: https://gitlab.com/shafir2/WorldLine/-/compare/v0.2.0...HEAD
+[Unreleased]: https://gitlab.com/shafir2/WorldLine/-/compare/v0.2.1...HEAD
+[0.2.1]: https://gitlab.com/shafir2/WorldLine/-/compare/v0.2.0...v0.2.1
 [0.2.0]: https://gitlab.com/shafir2/WorldLine/-/compare/v0.1.3-transcend...v0.2.0
 [0.1.3]: https://gitlab.com/shafir2/WorldLine/-/compare/v0.1.0-transcend...v0.1.3-transcend
 [0.1.2]: https://gitlab.com/shafir2/WorldLine/-/commit/b844c88

@@ -336,7 +336,7 @@ app = FastAPI(
         "`POST` endpoints are rate limited per client IP (default 30/min; `429` with `Retry-After`). "
         "Every response carries `X-Request-ID` (yours, if you sent one)."
     ),
-    version="0.2.0",
+    version="0.2.1",
     openapi_tags=TAGS,
     docs_url="/api/docs",
     openapi_url="/api/openapi.json",
