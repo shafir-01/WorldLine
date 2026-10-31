@@ -11,7 +11,9 @@ const fixtures = join(ui, "fixtures");
 const dest = join(ui, "public", "data");
 
 const hasJson = (dir) => existsSync(dir) && statSync(dir).isDirectory() && readdirSync(dir).some((f) => f.endsWith(".json"));
-const src = hasJson(real) && existsSync(join(real, "index.json")) ? real : fixtures;
+// The viewer cannot render without the manifest and the sealed bundle, so partial output falls back too.
+const complete = (dir) => hasJson(dir) && ["index.json", "bundle.json"].every((f) => existsSync(join(dir, f)));
+const src = complete(real) ? real : fixtures;
 
 rmSync(dest, { recursive: true, force: true });
 mkdirSync(dest, { recursive: true });

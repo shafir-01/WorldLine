@@ -339,6 +339,13 @@ pages:
   needs:
     - job: explore
       artifacts: true
+    # bundle.json and authorization.json come from the kernel jobs; the viewer reads both.
+    - job: kernel-verify
+      artifacts: true
+      optional: true
+    - job: authorize
+      artifacts: true
+      optional: true
     - job: docs
       artifacts: true
   rules:
