@@ -9,10 +9,12 @@ from typing import Any
 import yaml
 
 from worldline.core import EvidenceKind
+from worldline.resources import resource_path
 
 from .records import CERTAINTY_RANK, KERNEL_PRODUCER, is_agent_producer
 
-DEFAULT_POLICY_PATH = Path(__file__).resolve().parents[2] / "policies" / "release.yaml"
+DEFAULT_POLICY_PATH = (resource_path("policies/release.yaml")
+                       or Path(__file__).resolve().parents[2] / "policies" / "release.yaml")
 
 
 def kind_satisfies(kind: EvidenceKind, min_kind: EvidenceKind) -> bool:

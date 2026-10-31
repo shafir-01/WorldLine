@@ -24,6 +24,7 @@ from typing import List, Optional
 import typer
 from rich.console import Console
 
+from worldline.resources import resource_path
 from worldline.worlds.schema import EXAMPLE_SCENARIO, ValidationReport, scaffold, validate_file
 
 app = typer.Typer(help="Author scenarios: validate them, scaffold new ones.", add_completion=False,
@@ -48,9 +49,9 @@ def _resolve_invariants(path: Optional[Path], explicit: bool) -> Optional[Path]:
         return None
     if path.exists():
         return path
-    repo_alt = Path(__file__).resolve().parents[2] / path
-    if not path.is_absolute() and repo_alt.exists():
-        return repo_alt
+    bundled = None if path.is_absolute() else resource_path(path)   # checkout or installed wheel
+    if bundled is not None:
+        return bundled
     return path if explicit else None   # explicit but missing -> reported as an error by the validator
 
 

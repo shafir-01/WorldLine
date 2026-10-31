@@ -41,9 +41,12 @@ from .predicate import (
     _EVENT_FIELDS, _FLAGS, _FUNCTIONS, BoolOp, Call, Compare, Not, PredicateError, parse_predicate,
     referenced_kinds,
 )
+from ..resources import resource_path
 from .scenario import parse_ns, scenario_from_dict
 
-SCHEMA_PATH = Path(__file__).resolve().parents[2] / "scenarios" / "schema" / "scenario.schema.json"
+_SCHEMA_REL = Path("scenarios") / "schema" / "scenario.schema.json"
+# Checkout or installed wheel (worldline/_data/...), whichever exists.
+SCHEMA_PATH = resource_path(_SCHEMA_REL) or Path(__file__).resolve().parents[2] / _SCHEMA_REL
 
 ERROR = "error"
 WARNING = "warning"
